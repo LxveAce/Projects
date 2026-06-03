@@ -6,3 +6,4 @@ https://github.com/jbohack/nyanBOX
 
 https://flipper.net/products/flipper-zero
 
+https://shop.hak5.org
