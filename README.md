@@ -57,3 +57,5 @@ Project Nomad Offline Resources - https://github.com/Crosstalk-Solutions/project
 Ray Hunter - https://github.com/EFForg/rayhunter
 
 Chasing Your Tail - https://github.com/ArgeliusLabs/Chasing-Your-Tail-NG
+
+Kizmet - https://github.com/kismetwireless & https://www.kismetwireless.net/
