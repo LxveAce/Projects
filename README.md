@@ -1,9 +1,12 @@
 # Projects
 
-https://awokdynamics.com/products/dual-c5-touch
+Flipper Zero esp32 - https://awokdynamics.com/products/dual-c5-touch
 
-https://github.com/jbohack/nyanBOX
+Nyan Box - https://github.com/jbohack/nyanBOX
 
-https://flipper.net/products/flipper-zero
+Flipper Zero - https://flipper.net/products/flipper-zero
 
-https://shop.hak5.org
+Rubby Ducky USB - https://shop.hak5.org
+
+pwnagotchi - https://pwnagotchi.ai/ PWNA Discord - https://discord.gg/https://discord.gg/btZpkp45gQ
+
