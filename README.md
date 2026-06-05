@@ -19,7 +19,7 @@ Flock Camera, Drone, Etc. Detection - https://www.youtube.com/watch?v=W_F4rEaRdu
 
 Kismet Driving - https://github.com/kismetwireless & https://www.kismetwireless.net/
 
-BLE (Low Power Bluetooth) Detection & Tracking - https://github.com/kdesch5000/bluetooth-monitor & https://omarghader.github.io/esp32-ble-beacon-scanner-presence-detection-home-assistant/ & https://www.nordicsemi.com/Products/Development-tools/nRF-Sniffer-for-Bluetooth-LE
+BLE (Low Power Bluetooth) Detection & Tracking - https://github.com/kdesch5000/bluetooth-monitor & https://omarghader.github.io/esp32-ble-beacon-scanner-presence-detection-home-assistant/ & https://www.nordicsemi.com/Products/Development-tools/nRF-Sniffer-for-Bluetooth-LE & https://hackaday.io/project/199277-bleshark-nano-esp32-based-multi-tool-for-hackers & https://www.bing.com/ck/a?!&&p=db86e9036aa6e340891c170770b6d3959e19d30238fde040b912ad99850a19c4JmltdHM9MTc4MDYxNzYwMA&ptn=3&ver=2&hsh=4&fclid=3ca971e9-8612-69de-0883-668e876f68a7&psq=BLE+shark+nano&u=a1aHR0cHM6Ly9pbmZpc2hhcmsuY29tLw
 
 https://espterminator.com
 
