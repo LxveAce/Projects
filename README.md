@@ -17,6 +17,8 @@ RayHunter - https://github.com/EFForg/rayhunter
 
 Flock Camera, Drone, Etc. Detection - https://www.youtube.com/watch?v=W_F4rEaRduk&t=384s
 
+Kismet Driving - https://github.com/kismetwireless & https://www.kismetwireless.net/
+
 https://espterminator.com
 
 # Video Refrences / Guides
