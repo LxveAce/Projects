@@ -19,6 +19,8 @@ Flock Camera, Drone, Etc. Detection - https://www.youtube.com/watch?v=W_F4rEaRdu
 
 Kismet Driving - https://github.com/kismetwireless & https://www.kismetwireless.net/
 
+BLE (Low Power Bluetooth) Detection & Tracking - https://github.com/kdesch5000/bluetooth-monitor & https://omarghader.github.io/esp32-ble-beacon-scanner-presence-detection-home-assistant/ & https://www.nordicsemi.com/Products/Development-tools/nRF-Sniffer-for-Bluetooth-LE
+
 https://espterminator.com
 
 # Video Refrences / Guides
