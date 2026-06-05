@@ -44,6 +44,8 @@ https://youtu.be/cjXp3bBd2h8?si=a1ApsQjDNeuMD6m0
 
 Drone Detection - https://youtu.be/qK5cIhksoYw?si=lZgNcl84oi6JcZEy
 
+OSNIT Guide - https://www.youtube.com/watch?v=YKrXCmPp56k
+
 # Git Repo's
 
 ESP32 - https://github.com/colonelpanichacks/flock-you
