@@ -388,6 +388,8 @@ Default password: `raspberry` (change it immediately with `passwd`)
 
 ### 4D. Multimeter Continuity Testing for Solder Joints
 
+> **STATUS (2026-06-06):** Continuity tested on all pins with Fluke 17B+ -- ALL PASSED. No cold joints, no bridges. Solder quality is confirmed good. Skip to software/config troubleshooting (Sections 4A-4C).
+
 If display and HDMI both show nothing, and you soldered the GPIO header yourself, bad solder joints are the prime suspect.
 
 #### What You Need
@@ -438,18 +440,18 @@ Since your display does not work AND HDMI shows nothing, and you soldered the GP
    +-- YES --> Pi is alive. Display issue only.
    |           a. Check ui.display.type matches your exact display version
    |           b. Validate config.toml syntax at toml-lint.com
-   |           c. Multimeter continuity test on SPI pins (19,23,24,22,11,18)
-   |           d. Reflow any bad joints
+   |           c. ~~Multimeter continuity test~~ DONE - all pins passed (2026-06-06)
+   |           d. Try dummydisplay mode to isolate display vs config
    |           e. Try a different display if possible
    |
    +-- NO --> Pi may not be booting.
               a. Check LED: solid red only = bad SD card. Reflash.
               b. Check LED: no LEDs at all = power issue or dead Pi.
-              c. Multimeter test Pin 1 (3.3V) and Pin 2 (5V) solder joints
+              c. ~~Multimeter test solder joints~~ DONE - all passed (2026-06-06)
               d. Try a different USB cable (must be data-capable)
               e. Try a different SD card with fresh flash
               f. Add hdmi_force_hotplug=1 to /boot/config.txt
-              g. If all fails: resolder ALL joints or try a Pi Zero WH
+              g. If all fails: try a Pi Zero WH (pre-soldered header)
 ```
 
 ---
