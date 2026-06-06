@@ -38,6 +38,8 @@ Drone Detection - See if i can do it with parts i have now, and if i need more, 
 
 ESP32 Murader - One of the main projects i want to build, and i should have all needed resources. 
 
+Chasing Your Tail - May have most parts, if more needed, can buy to build
+
 https://espterminator.com
 
 # Video Refrences / Guides
