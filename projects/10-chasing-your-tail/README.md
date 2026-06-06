@@ -456,3 +456,27 @@ CYT-NG occupies a unique niche: it is the only open-source tool that combines **
 |-----------|-----------|-------|-------------|
 | Add-on | Passive buzzer module (GPIO-driven) | ~$3 | Audible alert when persistent tracker detected |
 | Add-on | Small LiPo battery + TP4056 charger | ~$8 | Portable operation for walking/driving |
+
+---
+
+## Cyberdeck Integration
+
+> See [Project 14: Cyberdeck](../14-cyberdeck/) for the full build plan.
+
+### Role in the Cyberdeck
+
+In the cyberdeck, Chasing Your Tail merges with BLE Detection (project 08) on a single board — **Lonely Binary Gold #3**. The tracker detection logic (Apple FindMy, Tile, Samsung SmartTag identification) runs as part of the combined BLE scanning firmware.
+
+### How It Differs from Standalone
+
+| Aspect | Standalone | Cyberdeck |
+|--------|-----------|-----------|
+| Board | ESP32-WROOM-32 generic | Lonely Binary Gold #3 (shared with BLE Detection) |
+| Display | CrowPanel 5" | Cyberdeck dashboard on 7" DSI (via Pi 5) |
+| Antenna | Internal PCB | External via SMA bulkhead #5 |
+| GPS | None | Shared USB GPS via Pi 5 `gpsd` |
+| Alerting | Buzzer/LED only | Dashboard alerts + optional buzzer |
+
+### GPS-Correlated Tracking
+
+The standalone build can't correlate tracker detections with location. In the cyberdeck, every detected tracker gets a GPS timestamp from the shared `gpsd` feed, enabling movement correlation — the dashboard can determine if a specific BLE device has been following your route.

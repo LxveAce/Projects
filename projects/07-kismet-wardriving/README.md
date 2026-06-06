@@ -743,3 +743,54 @@ The Pi 5 uses the standard 40-pin GPIO header (same pinout as Pi 4/3/Zero):
 | GPS | GlobalSat BU-353S4 | ~$30 | Faster fix time, better sensitivity than budget modules |
 | Antenna | 9dBi magnetic-base omni for Panda adapter | ~$12-18 | Extended scan range from vehicle roof |
 | Case | Argon NEO 5 with fan | ~$25 | Active cooling prevents thermal throttling during long wardrives |
+
+---
+
+## 12. Cyberdeck Integration
+
+> See [Project 14: Cyberdeck](../14-cyberdeck/) for the full build plan.
+
+### Role in the Cyberdeck
+
+Kismet is the **primary wardriving and wireless reconnaissance tool**, running directly on the Pi 5 (not on an ESP32). It uses the Panda PAU0F and RT5370 WiFi adapters in monitor mode to passively capture all wireless traffic.
+
+### Physical Setup
+
+- **Compute:** Runs on the Pi 5 itself (Kali Linux, pre-installed)
+- **Primary WiFi:** Panda PAU0F WiFi 6E → Pi 5 USB 3.0 port #1 (direct, not through hub — needs full bandwidth)
+- **Secondary WiFi:** RT5370 → powered USB hub (2.4GHz dedicated monitor)
+- **Antenna:** Panda PAU0F antenna → SMA bulkhead #3 (labeled "KISM") via SMA extension cable
+- **GPS:** USB GPS module (VK-162) → Pi 5 USB 2.0, shared via `gpsd` daemon
+- **Display:** 7" DSI touchscreen shows Kismet web UI at `http://localhost:2501`
+
+### Software Setup on Kali
+
+```bash
+sudo apt install kismet gpsd gpsd-clients
+sudo usermod -aG kismet $USER
+```
+
+Configure `/etc/kismet/kismet.conf`:
+```
+source=wlan1:name=PandaWiFi6E
+source=wlan2:name=RT5370_24GHz
+gps=gpsd:host=localhost,port=2947
+```
+
+### Dashboard Integration
+
+Kismet exposes a **REST API** at `http://localhost:2501`. The cyberdeck dashboard queries this API to display:
+- Live AP count and new network alerts
+- Channel activity heatmap
+- GPS-tagged network locations
+- Client/station associations
+
+### Data Flow
+
+```
+Panda PAU0F ──→ Pi 5 (Kismet) ──→ .kismet SQLite DB ──→ WiGLE CSV export
+RT5370 ────────→ Pi 5 (Kismet)     └──→ REST API ──→ Cyberdeck Dashboard
+USB GPS ───────→ gpsd ─────────────→ Kismet + Dashboard + Flock + Meshtastic
+```
+
+All tools share the single GPS feed via `gpsd`.
