@@ -733,3 +733,41 @@ The combination of Meshtastic (long-range text/GPS) + HAVEN (IP mesh/internet sh
 | Power | Solar panel + LiPo setup | ~$25-40 | Indefinite outdoor operation for relay nodes |
 | Second node | RAK WisBlock Meshtastic Starter Kit | ~$30-40 | Build a proper mesh network with 2+ nodes |
 | GPS | GPS module for location tracking | ~$10-15 | Enables position sharing and range testing |
+
+---
+
+## 13. Cyberdeck Integration
+
+> See [Project 14: Cyberdeck](../14-cyberdeck/) for the full build plan.
+
+### Role in the Cyberdeck
+
+Meshtastic provides **off-grid encrypted mesh communications** from the cyberdeck. It runs on the Heltec LoRa V3 and operates on 915MHz — a completely separate band from all other cyberdeck tools (which use 2.4/5GHz).
+
+### Physical Setup
+
+- **Board:** Heltec LoRa V3, mounted on the ESP32 rail via M3 standoffs
+- **Antenna:** IPEX → pigtail → SMA bulkhead #4 (labeled "MESH") → external 915MHz LoRa antenna
+- **Power:** USB from the powered hub (toggle switch #4 controls power)
+- **Data:** USB serial to Pi 5 — uses the `meshtastic` Python CLI/SDK for programmatic control
+
+### Communication with Pi 5
+
+Install `meshtastic` Python package on Kali:
+```
+pip install meshtastic
+```
+
+The Pi 5 can then:
+- Send/receive mesh messages programmatically
+- Read node list and signal reports
+- Share GPS position from the cyberdeck's USB GPS module
+- Forward mesh messages to the cyberdeck dashboard
+
+### No Interference
+
+LoRa 915MHz does not conflict with WiFi/BLE 2.4GHz. The Meshtastic node can transmit simultaneously with all other tools without any cross-talk.
+
+### Firmware
+
+Flash via [Meshtastic Web Flasher](https://flasher.meshtastic.org/). Select **Heltec WiFi LoRa 32 V3** as the device. Initial config via the Meshtastic app (Android/iOS) over BLE, then managed from Pi 5 via serial.

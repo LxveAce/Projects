@@ -828,3 +828,40 @@ If running Marauder on the CYD standalone (without the Lonely Binary board), you
 **Difficulty:** Intermediate. Requires soldering iron, flux, magnification. See [Fr4nkFletcher AntennaMod guide](https://github.com/Fr4nkFletcher/ESP32-Marauder-Cheap-Yellow-Display/blob/master/AntennaMod.md) and [YouTube tutorial](https://www.youtube.com/watch?v=CFhwLVzeMFA).
 
 **Recommendation:** Use the Lonely Binary Gold board as the main processor with CYD as display instead -- avoids the mod entirely and gives better range.
+
+---
+
+## 12. Cyberdeck Integration
+
+> See [Project 14: Cyberdeck](../14-cyberdeck/) for the full build plan.
+
+### Role in the Cyberdeck
+
+ESP32 Marauder is the **primary WiFi/BLE offensive tool** in the cyberdeck. It runs on Lonely Binary Gold #1 with the CYD 2.8" as its dedicated touchscreen interface.
+
+### Physical Setup
+
+- **Board:** Lonely Binary Gold #1, mounted on the ESP32 rail via M3 standoffs
+- **Display:** CYD 2.8" mounted face-up in the base, connected via serial to the Gold board
+- **Antenna:** IPEX → U.FL pigtail → SMA bulkhead #1 (labeled "MAR") → external 2.4GHz antenna
+- **Power:** USB from the powered hub (toggle switch #1 controls power)
+- **Data:** USB serial to Pi 5 via hub — Pi reads scan results and forwards to the dashboard
+
+### Serial Communication with Pi 5
+
+Marauder supports serial commands at **115200 baud**. The Pi 5 connects via `/dev/ttyUSBx` and can:
+
+- Send commands: `scanap`, `scansta`, `stopscan`, `attack -t deauth`, etc.
+- Read scan output: AP lists, station lists, PMKID captures
+- The cyberdeck dashboard parses this output in real time
+
+### Firmware
+
+Flash via [ESP Terminator](https://espterminator.com) web flasher or [Marauder OTA](https://github.com/justcallmekoko/ESP32Marauder/wiki/update-firmware). Select the **ESP32-WROOM** variant for the Lonely Binary Gold.
+
+### Standalone vs Integrated
+
+| Mode | How |
+|------|-----|
+| **Standalone** | CYD touchscreen provides full Marauder GUI. No Pi needed. Toggle on Marauder switch only |
+| **Integrated** | Pi 5 sends serial commands and aggregates results into the cyberdeck dashboard alongside all other tools |

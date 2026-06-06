@@ -927,3 +927,38 @@ For Flock detection while driving, an omnidirectional antenna provides 360-degre
 | Board | XIAO ESP32-S3 | ~$8-13 | More compact, better for vehicle mounting. Official flock-you recommended board |
 | Add-on | ICS-43434 MEMS microphone | ~$3-5 | Enables acoustic drone detection (Batear firmware) |
 | Antenna | 5dBi dual-band omni | ~$10-15 | Extended detection range for both Flock cameras and drones |
+
+---
+
+## Cyberdeck Integration
+
+> See [Project 14: Cyberdeck](../14-cyberdeck/) for the full build plan.
+
+### Role in the Cyberdeck
+
+Flock detection runs **passively and continuously** while the cyberdeck is powered on. It scans for the 31 known Flock OUI MAC prefixes via WiFi probe requests and beacon frames. When a Flock camera is detected, it sends an alert to the Pi 5 dashboard with signal strength and estimated distance.
+
+Drone detection (RemoteID) runs on a separate ESP32-WROOM-32, scanning for FAA-mandated RemoteID broadcasts on WiFi and BLE.
+
+### Physical Setup
+
+**Flock Detection:**
+- **Board:** Lonely Binary Gold #2, mounted on the ESP32 rail
+- **Antenna:** IPEX → U.FL pigtail → SMA bulkhead #2 (labeled "FLOCK") → external 2.4GHz antenna
+- **Power:** USB from hub (toggle switch #2)
+- **Data:** USB serial to Pi 5 — alerts parsed by the dashboard
+
+**Drone Detection:**
+- **Board:** ESP32-WROOM-32 generic, mounted on the rail
+- **Antenna:** Internal PCB antenna (sufficient for RemoteID detection range)
+- **Power:** USB from hub (toggle switch #5)
+- **Data:** USB serial to Pi 5
+
+### Serial Output Format
+
+The flock-you firmware outputs detected camera MACs, RSSI, and timestamps over serial at 115200 baud. The cyberdeck dashboard maps these to GPS coordinates from the shared `gpsd` feed.
+
+### Firmware
+
+- **Flock detection:** Flash flock-you firmware from [GitHub](https://github.com/lozaning/Flock-You). Use Arduino IDE or PlatformIO. Select ESP32 Dev Module as board
+- **Drone detection:** Flash [DroneID](https://github.com/bkerler/DroneID) or use ESP32 Marauder's built-in RemoteID scanning mode

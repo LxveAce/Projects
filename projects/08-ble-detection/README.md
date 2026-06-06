@@ -710,3 +710,39 @@ BLE and WiFi share the same 2.4GHz antenna on ESP32. Tests show **+10dB average 
 | Board | Lonely Binary ESP32-S3 IPEX | ~$15 | BLE 5.0 support (extended range, coded PHY), 16MB flash, 8MB PSRAM |
 | Antenna | 5dBi 2.4GHz RP-SMA omni | ~$8-12 | Better BLE detection range without losing 360-degree coverage |
 | Add-on | Passive buzzer module | ~$3-5 | Audible alert when suspicious BLE device detected (skimmer, rogue tracker) |
+
+---
+
+## 11. Cyberdeck Integration
+
+> See [Project 14: Cyberdeck](../14-cyberdeck/) for the full build plan.
+
+### Role in the Cyberdeck
+
+BLE Detection runs **continuously in the background**, scanning for BLE advertising packets. It detects AirTags, Tiles, SmartTags, and other BLE trackers that may be following you. In the cyberdeck, it shares a board with the Chasing Your Tail project — same scanning principle, different alert logic.
+
+### Physical Setup
+
+- **Board:** Lonely Binary Gold #3, mounted on the ESP32 rail
+- **Antenna:** IPEX → U.FL pigtail → SMA bulkhead #5 (labeled "BLE") → external 2.4GHz antenna
+- **Power:** USB from hub (toggle switch #3)
+- **Data:** USB serial to Pi 5 — detected devices streamed to dashboard
+
+### Serial Output
+
+The BLE scanner outputs detected device MACs, RSSI, device names, and manufacturer data over serial at 115200 baud. The cyberdeck dashboard:
+- Shows a live list of all detected BLE devices
+- Highlights persistent devices that appear across multiple scans (potential trackers)
+- Correlates with GPS position to detect devices following your movement
+
+### Combined BLE + Tracker Detection
+
+In the cyberdeck, BLE Detection (project 08) and Chasing Your Tail (project 10) merge into a single firmware on Gold #3. The firmware:
+1. Scans BLE advertising channels (37, 38, 39)
+2. Identifies Apple FindMy, Tile, Samsung SmartTag manufacturer data
+3. Tracks persistence: flags any device seen across 3+ scan cycles
+4. Sends alerts to Pi 5 via serial
+
+### Firmware
+
+Flash a BLE scanner firmware via Arduino IDE or PlatformIO. The ESP32-WROOM architecture on the Lonely Binary Gold supports BLE 4.2 scanning natively.
