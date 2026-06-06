@@ -36,6 +36,8 @@ Project Nomad - https://github.com/Crosstalk-Solutions/project-nomad & https://w
 
 Drone Detection - See if i can do it with parts i have now, and if i need more, buy and build it. 
 
+ESP32 Murader - One of the main projects i want to build, and i should have all needed resources. 
+
 https://espterminator.com
 
 # Video Refrences / Guides
