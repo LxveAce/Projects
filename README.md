@@ -23,6 +23,7 @@ A curated collection of cybersecurity, wireless, and hardware hacking projects -
 | 11 | [NyanBOX](projects/11-nyan-box/) | In Transit | Easy | Pre-built portable pentesting toolkit |
 | 12 | [USB Rubber Ducky](projects/12-usb-rubber-ducky/) | Not Yet Purchased | Easy | Keystroke injection tool (or DIY with ESP32) |
 | 13 | [ESP Terminator](projects/13-esp-terminator/) | Ready to Use | Easy | Web-based ESP32 firmware flasher for multiple tools |
+| 14 | [Cyberdeck](projects/14-cyberdeck/) | Brainstorm | Hard | All-in-one portable security rig (Pi 5 + ESP32s + Meshtastic + Kismet) |
 
 ---
 
