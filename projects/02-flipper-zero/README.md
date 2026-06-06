@@ -507,3 +507,25 @@ Visit flipper.net/pages/resellers and select your country for a complete list of
 - [Awesome Flipper Zero GitHub](https://github.com/djsime1/awesome-flipperzero)
 - [Flipper Zero Apps - Official Docs](https://docs.flipper.net/zero/apps)
 - [Flipper Lab App Store](https://lab.flipper.net/apps)
+
+---
+
+## 9. Best-Fit Hardware from Your Inventory
+
+### Status: Not Yet Purchased
+
+The Flipper Zero requires its own purchase (~$170) and has a separate ESP32 addon (AWOK Dual C5 Touch, ~$25-40) that plugs into its GPIO header. Standard ESP32 dev boards from your inventory are not pin-compatible with the Flipper GPIO interface.
+
+### What to Buy
+
+| Item | Price | Notes |
+|------|-------|-------|
+| Flipper Zero | ~$170 | From [flipper.net](https://flipper.net/products/flipper-zero) or [authorized resellers](https://flipper.net/pages/resellers) |
+| AWOK Dual C5 Touch ESP32 board | ~$25-40 | WiFi/BLE addon with ESP32-C5 for 5GHz support |
+
+### From Your Inventory
+
+| Component | Use |
+|-----------|-----|
+| KOOTION 16GB Micro SD Card | For Flipper's SD slot (firmware, saved signals, databases) |
+| Waveshare ESP32-C5 boards (2x) | Could theoretically be wired to Flipper GPIO, but the AWOK board is purpose-built and a better choice |

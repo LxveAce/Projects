@@ -434,3 +434,25 @@ CYT-NG occupies a unique niche: it is the only open-source tool that combines **
 - [AirGuard on F-Droid](https://f-droid.org/packages/de.seemoo.at_tracking_detection/)
 - [ESP32 BLETracker - GitHub](https://github.com/shogunxam/ESP32_BLETracker)
 - [nRFBox - Hackster.io](https://www.hackster.io/CiferTech/esp32-powered-tool-to-scan-jam-spoof-ble-wi-fi-nrfbox-96b516)
+
+---
+
+## Best-Fit Hardware from Your Inventory
+
+### Recommended Build
+
+| Component | Assignment | Why |
+|-----------|-----------|-----|
+| **Board** | ESP32-WROOM-32 generic DevKit | CYT detects trackers within personal proximity (~10-30m). Does NOT need extended range -- onboard PCB antenna is adequate for close-range detection. Saves premium Lonely Binary boards for range-critical projects |
+| **Display** | ELECROW CrowPanel 5" HMI ESP32 (800x480, capacitive) | Self-contained ESP32 + display. Rich dashboard showing detected trackers, signal strength over time, movement correlation alerts |
+| **Storage** | KOOTION 16GB Micro SD Card | For logging tracker detection events with timestamps |
+| **Prototyping** | AEDIKO ESP32 GPIO Breakout Board #4 + ELEGOO mini breadboard | For adding alert buzzer |
+
+**No external antenna needed** -- tracker detection is close-range by design.
+
+### Upgrade Recommendations
+
+| Component | Upgrade To | Price | Improvement |
+|-----------|-----------|-------|-------------|
+| Add-on | Passive buzzer module (GPIO-driven) | ~$3 | Audible alert when persistent tracker detected |
+| Add-on | Small LiPo battery + TP4056 charger | ~$8 | Portable operation for walking/driving |

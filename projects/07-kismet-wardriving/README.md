@@ -693,3 +693,53 @@ Laws vary significantly by country. Some jurisdictions (e.g., Germany, parts of 
 - [Wardriving Legal Implications -- US Legal Forms](https://legal-resources.uslegalforms.com/w/wardriving)
 - [Norton -- What is Wardriving](https://us.norton.com/blog/hacking/wardriving-what-it-is-and-how-to-help-protect-your-network)
 - [Wardriving -- Wikipedia](https://en.wikipedia.org/wiki/Wardriving)
+
+---
+
+## 11. Best-Fit Hardware from Your Inventory
+
+### Recommended Build
+
+| Component | Assignment | Why |
+|-----------|-----------|-----|
+| **Board** | CanaKit Raspberry Pi 5 8GB (with 128GB SD) | Most powerful SBC in inventory. Quad-core Cortex-A76 + 8GB RAM handles real-time packet processing, database writes, and web UI simultaneously. Better USB bandwidth for multiple WiFi adapters |
+| **Primary WiFi** | Panda PAU0F AXE3000 WiFi 6E USB 3.0 Adapter | Most capable WiFi adapter in inventory. MT7921A chipset, Kali-compatible. Supports 2.4/5/6 GHz with monitor mode |
+| **Secondary WiFi** | RT5370 USB WiFi Dongle | Dedicated 2.4GHz monitor mode adapter for parallel channel hopping |
+| **Display** | Hosyond 7" DSI Touchscreen IPS #1 | Dedicated Kismet dashboard. DSI ribbon cable (no HDMI port consumed). IPS for good car-mount viewing angles. Touch for Kismet web UI |
+| **Keyboard** | Rii K06 Mini Bluetooth Keyboard #2 | Dedicated to wardriving field kit. Compact for car use. Backlit for nighttime operation |
+| **Adapter** | JSAUX Micro HDMI to HDMI Adapter #1 | For Pi 5 HDMI output during setup (DSI handles daily use) |
+| **Storage** | 128GB Micro SD (from CanaKit kit) + 32GB USB 3.0 flash drive | SD for OS + kismetdb files. USB for exporting data |
+| **Field keyboard** | ProtoArc XK01 TP Foldable Keyboard | Available for extended SSH sessions and config editing |
+
+### Pinout Reference (Raspberry Pi 5)
+
+The Pi 5 uses the standard 40-pin GPIO header (same pinout as Pi 4/3/Zero):
+
+| Function | BCM GPIO | Physical Pin |
+|----------|----------|-------------|
+| I2C1 SDA | GPIO 2 | Pin 3 |
+| I2C1 SCL | GPIO 3 | Pin 5 |
+| SPI0 MOSI | GPIO 10 | Pin 19 |
+| SPI0 MISO | GPIO 9 | Pin 21 |
+| SPI0 SCLK | GPIO 11 | Pin 23 |
+| SPI0 CE0 | GPIO 8 | Pin 24 |
+| UART TXD | GPIO 14 | Pin 8 |
+| UART RXD | GPIO 15 | Pin 10 |
+
+**Interactive pinout:** [pinout.xyz](https://pinout.xyz/) | **Pi 5 docs:** [raspberrypi.com/documentation](https://www.raspberrypi.com/documentation/)
+
+### Missing Components
+
+| Item | Est. Price | Priority |
+|------|-----------|----------|
+| **GPS Module** (VK-162 or GlobalSat BU-353S4) | ~$15-25 | **High** -- required for geolocation tagging |
+| USB-C PD power bank (high capacity) | ~$25-40 | Medium -- for mobile wardriving |
+
+### Upgrade Recommendations
+
+| Component | Upgrade To | Price | Improvement |
+|-----------|-----------|-------|-------------|
+| WiFi | Alfa AWUS036AXML (WiFi 6E, tri-band) | ~$50-70 | Better 6 GHz support, faster capture rate, better Linux driver support |
+| GPS | GlobalSat BU-353S4 | ~$30 | Faster fix time, better sensitivity than budget modules |
+| Antenna | 9dBi magnetic-base omni for Panda adapter | ~$12-18 | Extended scan range from vehicle roof |
+| Case | Argon NEO 5 with fan | ~$25 | Active cooling prevents thermal throttling during long wardrives |

@@ -737,3 +737,44 @@ Enable the `led` plugin. The green LED will blink in specific patterns when hand
 - Discord: https://discord.gg/PgaU3Vp (unofficial)
 - Reddit: https://www.reddit.com/r/pwnagotchi/
 - GitHub Discussions: https://github.com/jayofelony/pwnagotchi/discussions
+
+---
+
+## 9. Best-Fit Hardware from Your Inventory
+
+### Recommended Build
+
+| Component | Assignment | Why |
+|-----------|-----------|-----|
+| **Board** | CanaKit Raspberry Pi Zero 2 W (with 32GB SD from kit) | Only board that runs Pwnagotchi. Quad-core RP3A0, low power draw, PiSugar-compatible form factor |
+| **Display** | Waveshare 2.13" E-Ink HAT V4 (250x122, SPI) | THE Pwnagotchi display. Shows AI face, handshake count, status. Zero power draw when static. Plugs directly onto GPIO header |
+| **WiFi** | RT5370 WiFi USB Dongle | Pi Zero 2W onboard WiFi cannot do monitor mode injection. RT5370 (Ralink/MediaTek) is proven Pwnagotchi-compatible with monitor mode + packet injection on 2.4GHz |
+| **Battery** | PiSugar S 1200mAh UPS | Purpose-built for Pi Zero, mounts underneath. ~3-4 hours portable operation. Note: PiSugar S lacks I2C -- no software battery monitoring |
+| **Keyboard** | Rii K06 Mini Bluetooth Keyboard #1 | Dedicated to Pwnagotchi rig for headless SSH/terminal access during setup and troubleshooting |
+| **Storage** | KOOTION 16GB Micro SD Card (Class 10) | 16GB is more than enough for Pwnagotchi image. Save 128GB cards for capture-heavy projects |
+| **Adapter** | JSAUX Micro HDMI to HDMI Adapter #2 | For Pi Zero mini HDMI output during initial setup or debugging |
+| **Testing** | Fluke 17B+ Multimeter | For testing GPIO solder joint continuity |
+
+### Pinout Reference
+
+The Pi Zero 2 W uses the standard Raspberry Pi 40-pin GPIO header. The Waveshare 2.13" e-ink HAT connects via SPI:
+
+| Function | BCM GPIO | Physical Pin |
+|----------|----------|-------------|
+| SPI0 MOSI | GPIO 10 | Pin 19 |
+| SPI0 MISO | GPIO 9 | Pin 21 |
+| SPI0 SCLK | GPIO 11 | Pin 23 |
+| SPI0 CE0 (Chip Select) | GPIO 8 | Pin 24 |
+| Data/Command (DC) | GPIO 25 | Pin 22 |
+| Reset (RST) | GPIO 17 | Pin 11 |
+| Busy | GPIO 24 | Pin 18 |
+
+**Interactive pinout:** [pinout.xyz](https://pinout.xyz/) | **Waveshare e-ink wiring:** [Waveshare Wiki](https://www.waveshare.com/wiki/2.13inch_e-Paper_HAT_Manual)
+
+### Upgrade Recommendations
+
+| Component | Upgrade To | Price | Improvement |
+|-----------|-----------|-------|-------------|
+| Battery | PiSugar 2 or PiSugar 3 | ~$30-40 | Adds I2C battery monitoring, software-readable charge level, RTC, longer runtime |
+| WiFi | Alfa AWUS036ACH | ~$30 | Dual-band (2.4+5GHz), better range, higher injection speed |
+| Board | Pi Zero 2 WH (pre-soldered headers) | ~$20 | Eliminates soldering requirement entirely |

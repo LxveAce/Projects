@@ -665,3 +665,48 @@ Passively receiving BLE advertising packets that are broadcast publicly is gener
 - [CYD ESP32 AirTag Scanner (GitHub)](https://github.com/hevnsnt/CYD_ESP32-AirTag-Scanner)
 - [AirFlag AirTag Detector (GitHub)](https://github.com/bennettjustin/AirFlag)
 - [BLE-Scanner MQTT (GitHub)](https://github.com/gromeck/BLE-Scanner)
+
+---
+
+## 10. Best-Fit Hardware from Your Inventory
+
+### Recommended Build
+
+| Component | Assignment | Why |
+|-----------|-----------|-----|
+| **Board** | Lonely Binary ESP32 Gold Edition #3 | IPEX antenna connector extends BLE reception range. BLE operates on 2.4GHz alongside WiFi, so the same external antenna improves BLE scanning. Ideal for detecting hidden BLE devices (ATM skimmers, rogue beacons) |
+| **Display** | AITRIP 4.0" ESP32 Touchscreen (ST7796, 320x480) | Larger screen provides more room for BLE device lists with MAC addresses, RSSI, device names, manufacturer data. Leaves both CYD screens for Marauder and Flock |
+| **Antenna** | Bingfu WiFi/BT Antenna #2 (2.4/5.8GHz, RP-SMA) via Boobrie adapter + U.FL pigtail | Specifically rated for Bluetooth frequencies. Better gain than DIYmall for BLE scanning |
+| **Storage** | KOOTION 16GB Micro SD Card | BLE scan data is small (MAC + RSSI + name per device). 16GB is plenty |
+| **Prototyping** | AEDIKO ESP32 GPIO Breakout Board #3 | For adding status LEDs or buzzer for alert-on-detection mode |
+
+### External Antenna for BLE Range
+
+BLE and WiFi share the same 2.4GHz antenna on ESP32. Tests show **+10dB average improvement** with external antenna vs PCB trace antenna, extending reliable BLE detection to 15+ meters with 70% improved signal stability.
+
+**Connection:** Same as Marauder antenna chain -- Lonely Binary IPEX socket -> U.FL pigtail -> Boobrie adapter -> Bingfu RP-SMA antenna.
+
+### Pinout Reference (ESP32-WROOM-32 / Lonely Binary Gold)
+
+| Function | GPIO | Notes |
+|----------|------|-------|
+| SPI MOSI | GPIO 23 | For external display |
+| SPI MISO | GPIO 19 | |
+| SPI SCK | GPIO 18 | |
+| SPI CS | GPIO 5 | |
+| I2C SDA | GPIO 21 | For sensors |
+| I2C SCL | GPIO 22 | |
+| UART TX | GPIO 1 | Serial output |
+| UART RX | GPIO 3 | Serial input |
+| ADC (signal strength) | GPIO 34-39 | Input-only pins, no pullup |
+| Buzzer/LED | GPIO 2, 4, 15 | Output for alerts |
+
+**Full pinout:** [RandomNerdTutorials ESP32 Pinout](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/)
+
+### Upgrade Recommendations
+
+| Component | Upgrade To | Price | Improvement |
+|-----------|-----------|-------|-------------|
+| Board | Lonely Binary ESP32-S3 IPEX | ~$15 | BLE 5.0 support (extended range, coded PHY), 16MB flash, 8MB PSRAM |
+| Antenna | 5dBi 2.4GHz RP-SMA omni | ~$8-12 | Better BLE detection range without losing 360-degree coverage |
+| Add-on | Passive buzzer module | ~$3-5 | Audible alert when suspicious BLE device detected (skimmer, rogue tracker) |

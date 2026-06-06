@@ -392,3 +392,20 @@ Every major firmware project (Marauder, GhostESP, Bruce) includes disclaimers st
 - [Flipper Zero EASY Flasher -- ESP Terminator YouTube](https://www.youtube.com/shorts/Ind2Q0OfS0E)
 - [ESP Terminator Web Flasher Demo -- YouTube](https://www.youtube.com/watch?v=JMGri1ZEfeg)
 - [XDA Developers -- Cheap ESP32 Display vs Flipper Zero](https://www.xda-developers.com/using-cheap-esp32-display-flipper-zero/)
+
+---
+
+## 10. Best-Fit Hardware from Your Inventory
+
+### Status: Ready to Use -- No Dedicated Hardware Needed
+
+ESP Terminator is a **web-based tool** that runs in your browser (Chrome/Edge). It communicates with ESP32 boards via USB Web Serial API. No dedicated ESP32 board or hardware build is required.
+
+### How It Works with Your Setup
+
+1. Open [espterminator.com](https://espterminator.com) in Chrome/Edge
+2. Connect any ESP32 board from your inventory via USB
+3. Select the firmware to flash (Marauder, GhostESP, Bruce, etc.)
+4. Click flash -- done
+
+**Compatible boards from your inventory:** All ESP32 boards (Lonely Binary Gold, WROOM-32, CYD, AITRIP, ESP32-C5). ESP Terminator auto-detects the connected board type.

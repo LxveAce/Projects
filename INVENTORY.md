@@ -36,7 +36,7 @@ All items below have been purchased via Amazon. Organized by category with links
 |---|---------|------|-------|-------------|------------|
 | 1 | Waveshare 2.13" E-Ink Display HAT V4 (250x122, SPI) | [B071S8HT76](https://amazon.com/dp/B071S8HT76) | ~$13-20 | [Waveshare](https://www.waveshare.com/2.13inch-e-paper-hat.htm) | Pwnagotchi |
 | 2 | ELECROW CrowPanel 5" HMI ESP32 Display (800x480, capacitive) | [B0DL5WB7RQ](https://amazon.com/dp/B0DL5WB7RQ) | ~$35 | [ELECROW](https://www.elecrow.com/esp32-display-5-inch-hmi-display-rgb-tft-lcd-touch-screen-support-lvgl.html) | IoT dashboards |
-| 3 | Hosyond 7" Touchscreen IPS DSI Display for Pi (800x480) | [B0D3QB7X4Z](https://amazon.com/dp/B0D3QB7X4Z) | ~$55 | [Hosyond](https://hosyond.com/) | Pi desktop, dashboards |
+| 3 | Hosyond 7" Touchscreen IPS DSI Display for Pi x2 (800x480) | [B0D3QB7X4Z](https://amazon.com/dp/B0D3QB7X4Z) | ~$55 ea | [Hosyond](https://hosyond.com/) | Pi desktop, dashboards |
 | 4 | ELECROW 5" Resistive Touch Screen TFT LCD (800x480, HDMI) | [B013JECYF2](https://amazon.com/dp/B013JECYF2) | ~$36 | [ELECROW](https://www.elecrow.com/hdmi-5-inch-800x480-tft-display-with-automatic-backlight-control.html) | Pi displays |
 | 5 | ESP32 2.8" CYD Touchscreen 2-Pack (240x320, ILI9341) | [B0G4YZ7532](https://amazon.com/dp/B0G4YZ7532) | ~$15-18 | Generic (Sunton) | IoT panels, tools |
 | 6 | AITRIP 4.0" ESP32 Touchscreen (320x480, ST7796) | [B0GGB5W5XK](https://amazon.com/dp/B0GGB5W5XK) | ~$15-20 | AITRIP | IoT panels, tools |
@@ -97,7 +97,7 @@ All items below have been purchased via Amazon. Organized by category with links
 | # | Product | ASIN | Price | Manufacturer | Project(s) |
 |---|---------|------|-------|-------------|------------|
 | 1 | ProtoArc XK01 TP Foldable Bluetooth Keyboard + Touchpad | [B0FYNPT7XF](https://amazon.com/dp/B0FYNPT7XF) | ~$46 | [ProtoArc](https://www.protoarc.com/products/xk01-tp-foldable-keyboard-with-touchpad) | Field work |
-| 2 | Rii K06 Mini Bluetooth Keyboard (backlit, IR learning) | [B0BML42L6X](https://amazon.com/dp/B0BML42L6X) | ~$27 | [Rii](https://www.riimall.com/) | Headless Pi control |
+| 2 | Rii K06 Mini Bluetooth Keyboard x2 (backlit, IR learning) | [B0BML42L6X](https://amazon.com/dp/B0BML42L6X) | ~$27 ea | [Rii](https://www.riimall.com/) | Headless Pi control |
 
 ### Datasheets & Drivers
 - **Rii K06**: [Manual PDF](http://www.riitek.com/upload/K06BT.pdf) -- no drivers needed (Bluetooth HID)
@@ -111,6 +111,7 @@ All items below have been purchased via Amazon. Organized by category with links
 | 1 | Fluke 17B+ Digital Multimeter | [B0779621KZ](https://amazon.com/dp/B0779621KZ) | ~$155-173 | [Fluke](https://www.fluke.com/en-us/product/electrical-testing/digital-multimeters/fluke-17b-plus) | All electronics work |
 | 2 | Professional Silicone Soldering Pad (17.7" x 11.8") | [B0D7MF2MPZ](https://amazon.com/dp/B0D7MF2MPZ) | ~$10-15 | Generic | Soldering workspace |
 | 3 | MYJOR Kapton Tape 4-Roll Assortment (1/4" - 1") | [B07RZYY2T1](https://amazon.com/dp/B07RZYY2T1) | ~$8-12 | MYJOR | PCB protection |
+| 4 | Soldering Iron + Workstation | N/A (owned) | -- | -- | All soldering work |
 
 ### Datasheets & Drivers
 - **Fluke 17B+**: [Product Page](https://www.fluke.com/en-us/product/electrical-testing/digital-multimeters/fluke-17b-plus) | [Datasheet](https://profitools.az/wp-content/uploads/2022/12/Fluke-17B-Digital-Multimeter-datasheet.pdf) | [User Manual](https://pim-resources.coleparmer.com/instruction-manual/17785-13-14-15b-17b-digital-multimeters-manual.pdf)
@@ -131,7 +132,7 @@ All items below have been purchased via Amazon. Organized by category with links
 
 | # | Product | ASIN | Price | Manufacturer | Project(s) |
 |---|---------|------|-------|-------------|------------|
-| 1 | JSAUX Micro HDMI to HDMI Adapter (4K@60Hz) | [B09LYPXPH6](https://amazon.com/dp/B09LYPXPH6) | ~$9 | [JSAUX](https://jsaux.com/) | Pi 4/5 display |
+| 1 | JSAUX Micro HDMI to HDMI Adapter x3 (4K@60Hz) | [B09LYPXPH6](https://amazon.com/dp/B09LYPXPH6) | ~$9 ea | [JSAUX](https://jsaux.com/) | Pi 4/5 display |
 | 2 | Meshnology Heltec V4 Case (antenna + charging cutouts) | [B0G2LQXSGY](https://amazon.com/dp/B0G2LQXSGY) | ~$8-12 | [Meshnology](https://meshnology.com/) | Meshtastic node |
 
 ---
@@ -142,7 +143,7 @@ All items below have been purchased via Amazon. Organized by category with links
 - [x] CanaKit Raspberry Pi Zero 2 W Starter Kit
 - [x] Waveshare 2.13" E-Ink Display HAT V4
 - [x] PiSugar S 1200mAh UPS Battery
-- [x] Rii K06 Mini Keyboard (for setup/troubleshooting)
+- [x] Rii K06 Mini Keyboard #1 (dedicated to Pwnagotchi rig)
 - [x] Fluke 17B+ Multimeter (for testing solder joints)
 - [x] 16GB Micro SD Cards
 
@@ -163,13 +164,6 @@ All items below have been purchased via Amazon. Organized by category with links
 - [x] AITRIP 4.0" ESP32 Touchscreen (for GUI)
 - [x] WiFi Antennas
 
-### Kismet Wardriving
-- [x] CanaKit Raspberry Pi 5 Starter Kit PRO
-- [x] Panda Wireless PAU0F WiFi 6E Adapter
-- [x] RT5370 WiFi USB Dongle (secondary)
-- [x] 128GB Micro SD Cards
-- [ ] GPS Module (not yet purchased)
-
 ### Project Nomad
 - [x] CanaKit Raspberry Pi 5 (ARM -- incompatible, need x64)
 - [ ] LattePanda or x64 SBC (not yet purchased)
@@ -186,13 +180,37 @@ All items below have been purchased via Amazon. Organized by category with links
 ### WiFi 6 / Zigbee / Thread Research
 - [x] Waveshare ESP32-C5 WiFi 6 boards (x2)
 
+### Kismet Wardriving
+- [x] CanaKit Raspberry Pi 5 Starter Kit PRO
+- [x] Panda Wireless PAU0F WiFi 6E Adapter
+- [x] RT5370 WiFi USB Dongle (secondary)
+- [x] Hosyond 7" Touchscreen DSI Display #1 (dedicated dashboard)
+- [x] Rii K06 Mini Keyboard #2 (field kit)
+- [x] JSAUX HDMI Adapter #2 (Pi 5)
+- [x] 128GB Micro SD Cards
+- [ ] GPS Module (not yet purchased)
+
 ### General / Shared
 - [x] Fluke 17B+ Multimeter
+- [x] Soldering Iron + Workstation (owned, not from Amazon)
 - [x] Silicone Soldering Pad
 - [x] Kapton Tape
 - [x] REXQualis Component Kit
 - [x] Pin Headers, Breadboards
 - [x] ProtoArc Foldable Keyboard
-- [x] JSAUX HDMI Adapter
+- [x] JSAUX HDMI Adapters (3x — Pi 5, Pi Zero, spare)
 - [x] USB Flash Drives (10-pack)
 - [x] SD Card Cases
+
+---
+
+## Quantity Impact Analysis
+
+Some items were purchased in multiples, allowing dedicated assignment to separate rigs:
+
+| Item | Qty | Assignment |
+|------|-----|-----------|
+| Rii K06 Mini Keyboard | 2 | #1 → Pwnagotchi rig (headless Pi Zero setup/troubleshooting) · #2 → Field kit (Kismet wardriving / general) |
+| Hosyond 7" DSI Display | 2 | #1 → Kismet wardriving dashboard (Pi 5) · #2 → General Pi desktop / Project Nomad (if LattePanda not used) |
+| JSAUX Micro HDMI Adapter | 3 | #1 → Pi 5 · #2 → Pi Zero 2 W · #3 → Spare |
+| Lonely Binary ESP32 Gold | 3 | #1 → Marauder (primary, has IPEX antenna) · #2 → BLE Detection · #3 → Flock/Drone Detection |

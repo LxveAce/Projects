@@ -665,3 +665,28 @@ No ARM-specific modifications in any recent releases. Updates focus on x86_64 op
 - [Docker Multi-Architecture Builds](https://docs.docker.com/build/building/multi-platform/)
 - [Meshtastic Official](https://meshtastic.org/)
 - [Reticulum / Nomad Network](https://unsigned.io/software/Nomad_Network.html)
+
+---
+
+## 11. Best-Fit Hardware from Your Inventory
+
+### Status: Blocked -- Need x64 SBC
+
+Your Pi 5 is ARM64 and Project Nomad requires x86-64. **No compatible board in current inventory.**
+
+### Reserved Components (Once x64 SBC Purchased)
+
+| Component | Assignment | Why |
+|-----------|-----------|-----|
+| **Display** | Hosyond 7" DSI Touchscreen IPS #2 | Desktop-class display for the NOMAD web UI (if SBC has DSI). Otherwise ELECROW 5" HDMI TFT |
+| **Keyboard** | ProtoArc XK01 TP Foldable Bluetooth Keyboard | Full-size foldable layout with touchpad. Ideal for a portable hacking workstation -- more comfortable than Rii mini for extended sessions |
+| **Adapter** | JSAUX Micro HDMI to HDMI Adapter #3 (spare) | If x64 SBC uses micro HDMI |
+| **Storage** | 128GB Micro SD or 32GB USB 3.0 Flash Drive | For bootable OS |
+
+### What to Buy
+
+| Item | Price | Why |
+|------|-------|-----|
+| **LattePanda 3 Delta** | ~$200-250 | Best budget x64 SBC for NOMAD. Intel N100, 8GB RAM. Standard Docker install works |
+| LattePanda Sigma 32GB | ~$710-1200 | Full-featured option with eGPU support for AI features |
+| Used Mini PC (x64) | ~$50-150 | Best value if portability is secondary |

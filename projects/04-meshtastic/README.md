@@ -690,3 +690,46 @@ The combination of Meshtastic (long-range text/GPS) + HAVEN (IP mesh/internet sh
 - [CP2102 CH340 Driver Fix ESP32 (KSP Electronics)](https://kspelectronics.in/cp2102-ch340-driver-fix-esp32/)
 - [Install CH340G and CP2102 Drivers (MicroDIYPro)](https://microdiypro.com/install-ch340g-cp2102-usb-to-serial-drivers/)
 - [Meshtastic Channels Explained (LoRaMeshDevices)](https://www.lorameshdevices.com/blog/meshtastic/meshtastic-meshcore-channels-explained-public-vs-private-keys.html)
+
+---
+
+## 12. Best-Fit Hardware from Your Inventory
+
+### Recommended Build
+
+| Component | Assignment | Why |
+|-----------|-----------|-----|
+| **Board** | Meshnology N30 Heltec LoRa V3 (ESP32-S3 + SX1262, 915MHz) | Only LoRa board in inventory. Purpose-built for Meshtastic with first-class firmware support. Built-in 0.96" OLED |
+| **Antenna** | 915MHz LoRa Antenna 3dBi #1 + IPEX cable | Connects to Heltec IPEX connector. Dramatically better range vs tiny onboard stub antenna |
+| **Case** | Meshnology Heltec V4 Case | Protective case with antenna and USB-C cutouts |
+| **Adapters** | Boobrie RP-SMA to SMA Adapter #1 | For connecting larger base station antennas with different connector types |
+| **Gateway** | Bingfu WiFi/BT Antenna | For WiFi backhaul on a Meshtastic gateway node |
+
+**No keyboard, display, or SD card needed** -- Meshtastic is configured via the phone app (Android/iOS) over BLE, or via the web interface over WiFi. Uses onboard flash for config/message storage.
+
+### Pinout Reference (Heltec WiFi LoRa 32 V3)
+
+| Function | GPIO | Notes |
+|----------|------|-------|
+| LoRa SPI SCK | GPIO 9 | SX1262 clock |
+| LoRa SPI MISO | GPIO 11 | SX1262 data out |
+| LoRa SPI MOSI | GPIO 10 | SX1262 data in |
+| LoRa NSS (CS) | GPIO 8 | SX1262 chip select |
+| LoRa RST | GPIO 12 | SX1262 reset |
+| LoRa DIO1 | GPIO 14 | SX1262 interrupt |
+| LoRa BUSY | GPIO 13 | SX1262 busy flag |
+| OLED SDA | GPIO 17 | I2C data (SSD1306) |
+| OLED SCL | GPIO 18 | I2C clock (SSD1306) |
+| OLED RST | GPIO 21 | OLED reset |
+| USB Serial | CP2102 | Requires [CP2102 driver](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers) |
+
+**Full pinout:** [Heltec Wiki](https://wiki.heltec.org/docs/devices/open-source-hardware/esp32-series/lora-32/wifi-lora-32-v3/)
+
+### Upgrade Recommendations
+
+| Component | Upgrade To | Price | Improvement |
+|-----------|-----------|-------|-------------|
+| Antenna | 5.8dBi fiberglass base station antenna | ~$20-35 | Much greater range for fixed/home node deployment |
+| Power | Solar panel + LiPo setup | ~$25-40 | Indefinite outdoor operation for relay nodes |
+| Second node | RAK WisBlock Meshtastic Starter Kit | ~$30-40 | Build a proper mesh network with 2+ nodes |
+| GPS | GPS module for location tracking | ~$10-15 | Enables position sharing and range testing |
