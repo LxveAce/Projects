@@ -2,24 +2,39 @@
 **Best General Resources - https://github.com/BushidoUK/Open-source-tools-for-CTI**
 
 Flipper Zero esp32 - https://awokdynamics.com/products/dual-c5-touch
+-Not Bought Yet
 
 Nyan Box - https://github.com/jbohack/nyanBOX
+-In Transit
 
 Flipper Zero - https://flipper.net/products/flipper-zero
+-Not Bought Yet
 
 Rubber Ducky USB - https://shop.hak5.org
+-Not Bought Yet
 
 pwnagotchi - https://pwnagotchi.ai/ PWNA Discord - https://discord.gg/https://discord.gg/btZpkp45gQ
+-Pwnagotchi display doesnt display anything, and when HDMi is used, it doesnt display either. I soldered the pi zero used, and maybe something is going wrong. 
 
-Meshtastic Website - https://meshtastic.org/ Meshtasic Github - https://github.com/meshtastic
+Meshtastic Website - https://meshtastic.org/ Meshtasic Github - https://github.com/meshtastic 
+-The pre-bought meshtastic node, and it doesnt work. computer doesnt detect when plugged it to troubleshoot and setup. 
 
 RayHunter - https://github.com/EFForg/rayhunter
+-Not setup , may have most material
 
 Flock Camera, Drone, Etc. Detection - https://www.youtube.com/watch?v=W_F4rEaRduk&t=384s
+-Not setup, May have most material
 
 Kismet Driving - https://github.com/kismetwireless & https://www.kismetwireless.net/
+-Not setup, May have most material
 
 BLE (Low Power Bluetooth) Detection & Tracking - https://github.com/kdesch5000/bluetooth-monitor & https://omarghader.github.io/esp32-ble-beacon-scanner-presence-detection-home-assistant/ & https://www.nordicsemi.com/Products/Development-tools/nRF-Sniffer-for-Bluetooth-LE & https://hackaday.io/project/199277-bleshark-nano-esp32-based-multi-tool-for-hackers & https://www.bing.com/ck/a?!&&p=db86e9036aa6e340891c170770b6d3959e19d30238fde040b912ad99850a19c4JmltdHM9MTc4MDYxNzYwMA&ptn=3&ver=2&hsh=4&fclid=3ca971e9-8612-69de-0883-668e876f68a7&psq=BLE+shark+nano&u=a1aHR0cHM6Ly9pbmZpc2hhcmsuY29tLw
+-Not Setup, may have most material
+
+Project Nomad - https://github.com/Crosstalk-Solutions/project-nomad & https://www.projectnomad.us/install
+-Tried to use a Pi 5, but Project Nomad doesnt natively support ARM based systems. May need to fork repo and attempt to make it compatable, if not, make my own version of project nomad. If anything, just use lattepanda with a linux distro to work. Lattepandas use x64 etc. which is compatable. 
+
+Drone Detection - See if i can do it with parts i have now, and if i need more, buy and build it. 
 
 https://espterminator.com
 
