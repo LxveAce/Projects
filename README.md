@@ -1,6 +1,6 @@
 # Security & Hardware Projects
 
-A curated collection of cybersecurity, wireless, and hardware hacking projects -- from ESP32 tools to mesh networking to OSINT. Each project has its own folder with deep research, step-by-step build guides, and resource links.
+A curated collection of cybersecurity, wireless, and hardware hacking projects -- from ESP32 tools to mesh networking to surveillance detection. Each project has its own folder with deep research, step-by-step build guides, and resource links.
 
 **General Resource Hub:** [BushidoUK/Open-source-tools-for-CTI](https://github.com/BushidoUK/Open-source-tools-for-CTI)
 
@@ -23,7 +23,14 @@ A curated collection of cybersecurity, wireless, and hardware hacking projects -
 | 11 | [NyanBOX](projects/11-nyan-box/) | In Transit | Easy | Pre-built portable pentesting toolkit |
 | 12 | [USB Rubber Ducky](projects/12-usb-rubber-ducky/) | Not Yet Purchased | Easy | Keystroke injection tool (or DIY with ESP32) |
 | 13 | [ESP Terminator](projects/13-esp-terminator/) | Ready to Use | Easy | Web-based ESP32 firmware flasher for multiple tools |
-| 14 | [OSINT](projects/14-osint/) | Ready to Start | Easy-Hard | Open-source intelligence tools and techniques |
+
+---
+
+## Resources
+
+| Resource | Description |
+|----------|-------------|
+| [OSINT / CTI](resources/osint/) | Open-source intelligence tools, techniques, and reference material |
 
 ---
 
@@ -46,7 +53,7 @@ A curated collection of cybersecurity, wireless, and hardware hacking projects -
 
 Full inventory of all purchased hardware with datasheets, drivers, and setup guides: **[INVENTORY.md](INVENTORY.md)**
 
-### What I Have (37 items, ~$1,250-$1,450 total)
+### What I Have (37 items + extras, ~$1,250-$1,450 total)
 
 **Compute:**
 - Raspberry Pi 5 8GB Starter Kit (CanaKit, 128GB SD)
@@ -60,7 +67,7 @@ Full inventory of all purchased hardware with datasheets, drivers, and setup gui
 **Displays:**
 - 2.13" E-Ink HAT V4 (Waveshare, for Pwnagotchi)
 - 5" HMI ESP32 Display (ELECROW CrowPanel, 800x480)
-- 7" Touchscreen DSI (Hosyond, for Pi)
+- 7" Touchscreen DSI x2 (Hosyond, for Pi)
 - 5" Resistive TFT LCD (ELECROW, HDMI)
 - 2.8" CYD Touchscreen 2-Pack (ESP32, ILI9341)
 - 4.0" ESP32 Touchscreen (AITRIP, ST7796)
@@ -79,7 +86,7 @@ Full inventory of all purchased hardware with datasheets, drivers, and setup gui
 
 **Tools:** Fluke 17B+ Multimeter, Soldering Pad, Kapton Tape, Component Kit, Breadboards, Pin Headers
 
-**Input:** ProtoArc Foldable Keyboard, Rii K06 Mini Keyboard
+**Input:** ProtoArc Foldable Keyboard, Rii K06 Mini Keyboard x2
 
 ---
 
@@ -94,14 +101,14 @@ Full inventory of all purchased hardware with datasheets, drivers, and setup gui
 | GPS Module (USB or UART) | Kismet Wardriving | ~$15-25 | Medium |
 | LattePanda Delta 3 (or x64 SBC) | Project Nomad | ~$200-300 | Low |
 | Alfa AWUS036ACM (or similar) | Kismet (monitor mode) | ~$40-50 | Medium |
-| Soldering Iron + Accessories | General | ~$30-50 | High (if not owned) |
+| ~~Soldering Iron + Accessories~~ | ~~General~~ | -- | **Owned** |
 
 ---
 
 ## Projects I Can Start Right Now
 
 ### 1. OSINT (Software Only)
-No hardware needed. Install tools and start practicing. See [project guide](projects/14-osint/).
+No hardware needed. Install tools and start practicing. See [OSINT resource guide](resources/osint/).
 
 ### 2. ESP32 Marauder
 Have multiple ESP32 boards and CYD touchscreens. Flash via [ESP Terminator](https://espterminator.com) web flasher. See [project guide](projects/01-esp32-marauder/).
@@ -186,7 +193,7 @@ Pi 5, WiFi adapters, and storage ready. Need GPS module for full wardriving. See
 | RayHunter | RayHunter | [EFForg/rayhunter](https://github.com/EFForg/rayhunter) |
 | Chasing Your Tail NG | Chasing Your Tail | [ArgeliusLabs/Chasing-Your-Tail-NG](https://github.com/ArgeliusLabs/Chasing-Your-Tail-NG) |
 | Kismet | Kismet | [kismetwireless](https://github.com/kismetwireless) |
-| Open Source CTI Tools | OSINT | [BushidoUK/Open-source-tools-for-CTI](https://github.com/BushidoUK/Open-source-tools-for-CTI) |
+| Open Source CTI Tools | OSINT (Resource) | [BushidoUK/Open-source-tools-for-CTI](https://github.com/BushidoUK/Open-source-tools-for-CTI) |
 
 ---
 

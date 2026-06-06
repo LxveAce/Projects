@@ -442,3 +442,18 @@ The legality depends entirely on **how you use it**.
 5. Join the [Discord](https://discord.gg/J5A3zDC2y8) for community support and firmware update notifications
 6. Start with passive tools first (WiFi Scanner, BLE Scanner, Spectrum Analyzer) to learn the interface
 7. Only use active/offensive tools on your own equipment or with written authorization
+
+---
+
+## 12. Best-Fit Hardware from Your Inventory
+
+### Status: In Transit -- Pre-Built Kit
+
+NyanBOX arrives as a self-contained unit. **No board from your inventory needs to be allocated.** The kit includes its own ESP32, antennas, and OLED display.
+
+### From Your Inventory (Optional Accessories)
+
+| Component | Use |
+|-----------|-----|
+| KOOTION 16GB Micro SD Card | If the kit requires one |
+| USB power bank | Extended portable operation |

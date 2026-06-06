@@ -40,22 +40,124 @@ A complete technical reference covering DIY detection of Flock Safety ALPR surve
 
 ### 1.1 What Are Flock Safety Cameras?
 
-Flock Safety is the largest vendor of Automated License Plate Reader (ALPR) systems in the United States. As of mid-2025, the company had deployed nearly 90,000 cameras across approximately 7,000 law enforcement networks nationwide.
+Flock Safety is the largest vendor of Automated License Plate Reader (ALPR) systems in the United States. Valued at $8.4 billion with nearly $1 billion in funding from Andreessen Horowitz, Founders Fund, and Tiger Global, they have deployed nearly 90,000 cameras across 4,800+ law enforcement agencies. Despite marketing itself as a "public safety" tool, Flock has become the center of a massive nationwide backlash.
 
 **How they work:**
 
 - Solar-powered, LTE-connected cameras install on poles in public areas (roads, intersections, neighborhood entrances)
 - Run continuously, capturing every vehicle that enters the frame
 - Onboard ALPR software reads license plate characters and tags each record with timestamp and GPS coordinates
-- The system also tags vehicle color, body type, and visible features (roof racks, trailers, body damage)
-- Data is uploaded to Flock's cloud, where law enforcement agencies can search and cross-reference across the entire national network
-- Alerts fire automatically when a plate matches a stolen vehicle, wanted person, or AMBER alert
+- Tags vehicle color, body type, and visible features (roof racks, trailers, body damage)
+- Data is uploaded to Flock's cloud, where 4,800+ law enforcement agencies can search and cross-reference across the entire national network with zero oversight
+- Expanding beyond license plates into audio surveillance ("Raven" gunshot/scream detection) and autonomous police drones
 
-**What they do NOT do (per Flock's claims):** No video recording, no speed enforcement, no facial recognition, no personal identity data -- only plate, make, model, color, and vehicle features.
+**Physical appearance:** Small, solar-powered units mounted on utility poles with a distinctive solar panel on top and a downward-facing camera housing. Many installed without public hearings or community input.
 
-**Privacy concerns:** The [EFF](https://www.eff.org/deeplinks/2025/12/effs-investigations-expose-flock-safetys-surveillance-abuses-2025-review) and [ACLU](https://data.aclum.org/2025/10/07/flock-gives-law-enforcement-all-over-the-country-access-to-your-location/) have documented that Flock's system constitutes a nationwide mass-surveillance network. A Norfolk, Virginia court ruled in 2024 that collecting location data from Flock ALPRs is a Fourth Amendment search requiring a warrant. Flock also announced plans in 2025 to add "human distress" audio detection microphones, raising wiretap law questions.
+---
 
-**Physical appearance:** Flock cameras are small, solar-powered units mounted on utility poles. They often have a distinctive solar panel on top and a downward-facing camera housing.
+### 1.1.1 Why Flock Cameras Are Dangerous -- Legal Troubles, Privacy Violations, and Abuse
+
+> **As of June 2026, 82 Flock contracts have been terminated across 28 states, with 39 of those in January-May 2026 alone.**
+
+#### Lawsuits Against Flock
+
+| Case | Date | Details |
+|------|------|---------|
+| **Gibbs Mura Class Action** (SF Superior Court) | Feb 2026 | Flock violated CA ALPR Privacy Act by sharing data with out-of-state/federal agencies. SFPD's database was searched by out-of-state agencies **1.6 million+ times** (Aug 2024 - Feb 2025) |
+| **Hellerman v. Flock Group** (CD California) | Jan 2026 | Direct-liability federal suit against Flock itself |
+| **EFF/ACLU v. San Jose** (Federal) | Nov 2025 | Fourth Amendment challenge. SJPD database searched **3,965,519 times** in one year |
+| **Boulder Residents v. City** | May 2026 | Challenging 31 cameras as unconstitutional warrantless tracking |
+| **Stop LAPD Spying Coalition v. Los Angeles** | -- | LAPD concealed its Flock partnership; sued under Public Records Act |
+| **ACLU/EFF v. Eugene, OR** | Oct 2025 | City blanketed with cameras operated in "secrecy" |
+| **4+ Commercial Property Class Actions** (CA) | Post-Feb 2026 | Shopping malls, medical centers, retailers deploying Flock without privacy compliance. 8+ more investigations active |
+| **Toledo Settlement** | Oct 2025 | Federal judge approved $35,000 for wrongful arrest from Flock misread. Judge called it **"Flock Flocked up"** |
+
+Senator Ron Wyden demanded an FTC probe. Reps. Krishnamoorthi and Garcia launched a formal Congressional investigation.
+
+#### Data Leaks and Security Failures
+
+- **2.3 million license plates exposed** -- Police departments accidentally released unredacted Flock surveillance logs through public records requests. [HaveIBeenFlocked.com](https://haveibeenflocked.com/) lets anyone search 180M+ Flock searches across 2.6M+ plates
+- **67 cameras streaming live to the open internet** -- Security researchers discovered Flock Condor PTZ cameras with **no username, no password, no encryption**. Anyone could watch real-time footage, access 30 days of archives, and delete recordings. 404 Media confirmed by watching themselves on camera. Flock called it a "limited misconfiguration"
+- **Stalking by police** -- Milwaukee officer Josue Ayala ran one victim's plate 55 times and another's 124 times using Flock (Mar-May 2025). Criminal charges filed. Discovered through HaveIBeenFlocked.com audit logs
+- **Oxnard, CA unauthorized access** -- Flock's "nationwide query" gave out-of-state and federal agencies access to Oxnard PD data **despite settings being restricted to "California only"** -- without the department's knowledge. 5M+ queries in 2025. Department suspended all cameras
+
+#### ICE and Immigration Enforcement
+
+Flock claims no direct ICE relationship, but investigations prove systematic "side-door access":
+
+- **Dayton, OH** -- Found 7,000+ immigration-related searches by outside entities. City covered cameras with trash bags (June 2026)
+- **Evanston, IL** -- Discovered at least 7 ICE searches of its ALPR database; revoked out-of-state access
+- **100+ public school systems** have Flock cameras. 3,100+ police agencies ran **733,000+ searches on school cameras in one month**. Immigration searches outnumbered criminal ones **2-to-1**. Police tracked parents at drop-off
+- **SFPD** -- Out-of-state agencies accessed the database 1.6M+ times. US Customs and Border Protection accessed Illinois data in violation of state privacy laws
+
+#### Racial Profiling and Discriminatory Targeting
+
+- **80+ law enforcement agencies** used racist stereotyping language when searching Flock (June 2024 - Oct 2025). Hundreds of searches using terms like "roma traveler," "possible gypsy," and racial slurs -- often without specifying any crime
+- **Oak Park, IL** -- 84% of drivers stopped in Flock-related incidents were Black, despite Black people making up only 19% of the population
+- **Grand Prairie PD (TX)** -- Used slurs 6 times via "Convoy" feature, targeting an entire traveling Romani community
+
+#### Abortion Tracking and Protest Surveillance
+
+- **Texas** -- Deputies used Flock to search **6,809 camera networks (83,345 cameras) nationwide** to track a woman who had a self-managed abortion. Initially disguised as a "missing person" case; court records revealed it was a "death investigation" into the fetus
+- **50+ federal, state, and local agencies** ran hundreds of searches tied to protest activity (50501, Hands Off, and No Kings protests). Officers searched "protest" without specifying any crime
+
+#### Mission Creep: From Plates to Audio to Drones
+
+- **"Raven" gunshot detection** expanded from detecting gunfire to listening for "human distress" and screaming. After EFF exposed this, Flock quietly removed "screaming" from marketing but continued development
+- **Drone as First Responder (DFR)** and **Drone as Automated Security (DAS)** launched Oct 2025, integrating with ALPR, gunshot detection, and 911 dispatch
+- Audio alerts integrate with FlockOS, ALPR network, and video feeds -- a scream could trigger a search for every vehicle in the vicinity
+
+#### Contract and Data Ownership Issues
+
+- **Feb 16, 2026**: Flock rewrote its Terms & Conditions to grant itself a **perpetual, irrevocable, worldwide license** to use and disclose all customer data. The previous commitment "Flock does not own and shall not sell Customer Data" was **deleted entirely**
+- Even after a city terminates its contract, Flock retains the right to use that surveillance data forever
+- After damaging audit logs went public, Flock **stripped officer names, license plates, and search filters from audit logs** -- reducing oversight capability
+
+#### Cities That Have Banned or Rejected Flock (Partial List)
+
+82 contract terminations across 28 states. Notable cancellations:
+
+| City/Region | Action |
+|------------|--------|
+| Denver, CO | City council rejected **unanimously** |
+| Dayton, OH | Covered cameras with trash bags after 7,000+ immigration searches |
+| Oxnard, CA | Suspended all cameras after unauthorized data access |
+| Santa Cruz, CA | Terminated after data leak |
+| Evanston, IL | Revoked out-of-state access after ICE searches discovered |
+| Austin, TX | Did not renew contract |
+| Boston, MA | Suspended/terminated |
+| Flagstaff, AZ | Suspended/terminated |
+| Bend, OR | Voted to turn off and remove cameras (Jan 2026) |
+| Silicon Valley | Cupertino, Saratoga, Los Altos Hills cameras deactivated after Santa Clara County ban |
+| Amazon Ring | Canceled partnership with Flock (Feb 2026) after Super Bowl ad backlash depicting a "dystopian surveillance society" |
+
+#### CEO Response to Critics
+
+Flock CEO Garrett Langley, in a December 2025 email to all law enforcement clients:
+- Called critics "the same activist groups who want to defund the police, weaken public safety, and normalize lawlessness"
+- Called DeFlock a "terroristic organization" and compared them to "Antifa"
+- Characterized public records requests as "a weapon against you and against us"
+- The ACLU called his rhetoric "simplistic, juvenile, and ultimately authoritarian"
+- Police chiefs in Staunton and Charlottesville, VA publicly rebuked the email
+
+#### Resistance and Oversight Resources
+
+- **[DeFlock](https://maps.deflock.org/)** -- Crowdsourced project mapping ~90,000 ALPR cameras. 15+ local anti-Flock groups, credited with catalyzing 50+ city contract cancellations
+- **[HaveIBeenFlocked.com](https://haveibeenflocked.com/)** -- Search 180M+ Flock queries to see if your plate was surveilled. Directly led to criminal charges against a Milwaukee officer
+- **[State of Surveillance](https://stateofsurveillance.org/)** -- Independent journalism covering Flock abuses
+- **[EFF Get the Flock Out](https://www.eff.org/deeplinks/2026/02/effecting-change-get-flock-out-our-city)** -- Campaign and investigation hub
+- **[ACLU Flock Coverage](https://www.aclu.org/news/privacy-technology/flock-pushback)** -- Legal analysis and advocacy
+
+#### Accuracy and Wrongful Encounters
+
+- 2021 IPVM study found a **10% error rate** in camera output (Flock disputes this but refuses to publish its own rates)
+- Characters like "8" confused with "B," "K" with "X" -- triggering felony stops, arrests, and police dog attacks
+- At least **12 documented wrongful encounters** including gunpoint stops, wrongful arrests, and a police dog attack
+- Toledo victim lost jobs, sold his truck, was evicted, and had to rehome his dogs -- all from a Flock misread
+
+#### Why Detection Matters
+
+Flock cameras are not neutral "public safety" tools. They are components of a massive, poorly-regulated surveillance infrastructure documented to track women seeking abortions, feed school camera data to ICE, enable racist policing, allow officers to stalk people, surveil protesters, share data with federal agencies without consent, operate with known security vulnerabilities, and produce false positives leading to wrongful arrests at gunpoint. **A camera detection tool serves legitimate privacy, civil liberties, and security research purposes.**
 
 ---
 
@@ -792,3 +894,36 @@ Some states have additional drone privacy laws. Detection and observation is uni
 - [Flock Safety LPR Product Page](https://www.flocksafety.com/products/license-plate-readers)
 - [nyanBOX (GitHub)](https://github.com/jbohack/nyanBOX)
 - [DroneRF Detection (GitHub)](https://github.com/Al-Sad/DroneRF)
+
+---
+
+## Best-Fit Hardware from Your Inventory
+
+### Recommended Build (Flock Camera Detection)
+
+| Component | Assignment | Why |
+|-----------|-----------|-----|
+| **Board** | Lonely Binary ESP32 Gold Edition #2 | IPEX antenna connector for extended WiFi scanning range. Detects Flock camera probe requests and beacons at greater distances |
+| **Display** | ESP32 2.8" CYD Touchscreen #2 (or AITRIP 4.0") | Alert dashboard showing detected cameras, signal strength, distance estimates |
+| **Antenna** | DIYmall 2.4G WiFi Antenna #2 + U.FL cable | Connects to IPEX connector. Omnidirectional for 360-degree detection while driving |
+| **Storage** | 128GB Micro SD Card #2 | For logging detected camera signatures and locations over extended periods |
+| **Prototyping** | AEDIKO ESP32 GPIO Breakout Board #2 | For development and adding external sensors |
+
+### Recommended Build (Drone Detection)
+
+| Component | Assignment | Why |
+|-----------|-----------|-----|
+| **Board** | Same Lonely Binary ESP32 Gold or a separate ESP32 | Drone RemoteID detection uses WiFi/BLE scanning |
+| **Antenna** | Bingfu 2.4/5.8GHz RP-SMA dual-band antenna #2 via adapter | Dual-band covers both 2.4GHz and 5GHz drone frequencies |
+
+### Antenna Notes
+
+For Flock detection while driving, an omnidirectional antenna provides 360-degree coverage. Drones communicate on both 2.4GHz and 5.8GHz bands -- the Bingfu dual-band antenna covers both.
+
+### Upgrade Recommendations
+
+| Component | Upgrade To | Price | Improvement |
+|-----------|-----------|-------|-------------|
+| Board | XIAO ESP32-S3 | ~$8-13 | More compact, better for vehicle mounting. Official flock-you recommended board |
+| Add-on | ICS-43434 MEMS microphone | ~$3-5 | Enables acoustic drone detection (Batear firmware) |
+| Antenna | 5dBi dual-band omni | ~$10-15 | Extended detection range for both Flock cameras and drones |

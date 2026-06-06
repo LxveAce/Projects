@@ -617,6 +617,31 @@ Rapidly becoming the most popular DIY Rubber Ducky platform.
 - [Advanced Features](https://docs.hak5.org/hak5-usb-rubber-ducky/docs/advanced-features/)
 - [Unboxing / Quack-Start Guide](https://docs.hak5.org/hak5-usb-rubber-ducky/unboxing-quack-start-guide/)
 
+---
+
+## 11. Best-Fit Hardware from Your Inventory
+
+### Status: Partially Ready (DIY Route Available)
+
+The official Hak5 USB Rubber Ducky (~$100) is not yet purchased. For a DIY alternative, you need an ESP32 board with native USB HID support.
+
+### DIY Option from Your Inventory
+
+| Component | Notes |
+|-----------|-------|
+| **Waveshare ESP32-C5 WiFi 6 Dev Board #1** | Has USB but its RISC-V architecture is better reserved for WiFi 6 research |
+| **Generic ESP32-WROOM-32** | Does NOT support USB HID natively (uses USB-to-serial bridge chip). Not suitable for Rubber Ducky |
+
+### Recommendation
+
+Purchase a dedicated **ESP32-S2 Mini** (~$5-8) which has native USB OTG/HID support and is the go-to DIY Rubber Ducky platform. Or get the official Hak5 USB Rubber Ducky ($100) for the most polished experience with DuckyScript 3.0 support.
+
+| Buy Option | Price | Capability |
+|-----------|-------|-----------|
+| ESP32-S2 Mini (DIY) | ~$5-8 | Native USB HID, WiFi payload delivery, open-source |
+| Raspberry Pi Pico (DIY) | ~$4-6 | USB HID via CircuitPython, large community |
+| Hak5 USB Rubber Ducky (official) | ~$100 | Best DuckyScript 3.0 support, most polished |
+
 ### DIY Projects
 
 - [pico-ducky (Raspberry Pi Pico)](https://github.com/dbisu/pico-ducky)

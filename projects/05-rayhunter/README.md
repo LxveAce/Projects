@@ -496,3 +496,20 @@ The EFF states: *"We believe running this program does not currently violate any
 
 - **Mattermost:** Referenced in official docs for discussion and log submission
 - **GitHub Issues:** https://github.com/EFForg/rayhunter/issues
+
+---
+
+## 10. Best-Fit Hardware from Your Inventory
+
+### Status: Not Ready -- Need Orbic Phone
+
+RayHunter requires a specific Orbic RC400L (or RC2200L) phone with a Qualcomm modem for baseband diagnostic access. **No board in your current inventory can substitute** -- it needs the cellular modem hardware.
+
+### What to Buy
+
+| Item | Price | Where |
+|------|-------|-------|
+| Orbic Speed RC400L (used/renewed) | ~$20-50 | [eBay](https://www.ebay.com/p/24051840599), [Amazon (renewed)](https://www.amazon.com/RC400L-Carrier-Unlocked-Hotspot-Renewed/dp/B0F55YKZP9), [Walmart](https://www.walmart.com/ip/Orbic-Speed-Mobile-Hotspot-for-Verizon-RC400L-Used/5384207634) |
+| Pre-flashed RayHunter unit | ~$50-70 | [Tindie (STS Collective)](https://www.tindie.com/products/stscollective/new-rayhunter-imsi-catcher-stingray-detector/) |
+
+Once obtained: root the phone, flash RayHunter via ADB, and access the web UI from another device. No keyboard, display, antenna, or storage from your inventory is needed.

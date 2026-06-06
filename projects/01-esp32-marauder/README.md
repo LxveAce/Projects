@@ -749,3 +749,82 @@ Using ESP32 Marauder against any network or device you do not own or have explic
 - **aircrack-ng:** https://www.aircrack-ng.org/
 - **esptool.py:** https://github.com/espressif/esptool
 - **ArduinoPcap Library:** https://github.com/spacehuhn/ArduinoPcap
+
+---
+
+## 11. Best-Fit Hardware from Your Inventory
+
+### Recommended Build
+
+| Component | Assignment | Why |
+|-----------|-----------|-----|
+| **Board** | Lonely Binary ESP32 Gold Edition #1 | IPEX/U.FL antenna connector for external antenna. Best WiFi range of all boards in inventory. CH340 USB well-supported for flashing |
+| **Display** | ESP32 2.8" CYD Touchscreen #1 (Sunton, ILI9341) | Marauder has native CYD support with full touch GUI. Compact and field-portable. Can run standalone OR pair with the Gold board as serial display |
+| **Antenna** | DIYmall 2.4G WiFi Antenna #1 + U.FL pigtail cable | Connects directly to the Lonely Binary IPEX connector. 3dBi omnidirectional for broad area scanning |
+| **Storage** | 128GB Micro SD Card (Lerdisk U3/A1/V30) #1 | For PCAP capture during extended scanning sessions |
+| **Prototyping** | AEDIKO ESP32 GPIO Breakout Board #1 | Useful during initial flashing and development |
+
+### External Antenna Setup
+
+Your Lonely Binary ESP32 Gold Edition has a built-in IPEX/U.FL connector -- **no soldering required**.
+
+**Connection chain:**
+```
+Lonely Binary ESP32 [IPEX socket]
+    │
+    ▼
+DIYmall U.FL Pigtail Cable (14cm, 1.13mm coax)
+    │
+    ▼
+SMA Female end of pigtail
+    │
+    ▼
+Boobrie RP-SMA to SMA Adapter (if using Bingfu antenna)
+    │
+    ▼
+Bingfu 2.4/5.8GHz RP-SMA Antenna (3dBi dual-band)
+```
+
+**Steps:**
+1. Locate the small gold IPEX connector on the Lonely Binary board (near the ESP32 module RF section)
+2. Align the DIYmall U.FL connector directly over it
+3. Press straight down firmly until you hear/feel a click
+4. Route the pigtail away from the board (5mm+ bend radius)
+5. Connect antenna to the SMA end (use Boobrie adapter if connecting RP-SMA Bingfu antenna)
+
+**Important:** U.FL connectors are rated for ~30 mating cycles. Treat as semi-permanent. Cable loss at 14cm is ~0.3dB -- negligible.
+
+### Antenna Upgrades for Extended Range
+
+| Antenna Type | Gain | Best For | Est. Price |
+|-------------|------|----------|-----------|
+| Your DIYmall 3dBi omni | 3dBi | General scanning, indoor | Already owned |
+| 5dBi omnidirectional RP-SMA | 5dBi | Balanced range/coverage outdoors | ~$8-12 |
+| 9dBi magnetic-base omni | 9dBi | Vehicle wardriving (roof mount) | ~$12-18 |
+| Directional panel (60-90°) | 8-14dBi | Targeted building scanning | ~$15-25 |
+| Yagi directional (30-45°) | 12-18dBi | Long-range point-to-point | ~$20-35 |
+
+### Upgrade Recommendations
+
+| Component | Upgrade To | Price | Improvement |
+|-----------|-----------|-------|-------------|
+| Board | Lonely Binary ESP32-S3 IPEX (16MB flash, 8MB PSRAM) | ~$15 | More memory for larger captures, dual USB-C, same IPEX connector |
+| Board | Marauder Mini (official hardware) | ~$45-65 | Purpose-built: 1.44" screen, GPS, LiPo battery, IPEX antenna, SD slot |
+| Board | Double Barrel 5G (C5 V2) | ~$80-120 | Dual Marauder systems, ESP32-C5 for 5GHz WiFi, GPS, Sub-GHz, 4 antennas |
+| Display | Marauder v7/v8 touchscreen | ~$60-90 | Full-featured touchscreen Marauder with GPS and battery |
+| Antenna | 9dBi magnetic-base omni | ~$12-18 | 3x range improvement for wardriving |
+
+### CYD Antenna Modification (Optional)
+
+If running Marauder on the CYD standalone (without the Lonely Binary board), you can add an external antenna:
+
+**Method (Direct pigtail solder -- Fr4nkFletcher guide):**
+1. Cut U.FL connector off a pigtail cable, exposing ~5mm of center conductor and shield
+2. Tin both wires with solder
+3. Solder center conductor to the CYD ESP32 module's antenna feed point
+4. Solder shield to nearby ground pad
+5. Connect RP-SMA antenna to the other end
+
+**Difficulty:** Intermediate. Requires soldering iron, flux, magnification. See [Fr4nkFletcher AntennaMod guide](https://github.com/Fr4nkFletcher/ESP32-Marauder-Cheap-Yellow-Display/blob/master/AntennaMod.md) and [YouTube tutorial](https://www.youtube.com/watch?v=CFhwLVzeMFA).
+
+**Recommendation:** Use the Lonely Binary Gold board as the main processor with CYD as display instead -- avoids the mod entirely and gives better range.
