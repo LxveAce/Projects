@@ -18,7 +18,7 @@ one general flashing flow, then the exact firmware that goes on each board.
 | **What it is** | [espterminator.com](https://espterminator.com/) — browser-based ESP32 firmware flasher |
 | **Why it's used** | Recommended flasher for Marauder; one interface flashes every ESP32 in the rig |
 | **Browser** | **Chrome or Edge** (Web Serial API — Firefox/Safari won't work) |
-| **Driver** | Silicon Labs **CP210x** USB-to-UART bridge (Windows) |
+| **Driver** | **CH340** for the Gold boards ([WCH](http://www.wch-ic.com/downloads/CH341SER_EXE.html)); CP210x for some others ([Silicon Labs](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers)) |
 | **Cable** | USB **data** cable (not charge-only) |
 | **Hardware to buy** | None — the tool is free and runs in the browser |
 
@@ -32,10 +32,10 @@ one general flashing flow, then the exact firmware that goes on each board.
 ## What You Need (from the repo inventory)
 
 - A PC running **Chrome or Edge** (the deck's Pi 5 can also do it, or any laptop)
-- **CP210x drivers** installed ([Silicon Labs](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers)) — reboot after install
+- The right USB-serial driver for the board — the **Gold boards use a CH340** ([WCH driver](http://www.wch-ic.com/downloads/CH341SER_EXE.html)); some other boards use **CP210x** ([Silicon Labs](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers)). Reboot after install.
 - USB-C / Micro-USB **data** cable to match each board
 - The deck's ESP32 boards from [INVENTORY.md](../../../../INVENTORY.md):
-  - Lonely Binary Gold #1, #2, #3 (ESP32-S3)
+  - Lonely Binary Gold #1, #2, #3 (**classic ESP32**, CH340 — verified by esptool, *not* S3)
   - ESP32-WROOM-32
 
 ---
@@ -52,8 +52,9 @@ one general flashing flow, then the exact firmware that goes on each board.
 6. Click **Install** / **Flash**. Do **not** disconnect while it runs.
 7. When it reports "complete," press **RST** — the board reboots into the new firmware.
 
-> **Caveats from the source:** If the board isn't detected, check the CP210x driver in
-> Device Manager and swap to a known data cable. If flashing stalls at connect, hold BOOT
+> **Caveats from the source:** If the board isn't detected, check the USB-serial driver in
+> Device Manager (CH340 for the Gold boards, CP210x for some others) and swap to a known data
+> cable. If flashing stalls at connect, hold BOOT
 > during connect; for ESP32-S2 boards use "No Reset" mode. ESP Terminator won't brick a
 > board — you can always re-flash.
 
@@ -61,14 +62,16 @@ one general flashing flow, then the exact firmware that goes on each board.
 
 | Board | Chip | Firmware to flash | Where it's used | Guide |
 |-------|------|-------------------|-----------------|-------|
-| **Gold #1** | ESP32-S3 | ESP32 Marauder `_multiboardS3.bin` | Primary WiFi/BLE tool | [../01-esp32-marauder/](../01-esp32-marauder/) |
-| **Gold #2** | ESP32-S3 | flock-you / Marauder Flock mode | Flock ALPR detection | [../06-flock-drone-detection/](../06-flock-drone-detection/) |
-| **Gold #3** | ESP32-S3 | ESP32-AirTag-Scanner | BLE tracker detection | [../08-ble-detection/](../08-ble-detection/) |
-| **WROOM-32** | ESP32-WROOM-32 | Sky-Spy drone firmware | Drone RemoteID detection | [../06-flock-drone-detection/](../06-flock-drone-detection/) |
-| Heltec V3 | ESP32-S3 (LoRa) | Meshtastic — *use [flasher.meshtastic.org](https://flasher.meshtastic.org/)* | Off-grid mesh | [../04-meshtastic/](../04-meshtastic/) |
+| **Gold #1** | classic ESP32 | ESP32 Marauder — **standard ESP32 (WROOM)** build | Primary WiFi/BLE tool | [../01-esp32-marauder/](../01-esp32-marauder/) |
+| **Gold #2** | classic ESP32 | Marauder Flock mode (`sniffbt -t flock`) — or flock-you if its build targets classic ESP32 | Flock ALPR detection | [../06-flock-drone-detection/](../06-flock-drone-detection/) |
+| **Gold #3** | classic ESP32 | ESP32-AirTag-Scanner (Arduino IDE → "ESP32 Dev Module") | BLE tracker detection | [../08-ble-detection/](../08-ble-detection/) |
+| **WROOM-32** | classic ESP32 | Sky-Spy drone firmware | Drone RemoteID detection | [../06-flock-drone-detection/](../06-flock-drone-detection/) |
+| Heltec V3 | **ESP32-S3** (LoRa) | Meshtastic — *use [flasher.meshtastic.org](https://flasher.meshtastic.org/)* | Off-grid mesh | [../04-meshtastic/](../04-meshtastic/) |
 
-> **Critical:** the Gold boards are **ESP32-S3** — for Marauder you must pick the
-> `_multiboardS3.bin` variant, not the generic WROOM build, or it won't boot.
+> **Critical:** the three Gold boards are **classic ESP32** (CH340, 16 MB — verified by esptool).
+> For Marauder pick the **standard ESP32 (WROOM)** build, *not* `_multiboardS3.bin`, or the
+> flasher's preflight rejects it (`target ESP32-S3 does not match detected chip ESP32`). The
+> Heltec V3 genuinely *is* an ESP32-S3, but it's flashed with Meshtastic's own web flasher.
 
 ### 3. Verify
 
@@ -91,8 +94,9 @@ screen /dev/ttyUSB0 115200     # confirm the new firmware banner / prompt
   when you update firmware. After flashing, the boards run on their own per their guides.
 - **Re-flash anytime:** if a board misbehaves, this is the tool to recover it — it can't brick
   the board, just re-flash the correct firmware from the map above.
-- **Driver dependency:** the same CP210x driver that lets ESP Terminator see the board is what
-  the [Pi 5 brain](../parts/pi5-brain/) needs to read those boards at `/dev/ttyUSBx`.
+- **Driver dependency:** the same USB-serial driver that lets ESP Terminator see the board
+  (CH340 for the Gold boards) is what the [Pi 5 brain](../parts/pi5-brain/) uses to read those
+  boards at `/dev/ttyUSBx` — Linux/Kali has CH340 + CP210x built in, so they enumerate automatically.
 
 ## Standalone Mode
 

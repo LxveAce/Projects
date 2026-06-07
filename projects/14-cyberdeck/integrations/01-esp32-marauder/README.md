@@ -12,20 +12,40 @@
 | Question | Choice for the deck |
 |----------|---------------------|
 | **Board** | Lonely Binary ESP32 **Gold #1** |
-| **Chip** | **ESP32-S3** (N16R8: 16 MB flash, 8 MB PSRAM) — *not* WROOM-32 |
-| **Firmware** | ESP32 Marauder, the `_multiboardS3.bin` variant |
+| **Chip** | **Classic ESP32** (WROOM-class, 16 MB flash, CH340 USB) — *not* an S3 |
+| **Firmware** | ESP32 Marauder, the **standard ESP32 (WROOM)** build — *not* `_multiboardS3.bin` |
 | **Flash tool** | [ESP Terminator](https://espterminator.com/) web flasher |
-| **Display** | CYD 2.8" #1, as the standalone touch GUI |
+| **Display** | CYD #1 — its *own* standalone touchscreen Marauder (a separate device, **not** a display wired to the Gold) |
 | **Antenna** | IPEX → U.FL pigtail → **SMA bulkhead #1** ("MAR") → Bingfu 2.4/5.8 GHz |
 | **Power** | Powered USB hub, gated by toggle **SW1** |
 
-> **Why the Gold board over the CYD-as-brain:** the Gold has an IPEX/U.FL connector for a
-> real external antenna (the CYD would need a soldered antenna mod). The CYD rides along as
-> a screen only. One board, best range, no soldering.
+> **Two independent Marauders, by design:** Marauder runs *on* the board it's flashed to —
+> there is no "brain + dumb display" mode. So the deck runs **two** Marauders: **Gold #1**
+> headless (no screen, driven by the Pi over USB serial, owns the external antenna for range),
+> and **CYD #1** as a self-contained touchscreen Marauder you operate by hand. They do **not**
+> wire to each other. The Gold earns its slot via the IPEX/U.FL external antenna — the CYD's
+> onboard ESP32 has only a PCB-trace antenna (an external antenna would need a soldered mod).
 
-> **Critical:** the Lonely Binary Gold is an **ESP32-S3**, so you must use the
-> `_multiboardS3.bin` firmware. The generic "ESP32-WROOM" Marauder build will *not* boot
-> correctly on it.
+> **Critical:** the Lonely Binary Gold reports as a **classic ESP32** — verified by esptool
+> (`Device: ESP32`, CH340 converter, 16 MB flash). Use the **standard ESP32 (WROOM)** Marauder
+> build. The `_multiboardS3.bin` (ESP32-S3) firmware fails the flasher's preflight
+> (`Firmware target (ESP32-S3) does not match detected chip (ESP32)`) and won't boot.
+
+### Does the Gold get its own screen?
+
+The Gold has no built-in display — so a Marauder flashed on it is **headless** (serial CLI only).
+Three ways to give it a "screen," in order of effort:
+
+1. **Use the Pi's 7" dashboard (recommended, no hardware).** The Gold runs headless; the Pi reads
+   its serial output and shows it on the 7" DSI via the [dashboard](../parts/dashboard/). The big
+   external antenna lives on the Gold, the screen lives on the Pi. This is the deck's design.
+2. **Carry the CYD as a second, standalone Marauder.** The CYD already has its own screen + ESP32 —
+   it's a complete touch Marauder on its own (you can't move its screen onto the Gold; it's one PCB).
+   Grab-and-go GUI without the Pi. (Its antenna is a PCB trace, so shorter range than the Gold.)
+3. **Wire a bare ILI9341 SPI touch TFT directly to the Gold (advanced).** Gives the Gold its own
+   local touchscreen *and* the external antenna, but needs jumper wiring + a build-from-source
+   display firmware (TFT_eSPI `User_Setup.h`). Pin map is in the
+   [full Marauder guide, Build Path 2](../../../01-esp32-marauder/). Soldering/wiring required.
 
 ---
 
@@ -48,39 +68,49 @@
 2. Go to [espterminator.com](https://espterminator.com/).
 3. Plug Gold #1 into your PC with a USB-C data cable.
 4. Hold **BOOT**, click **Connect**, pick the COM port, release BOOT.
-5. Select **ESP32 Marauder** → the **MultiBoard S3 / `_multiboardS3.bin`** target.
+5. Select **ESP32 Marauder** → the **standard ESP32 (WROOM)** target — the generic ESP32 one,
+   **not** MultiBoard S3 and **not** a CYD-specific build.
 6. Click **Install** / **Flash** and wait for "complete," then press **RST**.
 
-CLI alternative (same result):
+CLI alternative (same result — note the classic-ESP32 chip and `0x1000` bootloader offset):
 ```bash
 pip install esptool
-esptool.py --chip esp32s3 --port /dev/ttyUSB0 --baud 921600 \
-  write_flash 0x0 bootloader.bin \
+esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 921600 \
+  write_flash 0x1000 esp32_marauder.ino.bootloader.bin \
   0x8000 esp32_marauder.ino.partitions.bin \
   0xe000 boot_app0.bin \
-  0x10000 esp32_marauder_v1.12.1_multiboardS3.bin
+  0x10000 esp32_marauder_v1.12.1.bin
 ```
 (If it stalls at connect, hold BOOT during connect and drop to `--baud 115200`.)
 
 ### 2. Wire it into the deck
 
-- **Mount:** Gold #1 on the ESP32 plate via M3 standoffs.
+> **Bench first, case later.** Steps below are the *final in-case wiring*. Right now, on the
+> bench, every board just runs off a USB cable on your desk — you don't need the plate, the
+> hub, the switches, or any antenna to test. The "ESP32 plate" is a 3 mm acrylic mounting
+> plate you cut and drill during the physical build — see [case-prep](../parts/case-prep/).
+
+- **Mount:** Gold #1 on the ESP32 plate (the cut acrylic [mounting plate](../parts/case-prep/))
+  via M3 brass standoffs. *(Build-time step — skip on the bench.)*
 - **Antenna:** snap the U.FL pigtail straight down onto the Gold's IPEX socket (feel the
   click — never twist), route to **SMA bulkhead #1**, screw the antenna on outside.
   *U.FL is rated ~30 mating cycles — treat as semi-permanent.*
-- **Display:** CYD #1 plugs into Gold #1 over serial; mount it face-up in the base.
+- **CYD #1:** it does **not** connect to the Gold. It's a separate standalone Marauder — mount
+  it face-up, power it from its own hub port, operate it by hand. (See [displays](../parts/displays/).)
 - **Power:** USB from the powered hub → inline **toggle SW1** → Gold #1.
 - **Data:** the same USB run carries serial to the Pi 5 (`/dev/ttyUSBx`, 115200 baud).
 - **SD (optional):** FAT32, ≤32 GB, SanDisk recommended — enables `SavePCAP`.
 
 ### 3. Verify
 
+**Gold #1 (headless):** connect over serial and type a command —
 ```bash
 screen /dev/ttyUSB0 115200      # then type:
 scanap                          # should list nearby APs
 stopscan
 ```
-Or just power SW1 on with no Pi — the CYD should boot straight into the Marauder GUI.
+**CYD #1 (standalone):** just power it over USB — it boots straight into the Marauder
+touchscreen GUI, no Pi or Gold involved.
 
 ---
 
@@ -99,9 +129,10 @@ Or just power SW1 on with no Pi — the CYD should boot straight into the Maraud
 
 ## Standalone Mode
 
-Flip **SW1** on with the Pi off and Marauder runs entirely on Gold #1 + CYD #1 — full touch
-GUI, scans, attacks, PCAP to SD. Nothing about the deck wiring prevents pulling Gold #1 out
-and running it on a bench; it's the same board either way.
+Both Marauders work with the Pi off. **CYD #1** is a self-contained touchscreen Marauder —
+power it and use it by hand (scans, attacks, PCAP to SD). **Gold #1** runs headless; drive it
+from any serial terminal (a laptop works exactly like the Pi). Nothing about the deck wiring
+ties either one down — pull either board out and it's the same Marauder on the bench.
 
 ## Source / Upstream
 

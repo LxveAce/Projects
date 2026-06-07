@@ -33,7 +33,7 @@ Each maps to a numbered project in the repo. Numbers match the source project fo
 
 | # | Guide | Deck role | Board / device | Source |
 |---|-------|-----------|----------------|--------|
-| 01 | [ESP32 Marauder](01-esp32-marauder/) | Primary WiFi/BLE offensive tool | Lonely Binary Gold #1 (S3) | [01-esp32-marauder](../../01-esp32-marauder/) |
+| 01 | [ESP32 Marauder](01-esp32-marauder/) | Primary WiFi/BLE offensive tool | Lonely Binary Gold #1 (classic ESP32) | [01-esp32-marauder](../../01-esp32-marauder/) |
 | 02 | [Flipper Zero](02-flipper-zero/) | Sub-GHz / RFID / NFC / IR companion | Flipper Zero + ESP32 WiFi board | [02-flipper-zero](../../02-flipper-zero/) |
 | 03 | [Pwnagotchi](03-pwnagotchi/) | Docked, runs separate — charge/offload bay | Pi Zero 2 W + e-ink | [03-pwnagotchi](../../03-pwnagotchi/) |
 | 04 | [Meshtastic](04-meshtastic/) | Off-grid mesh node | Heltec LoRa V3 | [04-meshtastic](../../04-meshtastic/) |

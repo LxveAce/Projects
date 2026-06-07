@@ -12,9 +12,9 @@
 | Question | Choice for the deck |
 |----------|---------------------|
 | **Board** | Lonely Binary ESP32 **Gold #3** — *shared with [Chasing Your Tail](../10-chasing-your-tail/)* |
-| **Chip** | **ESP32-S3** (BLE 5.0 — extended range, coded PHY) |
-| **Firmware** | [MatthewKuKanich/ESP32-AirTag-Scanner](https://github.com/MatthewKuKanich/ESP32-AirTag-Scanner) |
-| **Flash tool** | Arduino IDE, board target **"ESP32S3 Dev Module"** |
+| **Chip** | **Classic ESP32** (WROOM-class, CH340, BLE 4.2 — *not* an S3) |
+| **Firmware** | [MatthewKuKanich/ESP32-AirTag-Scanner](https://github.com/MatthewKuKanich/ESP32-AirTag-Scanner) (compile for classic ESP32) |
+| **Flash tool** | Arduino IDE, board target **"ESP32 Dev Module"** |
 | **Antenna** | IPEX → U.FL pigtail → **SMA bulkhead #3** (2.4 GHz) |
 | **Power** | Powered USB hub, gated by toggle **SW3** |
 | **Display** | None — output goes to the Pi 5 dashboard |
@@ -25,10 +25,10 @@
 > the firmware that covers both before final mounting so you don't pull the board
 > twice.
 
-> **Why the Gold board:** the ESP32-S3 has BLE 5.0 and an IPEX/U.FL connector for a
-> real external antenna. BLE shares the 2.4 GHz radio with WiFi, so the same external
-> antenna that helps Marauder also extends BLE reception (+~10 dB vs PCB trace) for
-> spotting low-power trackers across a room.
+> **Why the Gold board:** it has an IPEX/U.FL connector for a real external antenna. BLE
+> shares the 2.4 GHz radio with WiFi, so the same external antenna that helps Marauder also
+> extends BLE reception (+~10 dB vs the PCB trace) for spotting low-power trackers across a
+> room. (BLE 4.2 on the classic ESP32 is plenty for scanning tracker advertisements.)
 
 ---
 
@@ -51,7 +51,7 @@
    then install "esp32 by Espressif Systems").
 2. Clone or download [MatthewKuKanich/ESP32-AirTag-Scanner](https://github.com/MatthewKuKanich/ESP32-AirTag-Scanner) and open its sketch.
 3. Plug Gold #3 into your PC with a USB-C data cable.
-4. **Tools > Board** → select **"ESP32S3 Dev Module"**.
+4. **Tools > Board** → select **"ESP32 Dev Module"** (classic ESP32 — *not* the S3 variant).
 5. **Tools > Port** → select the COM port.
 6. Click **Upload**; if it stalls at connect, hold **BOOT** during connect.
 
