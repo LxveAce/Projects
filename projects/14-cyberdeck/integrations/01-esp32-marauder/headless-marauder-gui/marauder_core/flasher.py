@@ -244,7 +244,10 @@ def flash(port: str, chip: str, app_path: str, on_line: Line,
             files += [off, path]
     files += ["0x10000", app_path]
 
+    # --flash_size detect: auto-detect the chip's real flash size and patch the image header.
+    # Without it esptool keeps the binary's header value (often 16MB), which boot-loops a 4MB
+    # board with "Detected size(4096k) smaller than ... header(16384k). Probe failed."
     argv = esptool_argv("--chip", chip, "--port", port, "--baud", str(baud),
                         "--before", "default_reset", "--after", "hard_reset",
-                        "write_flash", "-z", *files)
+                        "write_flash", "-z", "--flash_size", "detect", *files)
     return _run_stream(argv, on_line)
