@@ -1,0 +1,4 @@
+# Force LF line endings for shell scripts and Python so they run on Linux/Kali
+# regardless of the OS they were edited on.
+*.sh text eol=lf
+*.py text eol=lf
