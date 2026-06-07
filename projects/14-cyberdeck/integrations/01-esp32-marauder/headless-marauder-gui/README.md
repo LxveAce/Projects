@@ -5,12 +5,13 @@
 > antenna and no screen). Built because the browser UIs are thin on options and need Chromium's
 > Web Serial — these are **native applications** that talk straight to `/dev/ttyUSB0`.
 
-Two real apps, one shared core:
+Three native apps, one shared core:
 
 | App | What it is | Run | Needs |
 |-----|------------|-----|-------|
-| **Desktop GUI** | A native **Tkinter** window — categorized buttons for *every* command, param dialogs, live console, raw box, STOP | `python3 gui/app.py` | `python3-tk` + `pyserial` |
-| **Terminal TUI** | A **Textual** terminal app — command tree + live log + command box; great over SSH / on the deck console | `python3 tui/app.py` | `pyserial` + `textual` |
+| **Qt GUI** ⭐ | Polished **PyQt5** window — command sidebar, live colorized console, **live Access-Point & Station tables** (parsed from the serial stream), built-in flasher, STOP | `./run-qt.sh` | `pyserial` + `PyQt5` |
+| **Tkinter GUI** | Simpler native window (stdlib) — same buttons/console/flasher, no extra install | `./run-gui.sh` | `pyserial` + `python3-tk` |
+| **Terminal TUI** | **Textual** terminal app — command tree, live log, **live AP table**; great over SSH / on the deck console | `./run-tui.sh` | `pyserial` + `textual` |
 
 **No web server, no browser, no Web Serial.** Works on Kali regardless of which browser is installed
 (the Firefox/Web-Serial dead-end doesn't apply here). Both front-ends drive the same
@@ -20,17 +21,23 @@ Two real apps, one shared core:
 
 ## Install on Kali Linux
 
-Kali blocks system-wide `pip` (PEP 668), so use a venv:
+Kali blocks system-wide `pip` (PEP 668), so use a venv. **Simple path:**
 
 ```bash
-# system bits (once): venv tooling + Tkinter for the desktop GUI
+# 1. system bits (once)
 sudo apt update
-sudo apt install -y python3-venv python3-tk
+sudo apt install -y python3-venv python3-tk        # python3-tk = the Tkinter GUI
 
-# from this folder:
+# 2. from this folder
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements.txt                    # pyserial + textual + esptool
+
+# 3. for the prettier Qt GUI (recommended)
+pip install PyQt5
+#   ...if pip PyQt5 fails (sometimes on the Pi), use the system package instead:
+#   deactivate; sudo apt install -y python3-pyqt5
+#   python3 -m venv .venv --system-site-packages; source .venv/bin/activate; pip install -r requirements.txt
 ```
 
 Make sure you can reach the serial port without sudo (log out/in after):
@@ -45,12 +52,13 @@ sudo usermod -aG dialout $USER
 ## Run
 
 ```bash
-./run-gui.sh                 # desktop window  (or: python3 gui/app.py)
-./run-tui.sh                 # terminal app    (or: python3 tui/app.py)
+./run-qt.sh                  # ⭐ Qt GUI with live AP/station tables (recommended)
+./run-gui.sh                 # simple Tkinter window
+./run-tui.sh                 # terminal app
 
-# options (either app):
-python3 gui/app.py --port /dev/ttyUSB0     # skip auto-detect
-python3 gui/app.py --mock                  # no hardware — explore the UI
+# options (any app):
+./run-qt.sh --port /dev/ttyUSB0     # skip auto-detect
+./run-qt.sh --mock                  # no hardware — explore the UI
 ```
 
 Both **auto-detect** the port (preferring the Gold's CH340), connect at **115200 baud**, then:
@@ -115,10 +123,17 @@ Notes:
 ```
 marauder_core/
   controller.py   # pyserial connection, port auto-detect, threaded reader, pub/sub, --mock
-  commands.py     # the single command catalog (data-driven) — shared by BOTH apps
-gui/app.py        # Tkinter desktop application
-tui/app.py        # Textual terminal application
+  commands.py     # the single command catalog (data-driven) — shared by ALL apps
+  parsing.py      # parses scanap/scansta output into live AP/Station tables
+  flasher.py      # esptool wrapper: detect chip, fetch firmware, flash at right offsets
+gui_qt/app.py     # PyQt5 desktop app  (live tables — recommended)
+gui/app.py        # Tkinter desktop app (simple, stdlib)
+tui/app.py        # Textual terminal app
 ```
+
+Live tables come from `parsing.py`: the AP line format (`RSSI: -57 Ch: 3 BSSID: .. ESSID: ..`)
+is parsed as the stream arrives and de-duplicated by MAC, so the **Access Points** / **Stations**
+tabs (Qt) and the AP table (TUI) update themselves while `scanap`/`scansta` run.
 
 - **Server-side serial, native UI** — the app owns `/dev/ttyUSB0` directly, so there's no Web
   Serial / Chromium requirement and it can auto-start headless on the deck later.

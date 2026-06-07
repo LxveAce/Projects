@@ -17,12 +17,12 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from marauder_core import MarauderController, commands, flasher
+from marauder_core import MarauderController, MarauderParser, commands, flasher
 
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.screen import ModalScreen
-from textual.widgets import Header, Footer, Tree, Input, Button, Select, Static, Label
+from textual.widgets import Header, Footer, Tree, Input, Button, Select, Static, Label, DataTable
 
 try:                       # widget was renamed across Textual versions
     from textual.widgets import RichLog
@@ -163,7 +163,9 @@ class MarauderTUI(App):
     Screen { layout: vertical; }
     #main { height: 1fr; }
     #tree { width: 42%; border: round $accent; }
-    #log  { width: 1fr;  border: round $accent; }
+    #rightcol { width: 1fr; }
+    #log  { height: 1fr; border: round $accent; }
+    #aptable { height: 45%; border: round $accent; }
     Input { dock: bottom; border: round $accent; }
     """
     BINDINGS = [
@@ -177,6 +179,7 @@ class MarauderTUI(App):
     def __init__(self, controller: MarauderController):
         super().__init__()
         self.ctl = controller
+        self.parser = MarauderParser()
         self._q: "queue.Queue[str]" = queue.Queue()
         self.ctl.subscribe(self._q.put)
 
@@ -184,7 +187,9 @@ class MarauderTUI(App):
         yield Header(show_clock=True)
         with Horizontal(id="main"):
             yield Tree("Marauder", id="tree")
-            yield RichLog(id="log", highlight=False, markup=False, wrap=True)
+            with Vertical(id="rightcol"):
+                yield RichLog(id="log", highlight=False, markup=False, wrap=True)
+                yield DataTable(id="aptable")
         yield Input(placeholder="raw command (e.g. scanap) — Enter to send", id="raw")
         yield Footer()
 
@@ -198,7 +203,12 @@ class MarauderTUI(App):
                 label = ("⚠ " if c.danger else "") + c.label
                 node.add_leaf(label, data=c.id)
 
+        table = self.query_one("#aptable", DataTable)
+        table.add_columns("SSID", "BSSID", "Ch", "RSSI")
+        table.zebra_stripes = True
+
         self.set_interval(0.05, self._drain)
+        self.set_interval(0.7, self._refresh_aps)
 
         try:
             port = self.ctl.connect()
@@ -212,9 +222,21 @@ class MarauderTUI(App):
     def _drain(self):
         try:
             while True:
-                self._log(self._q.get_nowait())
+                line = self._q.get_nowait()
+                self._log(line)
+                self.parser.feed(line)
         except queue.Empty:
             pass
+
+    def _refresh_aps(self):
+        if not self.parser.dirty:
+            return
+        self.parser.dirty = False
+        table = self.query_one("#aptable", DataTable)
+        table.clear()
+        for a in self.parser.ap_rows()[:200]:
+            table.add_row(a.ssid, a.bssid, a.channel, a.rssi)
+        table.border_title = f"Access Points ({len(self.parser.aps)})"
 
     def _log(self, line: str):
         self.query_one("#log", RichLog).write(line)
@@ -262,6 +284,8 @@ class MarauderTUI(App):
 
     def action_clear(self):
         self.query_one("#log", RichLog).clear()
+        self.parser.clear()
+        self.query_one("#aptable", DataTable).clear()
 
     def action_focus_input(self):
         self.query_one("#raw", Input).focus()
