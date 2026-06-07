@@ -96,8 +96,7 @@ def esptool_argv(*args: str) -> List[str]:
 
 def esptool_available() -> bool:
     try:
-        subprocess.run(esptool_argv("version"), capture_output=True, timeout=20)
-        return True
+        return subprocess.run(esptool_argv("version"), capture_output=True, timeout=20).returncode == 0
     except Exception:
         return False
 

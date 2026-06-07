@@ -31,6 +31,7 @@ class FlasherWindow(tk.Toplevel):
         self.tag = ""
         self._label_to_asset = {}
         self._busy = False
+        self._need_refill = False   # set by worker threads; applied on the UI thread in _poll
 
         self._build()
         self._poll()
@@ -118,6 +119,13 @@ class FlasherWindow(tk.Toplevel):
                 self.console.config(state="disabled")
         except queue.Empty:
             pass
+        # all widget updates happen here on the UI thread (workers only set state/flags)
+        self.flash_btn.config(state="disabled" if self._busy else "normal")
+        self.chip_lbl.config(text=f"chip: {self.chip or '?'}",
+                             fg=ACCENT if self.chip else MUTED)
+        if self._need_refill:
+            self._need_refill = False
+            self._refill_variants()
         self.after(40, self._poll)
 
     def _free_port(self):
@@ -139,8 +147,7 @@ class FlasherWindow(tk.Toplevel):
             except Exception as e:
                 self._log(f"[error] {e}")
             finally:
-                self._busy = False
-                self.after(0, lambda: self.flash_btn.config(state="normal"))
+                self._busy = False     # _poll re-enables the button on the UI thread
 
         threading.Thread(target=run, daemon=True).start()
 
@@ -153,11 +160,8 @@ class FlasherWindow(tk.Toplevel):
 
         def job():
             self._log("[*] detecting chip...")
-            chip = flasher.detect_chip(port, self._log)
-            self.chip = chip
-            self.after(0, lambda: self.chip_lbl.config(
-                text=f"chip: {chip or 'unknown'}", fg=ACCENT if chip else DANGER))
-            self.after(0, self._refill_variants)
+            self.chip = flasher.detect_chip(port, self._log)
+            self._need_refill = True
         self._worker(job)
 
     def _load_release(self):
@@ -165,7 +169,7 @@ class FlasherWindow(tk.Toplevel):
             self._log("[*] fetching latest release...")
             self.tag, self.assets = flasher.latest_release()
             self._log(f"[i] {self.tag}: {len(self.assets)} firmware variants")
-            self.after(0, self._refill_variants)
+            self._need_refill = True
         self._worker(job)
 
     def _refill_variants(self):
@@ -188,10 +192,9 @@ class FlasherWindow(tk.Toplevel):
             self.local_var.set(path)
             self.source.set("local")
 
-    def _resolve_chip(self):
+    def _resolve_chip(self, port):
         if self.chip:
             return self.chip
-        port = self.port_var.get().strip()
         self._log("[*] chip unknown — detecting first...")
         self.chip = flasher.detect_chip(port, self._log)
         return self.chip
@@ -212,21 +215,25 @@ class FlasherWindow(tk.Toplevel):
         if not messagebox.askyesno("Confirm flash",
                                    f"Flash {mode} via {port} @ {baud}?\nDo not unplug during flashing."):
             return
+        # capture all widget values on the UI thread BEFORE starting the worker
+        asset = self._label_to_asset.get(self.variant_var.get()) if source == "download" else None
+        local = self.local_var.get().strip()
         self._free_port()
 
         def job():
-            chip = self._resolve_chip()
+            chip = self._resolve_chip(port)
             if not chip:
                 self._log("[error] could not detect chip; aborting"); return
             cache = flasher.cache_dir()
 
             if source == "download":
-                asset = self._label_to_asset[self.variant_var.get()]
+                if not asset:
+                    self._log("[error] no variant selected"); return
                 if asset["chip"] != chip:
                     self._log(f"[!] WARNING: variant is for {asset['chip']} but chip is {chip}")
                 app = flasher.download_to(asset["url"], os.path.join(cache, asset["name"]), self._log)
             else:
-                app = self.local_var.get().strip()
+                app = local
 
             support = None
             if mode == "full":
@@ -247,6 +254,6 @@ class FlasherWindow(tk.Toplevel):
         self._free_port()
 
         def job():
-            chip = self._resolve_chip() or "esp32"
+            chip = self._resolve_chip(port) or "esp32"
             flasher.erase(port, chip, self._log)
         self._worker(job)

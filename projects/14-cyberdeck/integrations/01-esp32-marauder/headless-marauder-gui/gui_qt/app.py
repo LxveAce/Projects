@@ -106,6 +106,7 @@ class FlasherDialog(QDialog):
         self.assets = []
         self.by_name = {}
         self._busy = False
+        self._need_refill = False   # set by worker threads; applied on the GUI thread in _drain
 
         lay = QVBoxLayout(self)
 
@@ -167,6 +168,12 @@ class FlasherDialog(QDialog):
                 self.console.appendPlainText(self.q.get_nowait())
         except queue.Empty:
             pass
+        # all widget updates happen here on the GUI thread (workers only set state/flags)
+        self.flash_btn.setEnabled(not self._busy)
+        self.chip_lbl.setText(f"chip: {self.chip or '?'}")
+        if self._need_refill:
+            self._need_refill = False
+            self._refill()
 
     def _free(self):
         if self.ctl and self.ctl.connected:
@@ -176,8 +183,7 @@ class FlasherDialog(QDialog):
     def _work(self, fn):
         if self._busy:
             return
-        self._busy = True
-        self.flash_btn.setEnabled(False)
+        self._busy = True       # _drain disables/enables the button on the GUI thread
 
         def run():
             try:
@@ -186,18 +192,17 @@ class FlasherDialog(QDialog):
                 self._log(f"[error] {e}")
             finally:
                 self._busy = False
-                self.flash_btn.setEnabled(True)
         threading.Thread(target=run, daemon=True).start()
 
     def _detect(self):
-        if not self.port.text().strip():
+        port = self.port.text().strip()
+        if not port:
             return
         self._free()
 
         def job():
-            self.chip = flasher.detect_chip(self.port.text().strip(), self._log)
-            self.chip_lbl.setText(f"chip: {self.chip or 'unknown'}")
-            self._refill()
+            self.chip = flasher.detect_chip(port, self._log)
+            self._need_refill = True
         self._work(job)
 
     def _load(self):
@@ -205,7 +210,7 @@ class FlasherDialog(QDialog):
             self._log("[*] fetching latest release...")
             tag, self.assets = flasher.latest_release()
             self._log(f"[i] {tag}: {len(self.assets)} variants")
-            self._refill()
+            self._need_refill = True
         self._work(job)
 
     def _refill(self):
@@ -226,11 +231,11 @@ class FlasherDialog(QDialog):
         if path:
             self.local.setText(path); self.src_local.setChecked(True)
 
-    def _resolve_chip(self):
+    def _resolve_chip(self, port):
         if self.chip:
             return self.chip
         self._log("[*] detecting chip...")
-        self.chip = flasher.detect_chip(self.port.text().strip(), self._log)
+        self.chip = flasher.detect_chip(port, self._log)
         return self.chip
 
     def _flash(self):
@@ -244,24 +249,29 @@ class FlasherDialog(QDialog):
             QMessageBox.information(self, "Firmware", "Browse to a local .bin."); return
         if QMessageBox.question(self, "Confirm", f"Flash {mode} via {port}?\nDon't unplug.") != QMessageBox.Yes:
             return
-        self._free()
+        # capture all widget values on the GUI thread BEFORE starting the worker
         baud = int(self.baud.currentText())
+        use_download = self.src_dl.isChecked()
+        asset = self.by_name.get(self.variant.currentText()) if use_download else None
+        local = self.local.text().strip()
+        self._free()
 
         def job():
-            chip = self._resolve_chip()
+            chip = self._resolve_chip(port)
             if not chip:
                 self._log("[error] chip unknown"); return
             cache = flasher.cache_dir()
-            if self.src_dl.isChecked():
-                a = self.by_name[self.variant.currentText()]
-                if a["chip"] != chip:
-                    self._log(f"[!] variant is {a['chip']} but chip is {chip}")
-                app = flasher.download_to(a["url"], os.path.join(cache, a["name"]), self._log)
+            if use_download:
+                if not asset:
+                    self._log("[error] no variant selected"); return
+                if asset["chip"] != chip:
+                    self._log(f"[!] variant is {asset['chip']} but chip is {chip}")
+                app = flasher.download_to(asset["url"], os.path.join(cache, asset["name"]), self._log)
             else:
-                app = self.local.text().strip()
+                app = local
             support = flasher.support_files(chip, cache, self._log) if mode == "full" else None
             rc = flasher.flash(port, chip, app, self._log, mode=mode, baud=baud, support=support)
-            self._log("[✓] done — power-cycle the board" if rc == 0 else f"[x] exit {rc}")
+            self._log("[done] power-cycle the board" if rc == 0 else f"[x] exit {rc}")
         self._work(job)
 
     def _erase(self):
@@ -271,7 +281,7 @@ class FlasherDialog(QDialog):
         if QMessageBox.question(self, "Erase", "Erase entire flash?") != QMessageBox.Yes:
             return
         self._free()
-        self._work(lambda: flasher.erase(port, self._resolve_chip() or "esp32", self._log))
+        self._work(lambda: flasher.erase(port, self._resolve_chip(port) or "esp32", self._log))
 
 
 # --------------------------------------------------------------------------- #
