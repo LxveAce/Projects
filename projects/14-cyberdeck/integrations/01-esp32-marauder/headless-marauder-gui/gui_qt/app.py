@@ -95,6 +95,88 @@ class ParamDialog(QDialog):
 
 
 # --------------------------------------------------------------------------- #
+class TargetPicker(QDialog):
+    """Pick APs to select from the parsed list (index-accurate) + manual fallback."""
+
+    def __init__(self, parent, controller, parser, base, list_cmd):
+        super().__init__(parent)
+        self.ctl = controller
+        self.parser = parser
+        self.base = base               # e.g. "select -a"
+        self.list_cmd = list_cmd       # e.g. "list -a"
+        self.result_cmd = None
+        self.setWindowTitle("Select targets")
+        self.resize(580, 500)
+        self._checks = []
+
+        lay = QVBoxLayout(self)
+        lay.addWidget(QLabel(f"Pick targets for  <b>{base}</b>  —  check rows, or type below"))
+
+        row = QHBoxLayout()
+        rb = QPushButton(f"⟳ Refresh ({list_cmd})"); rb.clicked.connect(self._refresh); row.addWidget(rb)
+        self.allbox = QCheckBox("select all"); self.allbox.stateChanged.connect(self._toggle_all); row.addWidget(self.allbox)
+        row.addStretch(); lay.addLayout(row)
+
+        self.table = QTableWidget(0, 5)
+        self.table.setHorizontalHeaderLabels(["pick", "#", "SSID", "Ch", "RSSI"])
+        self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)
+        self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeToContents)
+        self.table.verticalHeader().setVisible(False)
+        lay.addWidget(self.table)
+
+        mrow = QHBoxLayout()
+        mrow.addWidget(QLabel("or type:"))
+        self.manual = QLineEdit(); self.manual.setPlaceholderText("indices/filter, e.g.  0,2,5   or   all")
+        mrow.addWidget(self.manual)
+        lay.addLayout(mrow)
+
+        brow = QHBoxLayout()
+        ok = QPushButton("Select"); ok.clicked.connect(self._ok); brow.addWidget(ok)
+        cancel = QPushButton("Cancel"); cancel.clicked.connect(self.reject); brow.addWidget(cancel)
+        lay.addLayout(brow)
+
+        self._populate()
+        if not self.parser.indexed_aps():       # nothing pulled yet — grab it
+            self._refresh()
+
+    def _populate(self):
+        aps = self.parser.indexed_aps()
+        self.table.setRowCount(len(aps))
+        self._checks = []
+        for r, a in enumerate(aps):
+            cb = QCheckBox()
+            holder = QWidget(); h = QHBoxLayout(holder)
+            h.addWidget(cb); h.setAlignment(Qt.AlignCenter); h.setContentsMargins(0, 0, 0, 0)
+            self.table.setCellWidget(r, 0, holder)
+            self._checks.append((a.index, cb))
+            for c, val in enumerate([a.index, a.ssid, a.channel, a.rssi], start=1):
+                self.table.setItem(r, c, QTableWidgetItem(str(val)))
+
+    def _refresh(self):
+        if self.ctl.connected:
+            self.ctl.send(self.list_cmd)
+            QTimer.singleShot(900, self._populate)   # let the dump arrive, then repopulate
+
+    def _toggle_all(self, state):
+        for _, cb in self._checks:
+            cb.setChecked(state == Qt.Checked)
+
+    def _ok(self):
+        manual = self.manual.text().strip()
+        if manual:
+            self.result_cmd = f"{self.base} {manual}"
+        else:
+            idxs = [str(i) for i, cb in self._checks if cb.isChecked()]
+            if not idxs:
+                QMessageBox.information(self, "Pick", "Check some targets, or type indices/filter below.")
+                return
+            self.result_cmd = f"{self.base} {','.join(idxs)}"
+        self.accept()
+
+
+# --------------------------------------------------------------------------- #
 class FlasherDialog(QDialog):
     def __init__(self, parent, controller, default_port=""):
         super().__init__(parent)
@@ -328,7 +410,7 @@ class MainWindow(QMainWindow):
         self.console = QPlainTextEdit(); self.console.setReadOnly(True)
         self.console.setFont(QFont("monospace", 10))
         self.tabs.addTab(self.console, "Console")
-        self.ap_table = self._make_table(["SSID", "BSSID", "Ch", "RSSI"])
+        self.ap_table = self._make_table(["#", "SSID", "Ch", "RSSI", "BSSID"])
         self.tabs.addTab(self.ap_table, "Access Points")
         self.sta_table = self._make_table(["Station MAC", "AP BSSID", "RSSI"])
         self.tabs.addTab(self.sta_table, "Stations")
@@ -370,6 +452,12 @@ class MainWindow(QMainWindow):
 
     # --- actions ---------------------------------------------------------- #
     def _run(self, cmd):
+        # Selecting APs: open the picker fed by the parsed list (index-accurate).
+        if cmd.id == "select_ap":
+            dlg = TargetPicker(self, self.ctl, self.parser, cmd.base, "list -a")
+            if dlg.exec_() == QDialog.Accepted and dlg.result_cmd:
+                self._guarded_send(dlg.result_cmd)
+            return
         if cmd.danger and QMessageBox.question(
                 self, "Confirm", f"Run attack/spam?\n\n{cmd.base}\n\nAuthorized targets only.") != QMessageBox.Yes:
             return
@@ -446,7 +534,8 @@ class MainWindow(QMainWindow):
         aps = self.parser.ap_rows()
         self.ap_table.setRowCount(len(aps))
         for r, a in enumerate(aps):
-            for c, val in enumerate([a.ssid, a.bssid, a.channel, a.rssi]):
+            idx = a.index if a.index >= 0 else ""
+            for c, val in enumerate([idx, a.ssid, a.channel, a.rssi, a.bssid]):
                 self.ap_table.setItem(r, c, QTableWidgetItem(str(val)))
         self.tabs.setTabText(1, f"Access Points ({len(aps)})")
         stas = self.parser.station_rows()

@@ -206,7 +206,7 @@ class MarauderTUI(App):
                 node.add_leaf(label, data=c.id)
 
         table = self.query_one("#aptable", DataTable)
-        table.add_columns("SSID", "BSSID", "Ch", "RSSI")
+        table.add_columns("#", "SSID", "Ch", "RSSI", "BSSID")
         table.zebra_stripes = True
 
         self.set_interval(0.05, self._drain)
@@ -236,9 +236,11 @@ class MarauderTUI(App):
         self.parser.dirty = False
         table = self.query_one("#aptable", DataTable)
         table.clear()
-        for a in self.parser.ap_rows()[:200]:
-            table.add_row(a.ssid, a.bssid, a.channel, a.rssi)
-        table.border_title = f"Access Points ({len(self.parser.aps)})"
+        rows = self.parser.ap_rows()
+        for a in rows[:200]:
+            idx = str(a.index) if a.index >= 0 else ""
+            table.add_row(idx, a.ssid, a.channel, a.rssi, a.bssid)
+        table.border_title = f"Access Points ({len(rows)})"
 
     def _log(self, line: str):
         self.query_one("#log", RichLog).write(line)
