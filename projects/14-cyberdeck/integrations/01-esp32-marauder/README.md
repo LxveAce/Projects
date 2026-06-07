@@ -39,6 +39,8 @@ Three ways to give it a "screen," in order of effort:
 1. **Use the Pi's 7" dashboard (recommended, no hardware).** The Gold runs headless; the Pi reads
    its serial output and shows it on the 7" DSI via the [dashboard](../parts/dashboard/). The big
    external antenna lives on the Gold, the screen lives on the Pi. This is the deck's design.
+   **See [headless-on-kali](headless-on-kali/) for how to drive a headless Gold from Kali and the
+   open-source GUIs/TUIs you can use or pre-package into the all-in-one UI.**
 2. **Carry the CYD as a second, standalone Marauder.** The CYD already has its own screen + ESP32 —
    it's a complete touch Marauder on its own (you can't move its screen onto the Gold; it's one PCB).
    Grab-and-go GUI without the Pi. (Its antenna is a PCB trace, so shorter range than the Gold.)
