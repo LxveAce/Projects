@@ -80,23 +80,25 @@ class FlashScreen(ModalScreen):
 
     def on_button_pressed(self, event: Button.Pressed):
         bid = event.button.id
+        port = self._port()                       # read widgets on the UI thread, pass to workers
         if bid == "close":
             self.dismiss(); return
         if bid == "detect":
-            self._free(); self.run_worker(self._detect, thread=True); return
+            self._free(); self.run_worker(lambda: self._detect(port), thread=True); return
         if bid == "load":
             self.run_worker(self._load, thread=True); return
         if bid == "erase":
-            self._free(); self.run_worker(self._erase, thread=True); return
+            self._free(); self.run_worker(lambda: self._erase(port), thread=True); return
         if bid in ("flash_app", "flash_full"):
             self._free()
             mode = "app" if bid == "flash_app" else "full"
-            self.run_worker(lambda: self._flash(mode), thread=True)
+            name = self.query_one("#variant", Select).value
+            self.run_worker(lambda: self._flash(mode, port, name), thread=True)
 
     # workers (run in threads)
-    def _detect(self):
+    def _detect(self, port):
         on = self._line()
-        chip = flasher.detect_chip(self._port(), on)
+        chip = flasher.detect_chip(port, on)
         self.chip = chip
         self.app.call_from_thread(self.query_one("#chiplbl", Static).update, f"chip: {chip or 'unknown'}")
         self.app.call_from_thread(self._refill)
@@ -121,21 +123,21 @@ class FlashScreen(ModalScreen):
             if d:
                 sel.value = d["name"]
 
-    def _resolve_chip(self, on):
+    def _resolve_chip(self, port, on):
         if self.chip:
             return self.chip
         on("[*] detecting chip...")
-        self.chip = flasher.detect_chip(self._port(), on)
+        self.chip = flasher.detect_chip(port, on)
         return self.chip
 
-    def _flash(self, mode):
+    def _flash(self, mode, port, name):
         on = self._line()
-        if not self._port():
+        if not port:
             on("[error] enter a port"); return
-        asset = self._by_name.get(self.query_one("#variant", Select).value)
+        asset = self._by_name.get(name)
         if not asset:
             on("[error] Load release + pick a variant first"); return
-        chip = self._resolve_chip(on)
+        chip = self._resolve_chip(port, on)
         if not chip:
             on("[error] chip unknown"); return
         if asset["chip"] != chip:
@@ -146,13 +148,13 @@ class FlashScreen(ModalScreen):
         if mode == "full":
             on("[*] fetching bootloader/partitions/boot_app0...")
             support = flasher.support_files(chip, cache, on)
-        rc = flasher.flash(self._port(), chip, app, on, mode=mode, baud=921600, support=support)
+        rc = flasher.flash(port, chip, app, on, mode=mode, baud=921600, support=support)
         on("[done] power-cycle the board" if rc == 0 else f"[x] esptool exit {rc}")
 
-    def _erase(self):
+    def _erase(self, port):
         on = self._line()
-        chip = self._resolve_chip(on) or "esp32"
-        flasher.erase(self._port(), chip, on)
+        chip = self._resolve_chip(port, on) or "esp32"
+        flasher.erase(port, chip, on)
 
     def action_close(self):
         self.dismiss()

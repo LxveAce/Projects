@@ -144,6 +144,15 @@ Firefox can't do Web Serial). **User requirement: native applications, NOT web-b
   (`pip install PyQt5` or apt `python3-pyqt5` + venv `--system-site-packages`) to keep the base
   install robust. All files py_compile clean; parser smoke-tested on real sample output.
 
+**Red-team pass (2026-06-07): fixed real bugs.**
+1. `flasher.esptool_available()` ignored the exit code (reported present when missing) → now checks returncode.
+2. Tkinter + PyQt5 flasher dialogs touched widgets from worker threads (Tk/Qt forbid this → crashes/hangs):
+   all widget *writes* moved to the UI-thread poll/drain via flags; all widget *reads* (port/variant) captured
+   on the UI thread and passed into workers. `_resolve_chip(port)` now takes the port. TUI captures port/variant
+   on the UI thread before `run_worker`. Textual side already used `call_from_thread`.
+3. Verified (stubbed subprocess) the esptool argv + offsets are exactly right (classic bootloader 0x1000, S3 0x0,
+   app 0x10000) and the FlashFiles support filenames exist (no full-flash 404). 70 commands; controller + parser smoke-tested.
+
 ## Critical Discoveries (still valid)
 
 1. **Lonely Binary ESP32 Gold is a CLASSIC ESP32** (WROOM-class, CH340, 16MB flash) — verified
