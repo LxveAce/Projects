@@ -1,0 +1,123 @@
+# Headless Marauder GUI/TUI
+
+> **Part of:** [ESP32 Marauder — Cyberdeck Integration](../README.md) · [headless-on-kali](../headless-on-kali/)
+> Our own control software for a **headless** ESP32 Marauder (the Gold board with the external
+> antenna and no screen). Built because the browser UIs are thin on options and need Chromium's
+> Web Serial — these are **native applications** that talk straight to `/dev/ttyUSB0`.
+
+Two real apps, one shared core:
+
+| App | What it is | Run | Needs |
+|-----|------------|-----|-------|
+| **Desktop GUI** | A native **Tkinter** window — categorized buttons for *every* command, param dialogs, live console, raw box, STOP | `python3 gui/app.py` | `python3-tk` + `pyserial` |
+| **Terminal TUI** | A **Textual** terminal app — command tree + live log + command box; great over SSH / on the deck console | `python3 tui/app.py` | `pyserial` + `textual` |
+
+**No web server, no browser, no Web Serial.** Works on Kali regardless of which browser is installed
+(the Firefox/Web-Serial dead-end doesn't apply here). Both front-ends drive the same
+[`marauder_core`](marauder_core/) and the same full [command catalog](marauder_core/commands.py).
+
+---
+
+## Install on Kali Linux
+
+Kali blocks system-wide `pip` (PEP 668), so use a venv:
+
+```bash
+# system bits (once): venv tooling + Tkinter for the desktop GUI
+sudo apt update
+sudo apt install -y python3-venv python3-tk
+
+# from this folder:
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Make sure you can reach the serial port without sudo (log out/in after):
+```bash
+sudo usermod -aG dialout $USER
+```
+> Port issues (no `/dev/ttyUSB0`, `brltty` stealing the CH340, VM passthrough)? See
+> [../headless-on-kali](../headless-on-kali/#troubleshooting-ls-devttyusb-says-no-such-file-or-directory).
+
+---
+
+## Run
+
+```bash
+./run-gui.sh                 # desktop window  (or: python3 gui/app.py)
+./run-tui.sh                 # terminal app    (or: python3 tui/app.py)
+
+# options (either app):
+python3 gui/app.py --port /dev/ttyUSB0     # skip auto-detect
+python3 gui/app.py --mock                  # no hardware — explore the UI
+```
+
+Both **auto-detect** the port (preferring the Gold's CH340), connect at **115200 baud**, then:
+- click a command button (GUI) or pick one in the tree (TUI),
+- commands with options pop a parameter form / pre-fill a template,
+- everything the board prints streams into the console,
+- **STOP** sends `stopscan`.
+
+> Only one program can hold the serial port — close any `picocom`/`screen` session first.
+
+---
+
+## What it covers
+
+The [catalog](marauder_core/commands.py) exposes the full Marauder CLI, grouped:
+**WiFi · Scan** (scanap, scansta, scanall, sigmon, packetcount, wardrive) ·
+**WiFi · Sniff** (raw, beacon, probe, deauth, esp, pwnagotchi, PMKID w/ channel+deauth+targeted) ·
+**WiFi · Attack** (deauth APs/clients, beacon list/random/clone, probe flood, rickroll, badmsg, evil portal, karma) ·
+**WiFi · Network** (join, pingscan, portscan) ·
+**Bluetooth** (sniffbt airtag/flipper/flock, btwardrive, skimmer detect, BLE spam, AirTag spoof) ·
+**Lists & Targets** (list/select/clearlist/info) · **SSID** · **Channel** · **GPS** · **Files (SD)** ·
+**System** (settings, led, update, reboot, stopscan).
+
+Anything not buttoned is still one keystroke away in the **raw command box**.
+
+> **Authorization:** the attack/spam commands are for networks and devices you own or are
+> explicitly authorized to test. See the legal section in the [full Marauder guide](../../../../01-esp32-marauder/).
+
+---
+
+## Architecture (and why it's built this way)
+
+```
+marauder_core/
+  controller.py   # pyserial connection, port auto-detect, threaded reader, pub/sub, --mock
+  commands.py     # the single command catalog (data-driven) — shared by BOTH apps
+gui/app.py        # Tkinter desktop application
+tui/app.py        # Textual terminal application
+```
+
+- **Server-side serial, native UI** — the app owns `/dev/ttyUSB0` directly, so there's no Web
+  Serial / Chromium requirement and it can auto-start headless on the deck later.
+- **One catalog, two UIs** — add a `Command(...)` in `commands.py` once and it appears in the GUI
+  *and* the TUI. That's how we keep "all the options" without maintaining two lists.
+- **Thread-safe output** — the reader thread pushes lines onto a queue; each UI drains it on its
+  own main loop (`after()` in Tk, `set_interval()` in Textual).
+
+## Extending it
+
+Add a command — that's the whole edit:
+```python
+# marauder_core/commands.py
+Command("my_id", "My Button", "somecmd -x", "WiFi · Scan",
+        "what it does",
+        params=[Param("value", "-n", "int", required=True, placeholder="5")])
+```
+
+## Roadmap → cyberdeck all-in-one UI
+
+This is the seed for the deck's [dashboard](../../parts/dashboard/). Next steps:
+- expose `marauder_core` over a small local IPC (or import it directly) so the deck UI reuses it,
+- add response parsing (AP/station tables) for structured panels,
+- fold in Kismet / Meshtastic / GPS alongside Marauder in one app.
+
+## License / credit
+
+Original work for this repo. Command set per the
+[ESP32 Marauder CLI wiki](https://github.com/justcallmekoko/ESP32Marauder/wiki/cli)
+(firmware by justcallmekoko, GPL). Built on [pyserial](https://pyserial.readthedocs.io/) and
+[Textual](https://textual.textualize.io/).

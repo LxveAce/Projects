@@ -103,6 +103,23 @@ CYD / advanced wired-TFT).
 
 ---
 
+### Built (2026-06-07): Headless Marauder GUI/TUI — our own control app
+
+`projects/14-cyberdeck/integrations/01-esp32-marauder/headless-marauder-gui/` — native control
+software for the headless Gold-board Marauder (user found the browser UIs thin on options and
+Firefox can't do Web Serial). **User requirement: native applications, NOT web-based, Kali-compatible.**
+
+- **Shared core** (`marauder_core/`): `controller.py` (pyserial, port auto-detect preferring CH340,
+  threaded reader, pub/sub, `--mock`) + `commands.py` (data-driven catalog — **65 commands / 11
+  categories**, the full Marauder CLI). One catalog feeds both UIs.
+- **`gui/app.py`** — native **Tkinter** desktop window (needs `python3-tk`).
+- **`tui/app.py`** — **Textual** terminal app.
+- **No web/SSE/SocketIO** (an earlier draft considered Flask+SSE; dropped per user — they want
+  real apps, not a server). Install via venv (Kali PEP 668). Smoke-tested: catalog + `build()` +
+  mock controller all pass; all files `py_compile` clean.
+- **Roadmap:** this is the seed for the deck [dashboard](projects/14-cyberdeck/integrations/parts/dashboard/) —
+  reuse `marauder_core` directly in the all-in-one UI.
+
 ## Critical Discoveries (still valid)
 
 1. **Lonely Binary ESP32 Gold is a CLASSIC ESP32** (WROOM-class, CH340, 16MB flash) — verified
