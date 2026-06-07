@@ -105,7 +105,15 @@ What it does:
      (bootloader `0x1000` on classic ESP32, `0x0` on S3).
 4. **FLASH** — `esptool` output streams live into the window. There's also an **Erase flash**.
 
+**Boot-loop diagnosis (read the Console after connecting):**
+- `invalid header: 0xffffffff` repeating → flash is **blank** → use **Full flash (blank board)**.
+- `Detected size(4096k) smaller than ... header(16384k). Probe failed.` → firmware was written with the
+  wrong flash size → the flasher now passes `--flash_size detect` to fix it; **Erase flash**, then re-flash.
+- Either way the board isn't running Marauder, so `scanap` does nothing and the AP table stays empty.
+
 Notes:
+- The flasher always flashes with **`--flash_size detect`** so the image header matches the chip's real
+  flash size (prevents the 4MB-vs-16MB boot loop above).
 - There is **no generic "esp32" release build** — for a classic ESP32 Gold pick a non-S3 variant
   (e.g. *Generic ESP32 / original v4*, or *Generic ESP32 dev board, no display* for a headless
   board); for an S3 pick *MultiBoard S3*. The app defaults sensibly per detected chip.
