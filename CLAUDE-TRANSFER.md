@@ -134,6 +134,16 @@ Firefox can't do Web Serial). **User requirement: native applications, NOT web-b
   auto-downloads support files). Catalog now **70 commands** (added sourapple/swiftpair/
   samsungblespam/btspamall/mactrack). esptool added to requirements.
 
+**Overhaul 2 (2026-06-07): live tables + PyQt5 GUI.**
+- `marauder_core/parsing.py` parses the AP line format (`RSSI: -57 Ch: 3 BSSID: .. ESSID: ..`,
+  confirmed via research) + tolerant station matcher → dedupes by MAC → live AP/Station tables.
+- **`gui_qt/app.py`** = polished **PyQt5** GUI (recommended): command sidebar, colorized console,
+  **live Access-Point & Station tabs**, built-in flasher dialog. `./run-qt.sh`.
+- TUI gained a live AP **DataTable**; Tkinter GUI kept as the simple stdlib option.
+- Three apps now (Qt/Tk/TUI), all on the shared core. PyQt5 installed separately
+  (`pip install PyQt5` or apt `python3-pyqt5` + venv `--system-site-packages`) to keep the base
+  install robust. All files py_compile clean; parser smoke-tested on real sample output.
+
 ## Critical Discoveries (still valid)
 
 1. **Lonely Binary ESP32 Gold is a CLASSIC ESP32** (WROOM-class, CH340, 16MB flash) — verified
