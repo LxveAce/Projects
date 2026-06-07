@@ -1,0 +1,7 @@
+# Headless Marauder GUI/TUI — Python dependencies (install in a venv on Kali)
+#
+# Tkinter (the desktop GUI) is NOT a pip package — it ships with Python.
+# On Kali/Debian install it once via apt:   sudo apt install -y python3-tk
+
+pyserial>=3.5      # serial link to the board (both apps)
+textual>=0.50      # terminal UI (tui/app.py only)
