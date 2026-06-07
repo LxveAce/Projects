@@ -5,3 +5,4 @@
 
 pyserial>=3.5      # serial link to the board (both apps)
 textual>=0.50      # terminal UI (tui/app.py only)
+esptool>=4.7       # firmware flashing (Flash Firmware feature)

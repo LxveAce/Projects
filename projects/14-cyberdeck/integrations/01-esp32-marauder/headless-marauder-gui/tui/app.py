@@ -17,16 +17,145 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from marauder_core import MarauderController, commands
+from marauder_core import MarauderController, commands, flasher
 
 from textual.app import App, ComposeResult
-from textual.containers import Horizontal
-from textual.widgets import Header, Footer, Tree, Input
+from textual.containers import Horizontal, Vertical
+from textual.screen import ModalScreen
+from textual.widgets import Header, Footer, Tree, Input, Button, Select, Static, Label
 
 try:                       # widget was renamed across Textual versions
     from textual.widgets import RichLog
 except ImportError:        # older Textual
     from textual.widgets import TextLog as RichLog
+
+
+class FlashScreen(ModalScreen):
+    """Modal firmware flasher: detect chip, fetch firmware, flash."""
+
+    CSS = """
+    #flash { width: 90%; height: 90%; border: round $accent; background: $surface; padding: 1; }
+    #flog { height: 1fr; border: round $accent; }
+    #flash Button { margin: 0 1; }
+    """
+    BINDINGS = [("escape", "close", "Close")]
+
+    def __init__(self, controller: MarauderController):
+        super().__init__()
+        self.ctl = controller
+        self.chip = None
+        self.assets = []
+        self.tag = ""
+        self._by_name = {}
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="flash"):
+            yield Label("Flash Marauder Firmware")
+            yield Input(value=(self.ctl.port or ""), placeholder="port e.g. /dev/ttyUSB0", id="fport")
+            with Horizontal():
+                yield Button("Detect chip", id="detect")
+                yield Button("Load release", id="load")
+            yield Static("chip: ?", id="chiplbl")
+            yield Select([], prompt="firmware variant", id="variant")
+            with Horizontal():
+                yield Button("Flash app", id="flash_app", variant="success")
+                yield Button("Full flash", id="flash_full", variant="warning")
+                yield Button("Erase", id="erase", variant="error")
+                yield Button("Close", id="close")
+            yield RichLog(id="flog", highlight=False, markup=False, wrap=True)
+
+    def on_mount(self):
+        if not flasher.esptool_available():
+            self._log("[!] esptool not found — pip install esptool")
+
+    # helpers
+    def _log(self, s): self.query_one("#flog", RichLog).write(s)
+    def _line(self): return lambda s: self.app.call_from_thread(self._log, s)
+    def _port(self): return self.query_one("#fport", Input).value.strip()
+
+    def _free(self):
+        if self.ctl.connected:
+            self._log("[i] closing serial session so esptool can use the port")
+            self.ctl.disconnect()
+
+    def on_button_pressed(self, event: Button.Pressed):
+        bid = event.button.id
+        if bid == "close":
+            self.dismiss(); return
+        if bid == "detect":
+            self._free(); self.run_worker(self._detect, thread=True); return
+        if bid == "load":
+            self.run_worker(self._load, thread=True); return
+        if bid == "erase":
+            self._free(); self.run_worker(self._erase, thread=True); return
+        if bid in ("flash_app", "flash_full"):
+            self._free()
+            mode = "app" if bid == "flash_app" else "full"
+            self.run_worker(lambda: self._flash(mode), thread=True)
+
+    # workers (run in threads)
+    def _detect(self):
+        on = self._line()
+        chip = flasher.detect_chip(self._port(), on)
+        self.chip = chip
+        self.app.call_from_thread(self.query_one("#chiplbl", Static).update, f"chip: {chip or 'unknown'}")
+        self.app.call_from_thread(self._refill)
+
+    def _load(self):
+        on = self._line()
+        on("[*] fetching latest release...")
+        self.tag, self.assets = flasher.latest_release()
+        on(f"[i] {self.tag}: {len(self.assets)} variants")
+        self.app.call_from_thread(self._refill)
+
+    def _refill(self):
+        items = flasher.variants_for_chip(self.assets, self.chip) if self.chip else self.assets
+        if not items:
+            items = self.assets
+        self._by_name = {a["name"]: a for a in items}
+        opts = [(f"{a['label']} [{a['name']}]", a["name"]) for a in items]
+        sel = self.query_one("#variant", Select)
+        sel.set_options(opts)
+        if self.chip and items:
+            d = flasher.default_variant(items, self.chip)
+            if d:
+                sel.value = d["name"]
+
+    def _resolve_chip(self, on):
+        if self.chip:
+            return self.chip
+        on("[*] detecting chip...")
+        self.chip = flasher.detect_chip(self._port(), on)
+        return self.chip
+
+    def _flash(self, mode):
+        on = self._line()
+        if not self._port():
+            on("[error] enter a port"); return
+        asset = self._by_name.get(self.query_one("#variant", Select).value)
+        if not asset:
+            on("[error] Load release + pick a variant first"); return
+        chip = self._resolve_chip(on)
+        if not chip:
+            on("[error] chip unknown"); return
+        if asset["chip"] != chip:
+            on(f"[!] variant is for {asset['chip']} but chip is {chip}")
+        cache = flasher.cache_dir()
+        app = flasher.download_to(asset["url"], os.path.join(cache, asset["name"]), on)
+        support = None
+        if mode == "full":
+            on("[*] fetching bootloader/partitions/boot_app0...")
+            support = flasher.support_files(chip, cache, on)
+        rc = flasher.flash(self._port(), chip, app, on, mode=mode, baud=921600, support=support)
+        on("[done] power-cycle the board" if rc == 0 else f"[x] esptool exit {rc}")
+
+    def _erase(self):
+        on = self._line()
+        chip = self._resolve_chip(on) or "esp32"
+        flasher.erase(self._port(), chip, on)
+
+    def action_close(self):
+        self.dismiss()
 
 
 class MarauderTUI(App):
@@ -40,6 +169,7 @@ class MarauderTUI(App):
     BINDINGS = [
         ("q", "quit", "Quit"),
         ("s", "stop", "Stop scan"),
+        ("f", "flash", "Flash fw"),
         ("ctrl+l", "clear", "Clear log"),
         ("c", "focus_input", "Command box"),
     ]
@@ -126,6 +256,9 @@ class MarauderTUI(App):
     def action_stop(self):
         if self.ctl.connected:
             self.ctl.stop()
+
+    def action_flash(self):
+        self.push_screen(FlashScreen(self.ctl))
 
     def action_clear(self):
         self.query_one("#log", RichLog).clear()
