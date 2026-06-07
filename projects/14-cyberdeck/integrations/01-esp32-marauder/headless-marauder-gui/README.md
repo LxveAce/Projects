@@ -139,9 +139,16 @@ gui/app.py        # Tkinter desktop app (simple, stdlib)
 tui/app.py        # Textual terminal app
 ```
 
-Live tables come from `parsing.py`: the AP line format (`RSSI: -57 Ch: 3 BSSID: .. ESSID: ..`)
-is parsed as the stream arrives and de-duplicated by MAC, so the **Access Points** / **Stations**
-tabs (Qt) and the AP table (TUI) update themselves while `scanap`/`scansta` run.
+Live tables come from `parsing.py`, which understands **both** AP formats:
+`scanap` stream (`RSSI: .. Ch: .. BSSID: .. ESSID: ..`) and the `list -a` dump
+(`[0][CH:5] SSID -54`). The `list -a` form carries Marauder's **index**, which is what
+`select -a N` needs.
+
+**Workflow:** `scanap` *scans*; **`list -a`** (the *List APs* button) *prints* the indexed list
+that fills the **Access Points** table. To target APs, click **Select APs** — a picker opens
+listing everything pulled, with checkboxes; tick the ones you want and it builds the correct
+`select -a 0,2,5` for you (it auto-runs `list -a` to refresh, and a manual indices/filter box
+stays for typing). Then run your attack (e.g. *Deauth (selected APs)*).
 
 - **Server-side serial, native UI** — the app owns `/dev/ttyUSB0` directly, so there's no Web
   Serial / Chromium requirement and it can auto-start headless on the deck later.
