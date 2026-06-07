@@ -1,90 +1,137 @@
 # Claude Session Transfer Notes
 
-**Last updated:** 2026-06-06
+**Last updated:** 2026-06-07
 **Project:** `C:\Users\mmrla\Projects` (Security & Hardware Projects Repo)
 **GitHub:** https://github.com/LxveAce/Projects (private)
 
 ---
 
-## What Was Done This Session
+## What Was Done This Session (2026-06-07)
 
-### Cyberdeck Brainstorm (`projects/14-cyberdeck/README.md`)
+### Cyberdeck Integration Guides — `projects/14-cyberdeck/integrations/`
 
-Major rewrite of the cyberdeck brainstorm document. All sections updated:
+Built a whole new `integrations/` tree under the cyberdeck that re-frames **every project
+and every hardware subsystem** specifically for the deck build. Each guide is **decision-made**
+(only the choice that was made for the deck — not the option-dumps the original project READMEs
+carry) and **standalone-compatible** (every guide has a "Standalone Mode" section). Tone is a
+short build-sheet: flash it, wire it, verify it.
 
-1. **Case:** Pelican 1300 selected (~$85-100). Price updated, references added.
-2. **Antenna Connections:** Full U.FL/IPEX guide added — step-by-step for each board. Waterproofing with IP67 SMA bulkheads + 3M Marine Silicone + dust caps.
-3. **Displays:** 5 total — 7" DSI primary, 2x CYD 2.8" (Marauder + Flock/Drone), 2.42" SSD1309 OLED (system vitals), Heltec built-in OLED.
-4. **Connectivity/Switching:** 7x SPST toggle switches with waterproof boot caps for per-device power control. USB hub architecture documented.
-5. **Input:** Wired USB keyboard (Perixx PERIBOARD-409U) — BLE stealth, no Bluetooth advertising.
-6. **Cooling:** 3-layer IP67-sealed system — 2x Coolerguys IP67 waterproof 40mm fans (intake/exhaust in walls), Noctua NF-A4x10 internal circulator, Amphenol VENT-PS1 membrane vent, thermal pads. Runs sealed.
-7. **Mounting:** No 3D printer — acrylic plates (score and snap), DIN rail brackets, aluminum L-brackets, pick-and-pluck foam.
-8. **Software Integration:** GPIO pin mapping (3-4 pins used, 22+ free, NO expander needed). USB port budget. Flask + SocketIO dashboard with UI layout. Serial protocols for all ESP32s. Firmware flashing guide for all 5 boards. GPS via gpsd.
-9. **BOM:** Split into "Already Purchased" (17 items) and "Need to Get" (27 items) with Amazon links and descriptions. Total new parts: ~$340-420.
-10. **Visual Diagrams:** 7 ASCII renderings — top-down base, lid interior, right wall (SMA + exhaust), left wall (intake + vent), front panel (switches), cross-section (airflow), antenna connection detail, wiring/power distribution.
-11. **Build Phases:** Expanded to 9 phases with waterproofing, sealant curing, sealed thermal testing.
-12. **Decision Matrix:** Updated with all new choices.
+**Structure chosen (with the user): `integrations/` subfolders, all 13 projects + 8 parts.**
 
-### Project Integration Sections Added
+```
+projects/14-cyberdeck/
+  README.md                         (UNTOUCHED — the master brainstorm)
+  integrations/
+    README.md                       (index + master wiring/decisions table)
+    01-esp32-marauder/README.md     (EXEMPLAR — sets the template/style)
+    02-flipper-zero/README.md
+    03-pwnagotchi/README.md
+    04-meshtastic/README.md
+    05-rayhunter/README.md
+    06-flock-drone-detection/README.md
+    07-kismet-wardriving/README.md
+    08-ble-detection/README.md
+    09-project-nomad/README.md
+    10-chasing-your-tail/README.md
+    11-nyan-box/README.md
+    12-usb-rubber-ducky/README.md
+    13-esp-terminator/README.md
+    parts/
+      pi5-brain/README.md
+      power/README.md
+      cooling/README.md
+      antennas/README.md
+      displays/README.md
+      gps/README.md
+      case-prep/README.md
+      dashboard/README.md
+```
 
-These project READMEs got new "Cyberdeck Integration" sections:
+Each guide follows the exemplar's sections: header block → **The Decision** table → What You
+Need → **Get It Running** (Flash/Build → Wire into deck → Verify) → Cyberdeck Compatibility
+Notes → **Standalone Mode** → Source / Upstream. All cross-links are relative and verified to
+resolve.
 
-- `01-esp32-marauder/README.md` — Section 12: serial commands, flash instructions, standalone vs integrated
-- `04-meshtastic/README.md` — Section 13: Heltec V3 on ESP32 rail, meshtastic-python API
-- `06-flock-drone-detection/README.md` — Flock on Gold #2, Drone on WROOM-32, Marauder built-in Flock discovery
-- `07-kismet-wardriving/README.md` — Section 12: Pi 5 native, Kismet REST API, GPS sharing
-- `08-ble-detection/README.md` — Section 11: Gold #3, merged with Chasing Your Tail
-- `10-chasing-your-tail/README.md` — Merges with BLE on Gold #3, GPS correlation
+### Master wiring decisions (now pinned in `integrations/README.md`)
 
-### Root README Updated
+| Board / device | Slot | Power | Antenna | Display |
+|---|---|---|---|---|
+| Pi 5 | Brain | Anker 347 USB-C PD (always on) | — | 7" DSI |
+| Gold #1 | Marauder | SW1 | SMA #1 | CYD #1 |
+| Gold #2 | Flock | SW2 | SMA #2 | CYD #2 |
+| Gold #3 | BLE + Chasing Your Tail | SW3 | SMA #3 | — |
+| Heltec V3 | Meshtastic | SW4 | SMA #4 | onboard OLED |
+| WROOM-32 | Drone RemoteID | SW5 | internal PCB | CYD #2 (shared) |
+| Panda PAU0F | Kismet primary | Pi USB 3.0 (always on) | SMA #5 | — |
+| RT5370 | Kismet secondary | SW6 | internal | — |
+| VK-162 GPS | Shared GPS | SW7 | internal | — |
 
-- `README.md` — Added row 14 (Cyberdeck) to project table
+### Notable per-guide decisions made
+
+- **Flipper Zero:** Flipper + **AWOK Dynamics Dual C5 Touch** WiFi add-on, **Momentum** firmware;
+  docks/charges via deck USB, owns no SMA/switch (sub-GHz/RFID/NFC/IR is its unique value).
+- **USB Rubber Ducky:** DIY path = **ESP32-S2 Mini + SuperWiFiDuck**; Hak5 listed only as upgrade.
+- **Companions (not chassis-mounted):** RayHunter (runs on the Orbic itself), NyanBOX (own ESP32),
+  Pwnagotchi (docked charge/offload bay — kept separate per design), Project Nomad
+  (**blocked on ARM** — needs an x64 LattePanda; does NOT run on the Pi 5).
+- **ESP Terminator** guide doubles as the deck's "which firmware on which board" flashing hub.
+
+### Corrected fact baked into the new guides
+
+The Lonely Binary ESP32 Gold is an **ESP32-S3** → all Marauder/Flock/BLE flashes use the S3
+variants (`_multiboardS3.bin`, "ESP32S3 Dev Module"). NOTE: the *old* `01-esp32-marauder/README.md`
+Section 12 still says "ESP32-WROOM" — left **untouched** per the "don't edit existing info" rule;
+the corrected decision lives only in the new integration guides.
 
 ---
 
-## Critical Discoveries
+## Critical Discoveries (still valid)
 
-1. **Lonely Binary ESP32 Gold is ESP32-S3** (N16R8: 16MB Flash, 8MB PSRAM), NOT ESP32-WROOM-32. All firmware selections must use `_multiboardS3.bin` variants.
+1. **Lonely Binary ESP32 Gold is ESP32-S3** (N16R8: 16MB Flash, 8MB PSRAM), NOT ESP32-WROOM-32.
+   All firmware selections must use `_multiboardS3.bin` / "ESP32S3 Dev Module" variants.
 
-2. **Marauder has built-in Flock Sniff** — serial command `sniffbt -t flock`. Could potentially consolidate Gold #2 (dedicated Flock board) since Marauder on Gold #1 can do Flock detection. Current design keeps them separate for flexibility.
+2. **Marauder has built-in Flock Sniff** — serial `sniffbt -t flock`. Gold #1 can cover Flock,
+   so Gold #2 is kept dedicated only for flexibility (drop it and Marauder covers Flock).
 
-3. **Pi 5 DSI uses 22-pin connector** (not 15-pin like Pi 4). The Hosyond 7" display needs a 22-to-15 pin adapter cable.
+3. **Pi 5 DSI uses a 22-pin connector** (not 15-pin like Pi 4). The Hosyond 7" display needs a
+   22-to-15 pin adapter cable.
 
 ---
 
 ## What's Left / Future Work
 
-- **Dashboard app:** Build the actual Flask + SocketIO dashboard (architecture is designed, not coded yet)
-- **Temperature monitoring script:** Write `temp_monitor.py` for the 2.42" OLED (code pattern in README)
-- **systemd services:** Write auto-start service files for all components
-- **Physical build:** Follow the 9-phase build plan
-- **Repo refinement:** General polish of all 13 project READMEs (some still have standalone-only framing)
-- **INVENTORY.md updates:** Quantity corrections, pinout images, best-fit hardware recs, antenna solutions (from memory file `projects-repo-updates.md`)
+- **Dashboard app:** Build the actual Flask + SocketIO dashboard (scaffold/protocols documented in
+  `integrations/parts/dashboard/`, still not coded).
+- **`temp_monitor.py`** for the 2.42" OLED (pattern in cooling/dashboard guides).
+- **systemd services:** auto-start files (gpsd → kismet → dashboard).
+- **Physical build:** follow the 9-phase plan in the cyberdeck README + the per-part guides.
+- **Purchases still needed:** Pelican 1300 NF, IP67 SMA bulkheads + pigtails, Coolerguys IP67 fans,
+  Noctua, VK-162 GPS, 2.42" OLED, Flipper Zero (+ AWOK Dual C5 Touch), Orbic RC400L, etc.
+- **Optional:** mirror the corrected S3 firmware note back into the original `01` README if the
+  "don't edit originals" rule is ever relaxed.
 
 ---
 
 ## Constraints / User Preferences
 
-- **No Pwnagotchi** in the cyberdeck — kept separate
-- **No 3D printer** — use acrylic, DIN rail, foam, L-brackets instead
-- **No Bluetooth keyboard** — wired only (BLE stealth concern)
-- **No Claude co-author** in git commits
-- **Do NOT modify** `C:\Users\mmrla\Downloads\Barcode Label Gen` (original copy)
-- **Anker 347** confirmed as the power bank
-- **Pelican 1300** confirmed as the case
+- **Commit as the user (LxveAce), NO Claude co-author** in git commits — the user wants the credit.
+- **Do NOT edit the existing project READMEs or the cyberdeck `README.md`** — the integration guides
+  are *new clones*, oriented to the deck; originals are the untouched reference library.
+- **Decision-made, not option-dumps** — guides present the one choice per component, simply.
+- **No Pwnagotchi** wired into the deck — kept separate (docked only).
+- **No 3D printer** — acrylic, DIN rail, foam, L-brackets.
+- **No Bluetooth keyboard** — wired only (BLE stealth).
+- **Anker 347** = power bank. **Pelican 1300** = case.
+- **Do NOT modify** `C:\Users\mmrla\Downloads\Barcode Label Gen` (original copy).
 
 ---
 
 ## Files Modified This Session
 
 ```
-projects/14-cyberdeck/README.md          (major rewrite — all sections)
-projects/01-esp32-marauder/README.md     (added cyberdeck integration section)
-projects/04-meshtastic/README.md         (added cyberdeck integration section)
-projects/06-flock-drone-detection/README.md (added cyberdeck integration section)
-projects/07-kismet-wardriving/README.md  (added cyberdeck integration section)
-projects/08-ble-detection/README.md      (added cyberdeck integration section)
-projects/10-chasing-your-tail/README.md  (added cyberdeck integration section)
-README.md                               (added cyberdeck row to project table)
-CLAUDE-TRANSFER.md                       (this file)
+projects/14-cyberdeck/integrations/                     (NEW — 22 files: index + exemplar +
+                                                          12 project guides + 8 part guides)
+CLAUDE-TRANSFER.md                                       (this file)
 ```
+
+No existing files were edited (verified via `git status` — only the new `integrations/` tree).
