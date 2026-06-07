@@ -148,6 +148,38 @@ Instead use a **server-side serial bridge**:
 
 ---
 
+## Troubleshooting: `ls /dev/ttyUSB*` says "No such file or directory"
+
+The board isn't showing up as a serial port. Work down this list — on Kali the #1 cause is `brltty`.
+
+1. **Cable + power:** use the **data** cable you flashed with (charge-only cables show nothing),
+   plugged into a direct port (not a hub) for first contact.
+2. **Does the OS see the USB device at all?**
+   ```bash
+   lsusb | grep -i 1a86        # the Gold's CH340 = "QinHeng" / 1a86:7522
+   ```
+   - **Listed →** it's a driver/naming/`brltty` issue → steps 3–4.
+   - **Not listed →** the port isn't reaching this OS → steps 5–6.
+3. **`brltty` is stealing it (most common on Kali/Debian).** `brltty` mistakes CH340 chips for a
+   braille display and yanks `/dev/ttyUSB0` ~1 second after it appears. If the port flashes up then
+   vanishes, this is it:
+   ```bash
+   sudo apt remove brltty       # then unplug/replug the board
+   dmesg | tail -20             # confirm brltty no longer grabs it
+   ```
+4. **Wrong name / driver not loaded** — check both names; CH340 may land on `ttyACM`:
+   ```bash
+   ls /dev/ttyUSB* /dev/ttyACM*
+   sudo modprobe ch341
+   ```
+   If it's `/dev/ttyACM0`, just use that path (`picocom -b 115200 /dev/ttyACM0`).
+5. **Kali in a VM (VirtualBox/VMware):** the host OS owns the USB until you pass it through.
+   VirtualBox → *Devices ▸ USB ▸* tick "QinHeng CH340" (needs the Extension Pack).
+   VMware → *VM ▸ Removable Devices ▸ CH340 ▸ Connect*.
+6. **Kali on WSL:** WSL2 has no `/dev/ttyUSB` by default — attach the device from Windows with
+   [usbipd-win](https://github.com/dorssel/usbipd-win) (`usbipd bind` then `usbipd attach --wsl`).
+7. Still nothing? Try a different cable/port, and confirm the board powers on (its LED).
+
 ## Source / Upstream
 
 - Marauder CLI reference: [justcallmekoko/ESP32Marauder Wiki — CLI](https://github.com/justcallmekoko/ESP32Marauder/wiki/cli) · [CLI Usage](https://github.com/justcallmekoko/ESP32Marauder/wiki/cli-usage)
