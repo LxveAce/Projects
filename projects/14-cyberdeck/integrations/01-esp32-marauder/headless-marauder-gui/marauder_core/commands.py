@@ -68,6 +68,8 @@ COMMANDS: List[Command] = [
             "Live signal-strength monitor.", longrunning=True),
     Command("packetcount", "Packet Count", "packetcount", "WiFi · Scan",
             "Live packets-per-second counter.", longrunning=True),
+    Command("mactrack", "MAC Track", "mactrack", "WiFi · Scan",
+            "Track signal strength of selected MAC(s).", longrunning=True),
     Command("wardrive", "Wardrive", "wardrive", "WiFi · Scan",
             "GPS-tagged AP logging to SD.", longrunning=True,
             params=[Param("silent", "-s", "bool", help="Silent mode (no screen spam)")]),
@@ -156,6 +158,14 @@ COMMANDS: List[Command] = [
     Command("spoofat", "Spoof AirTag", "spoofat", "Bluetooth",
             "Broadcast a cloned AirTag.", danger=True, longrunning=True,
             params=[Param("index", "-t", "int", required=True, placeholder="0", help="AirTag index")]),
+    Command("sourapple", "Sour Apple", "sourapple", "Bluetooth",
+            "iOS 17 BLE pop-up crash spam.", danger=True, longrunning=True),
+    Command("swiftpair", "Swiftpair Spam", "swiftpair", "Bluetooth",
+            "Windows BLE pairing-notification spam.", danger=True, longrunning=True),
+    Command("samsungblespam", "Samsung BLE Spam", "samsungblespam", "Bluetooth",
+            "Samsung BLE pairing spam.", danger=True, longrunning=True),
+    Command("btspamall", "BLE Spam All", "btspamall", "Bluetooth",
+            "Run all BLE spam attacks at once.", danger=True, longrunning=True),
 
     # ---- Lists & Targets -------------------------------------------------- #
     Command("list_ap", "List APs", "list -a", "Lists & Targets", "Show scanned access points."),

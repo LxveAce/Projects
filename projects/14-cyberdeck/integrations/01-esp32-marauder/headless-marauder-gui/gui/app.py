@@ -144,7 +144,13 @@ class MarauderGUI(tk.Tk):
 
         ttk.Button(bar, text="STOP", style="Stop.TButton",
                    command=self._stop).pack(side="right", padx=10, pady=6)
+        ttk.Button(bar, text="⚡ Flash Firmware",
+                   command=self._open_flasher).pack(side="right", padx=4, pady=6)
         self._refresh_ports()
+
+    def _open_flasher(self):
+        from gui.flasher_window import FlasherWindow
+        FlasherWindow(self, self.ctl, default_port=self.port_var.get().strip())
 
     # --- body: command panel + console ----------------------------------- #
     def _build_body(self):

@@ -120,6 +120,20 @@ Firefox can't do Web Serial). **User requirement: native applications, NOT web-b
 - **Roadmap:** this is the seed for the deck [dashboard](projects/14-cyberdeck/integrations/parts/dashboard/) —
   reuse `marauder_core` directly in the all-in-one UI.
 
+**Overhaul (2026-06-07, later): built-in firmware flasher + full command coverage.**
+- `marauder_core/flasher.py` wraps `esptool` (subprocess, streamed). Detects chip
+  (classic ESP32 vs S3), pulls firmware from the GitHub release, and flashes at the right
+  offsets. Both apps have a flasher UI (GUI: ⚡ Flash Firmware button → `gui/flasher_window.py`;
+  TUI: press `f` → FlashScreen).
+- **Verified release facts:** releases ship ONLY app .bins (no generic "esp32" build — classic
+  ESP32 uses `_old_hardware`/`_lddb`/etc., S3 uses `_multiboardS3`). bootloader/partitions/
+  boot_app0 come from the repo's `FlashFiles/` (MarauderV4 = classic, FlipperZeroMultiBoardS3 = S3
+  + shared boot_app0, FlipperZeroDevBoard = S2). Offsets: bootloader 0x1000 classic / 0x0 S3,
+  partitions 0x8000, boot_app0 0xe000, app 0x10000.
+- Modes: **app-only** (write 0x10000 — update existing board) and **full flash** (blank board,
+  auto-downloads support files). Catalog now **70 commands** (added sourapple/swiftpair/
+  samsungblespam/btspamall/mactrack). esptool added to requirements.
+
 ## Critical Discoveries (still valid)
 
 1. **Lonely Binary ESP32 Gold is a CLASSIC ESP32** (WROOM-class, CH340, 16MB flash) — verified

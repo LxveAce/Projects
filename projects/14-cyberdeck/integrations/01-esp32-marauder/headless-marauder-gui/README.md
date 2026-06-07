@@ -76,6 +76,35 @@ The [catalog](marauder_core/commands.py) exposes the full Marauder CLI, grouped:
 
 Anything not buttoned is still one keystroke away in the **raw command box**.
 
+---
+
+## Flash firmware (built in)
+
+Both apps can flash Marauder firmware onto a board — **GUI:** the *⚡ Flash Firmware* button ·
+**TUI:** press **`f`**. It wraps [`esptool`](https://github.com/espressif/esptool) and pulls
+firmware straight from the official GitHub release.
+
+What it does:
+1. **Detect chip** over the port (`esptool chip_id`) — tells classic **ESP32** from **ESP32-S3**,
+   so you never flash the wrong build (the mistake that fails ESP Terminator's preflight).
+2. **Pick the firmware** — *Download latest release* (the variant list is filtered to your chip,
+   with a sensible default) or *Local .bin* (browse).
+3. **Choose a mode:**
+   - **Update app only** — writes just the app at `0x10000`. Use this to update/re-flash a board
+     that already runs Marauder (your Gold boards). Fast and safe.
+   - **Full flash (blank board)** — also fetches bootloader + partitions + `boot_app0` from the
+     repo's `FlashFiles/` tree and writes them at the right offsets
+     (bootloader `0x1000` on classic ESP32, `0x0` on S3).
+4. **FLASH** — `esptool` output streams live into the window. There's also an **Erase flash**.
+
+Notes:
+- There is **no generic "esp32" release build** — for a classic ESP32 Gold pick a non-S3 variant
+  (e.g. *Generic ESP32 / original v4*, or *Generic ESP32 dev board, no display* for a headless
+  board); for an S3 pick *MultiBoard S3*. The app defaults sensibly per detected chip.
+- Flashing needs exclusive access to the port, so the app **auto-closes the live serial session**
+  before it runs esptool.
+- Requires `esptool` (in `requirements.txt`).
+
 > **Authorization:** the attack/spam commands are for networks and devices you own or are
 > explicitly authorized to test. See the legal section in the [full Marauder guide](../../../../01-esp32-marauder/).
 
