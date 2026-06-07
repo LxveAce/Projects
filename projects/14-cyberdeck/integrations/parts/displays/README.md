@@ -15,8 +15,8 @@ every interactive board has its own output.
 | Display | Size / Type | Role | Connection |
 |---------|-------------|------|------------|
 | **Hosyond 7" DSI** | 7.0" 800×480 touch | Primary dashboard, Kismet web UI, full Kali desktop | Pi 5 **DSI port** (in the lid) |
-| **CYD 2.8" #1** | 2.8" ILI9341 touch | Marauder touch GUI | **Serial** to Lonely Binary Gold #1 |
-| **CYD 2.8" #2** | 2.8" ILI9341 touch | Flock / Drone alert display | **Serial** to Lonely Binary Gold #2 |
+| **CYD 2.8" #1** | 2.8" ILI9341 touch | Standalone Marauder (touch GUI) | Its *own* onboard ESP32 (USB power) |
+| **CYD 2.8" #2** | 2.8" ILI9341 touch | Flock / Drone alert screen | Its *own* onboard ESP32 (USB power) |
 | **SSD1309 OLED** | 2.42" 128×64, I2C | System vitals (battery, temp, GPS, tool status) | Pi 5 **GPIO I2C1** (SDA/SCL) |
 | **Heltec built-in OLED** | 0.96" | Meshtastic status | **Onboard** Heltec LoRa V3 (no wiring) |
 
@@ -62,13 +62,17 @@ The two CYDs are flashed/configured as part of their own subsystem guides — se
    extension**, then route the ribbon **through the hinge gap** to the lid. Secure with Kapton tape.
 6. Power and touch are carried per the [pi5-brain](../pi5-brain/) GPIO map (5V on pin 2/4, GND on pin 6).
 
-### 2. CYD #1 and CYD #2 (serial-driven, base-mounted)
+### 2. CYD #1 and CYD #2 (standalone boards, base-mounted)
 
+- **Each CYD is a complete ESP32 board with its own screen** — *not* a dumb display wired to a
+  Gold board. It runs its own firmware off its own USB power. (You already flash these as their
+  own devices — that's why the CYD ships with an ESP32 onboard.)
 - Mount both CYDs **face-up in the base**, visible when the lid is open.
-- **CYD #1** connects to **Gold #1** over serial — it boots straight into the Marauder touch
-  GUI (scan/attack/sniff modes, live AP/station lists).
-- **CYD #2** connects to **Gold #2** over serial — it runs the alert dashboard (OUI match
-  alerts, signal strength, estimated distance, red-flash on Flock detection).
+- **CYD #1** runs **Marauder standalone** — power it over USB and it boots into the touch GUI
+  (scan/attack/sniff modes, live AP/station lists). Nothing connects it to Gold #1.
+- **CYD #2** runs its own **Flock/Drone alert firmware** (e.g. Marauder with `sniffbt -t flock`,
+  or a custom alert sketch). If you want it to *mirror* Gold #2's output rather than sniff on its
+  own, run a UART wire between the two boards — otherwise let CYD #2 detect by itself.
 - No flashing here: each CYD is set up in its parent subsystem guide (linked above).
 
 ### 3. Wire the 2.42" OLED (I2C to the Pi 5)
@@ -95,8 +99,8 @@ GPS lock + satellite count, last Meshtastic message, and Pi 5 CPU temp / throttl
 sudo apt install -y i2c-tools
 i2cdetect -y 1
 ```
-- **CYD #1:** power Gold #1 (SW1) — the screen boots into the Marauder GUI.
-- **CYD #2:** power Gold #2 (SW2) — the screen boots into the Flock/Drone alert dashboard.
+- **CYD #1:** power it over USB — it boots into the Marauder touch GUI on its own.
+- **CYD #2:** power it over USB — it boots into its Flock/Drone alert screen on its own.
 - **Heltec OLED:** powers up with the board (SW4) and shows Meshtastic status — no wiring.
 
 ---
@@ -109,22 +113,23 @@ i2cdetect -y 1
 - **GPIO budget:** the OLED uses **I2C1 (GPIO2/GPIO3) only**. The DSI touchscreen runs its
   touch over a **separate I2C bus inside the DSI connector** — no clash with the OLED. See
   the [pi5-brain](../pi5-brain/) guide for the full pin map.
-- **Which subsystem drives each screen:** CYD #1 ← [Marauder / Gold #1](../../01-esp32-marauder/);
-  CYD #2 ← [Flock & Drone / Gold #2](../../06-flock-drone-detection/); 7" DSI + OLED ← the
+- **Which subsystem each screen belongs to:** CYD #1 = the standalone
+  [Marauder](../../01-esp32-marauder/) touchscreen; CYD #2 = the
+  [Flock & Drone](../../06-flock-drone-detection/) alert screen; 7" DSI + 2.42" OLED ← the
   [Pi 5](../pi5-brain/); 0.96" OLED ← Heltec LoRa V3 itself.
-- **No USB cost for the screens:** the CYDs ride the *same* serial USB links as their Gold
-  boards (no extra hub ports), the OLED is GPIO, and the 7" is DSI — the powered-hub budget
-  is untouched.
-- **Power gating:** the CYDs and Heltec OLED follow their board's toggle (SW1/SW2/SW4) —
-  cut the board, the screen goes dark with it. The 7" and OLED live on the always-on Pi 5.
+- **USB cost:** each CYD is its own ESP32 board, so it needs its **own powered-hub port** for
+  power — it is not free-riding on a Gold board's link. The OLED is GPIO and the 7" is DSI.
+- **Power gating:** give each CYD its own inline toggle on its hub port (the OLED/7" live on the
+  always-on Pi 5; the Heltec OLED follows SW4 with its board).
 
 ## Standalone Mode
 
-The two CYDs are tied to their ESP32s, not the Pi — so they work with the Pi off. Flip
-**SW1** (Pi off) and CYD #1 + Gold #1 run the full Marauder touch GUI on their own; flip
-**SW2** and CYD #2 + Gold #2 run the Flock/Drone alert screen on their own. The Heltec's
-0.96" OLED shows Meshtastic status standalone the same way. Only the 7" DSI and the 2.42"
-OLED require the Pi 5 — they're the brain's screens.
+Each CYD is a self-contained ESP32 + screen, so it works with the Pi off (and without any Gold
+board). Power CYD #1 and it runs the full Marauder touch GUI on its own; power CYD #2 and it
+runs the Flock/Drone alert screen on its own. The Heltec's 0.96" OLED shows Meshtastic status
+standalone the same way. Only the 7" DSI and the 2.42" OLED require the Pi 5 — they're the
+brain's screens (and the 7" is where a *headless* Gold board's output actually shows up, via the
+[dashboard](../dashboard/)).
 
 ## Source / Upstream
 

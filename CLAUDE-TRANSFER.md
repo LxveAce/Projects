@@ -76,19 +76,38 @@ resolve.
   (**blocked on ARM** — needs an x64 LattePanda; does NOT run on the Pi 5).
 - **ESP Terminator** guide doubles as the deck's "which firmware on which board" flashing hub.
 
-### Corrected fact baked into the new guides
+### HARDWARE-VERIFIED CORRECTION (2026-06-07, later) — Gold boards are CLASSIC ESP32, not S3
 
-The Lonely Binary ESP32 Gold is an **ESP32-S3** → all Marauder/Flock/BLE flashes use the S3
-variants (`_multiboardS3.bin`, "ESP32S3 Dev Module"). NOTE: the *old* `01-esp32-marauder/README.md`
-Section 12 still says "ESP32-WROOM" — left **untouched** per the "don't edit existing info" rule;
-the corrected decision lives only in the new integration guides.
+While flashing, the user's own boards proved the earlier "S3" claim WRONG. ESP Terminator's
+auto-detect on **all three Gold boards** reports `Device: ESP32` (classic, CH340 converter,
+16 MB flash) — and the `_multiboardS3.bin` firmware fails preflight
+(`Firmware target (ESP32-S3) does not match detected chip (ESP32)`). The user successfully
+flashed the **standard ESP32 (WROOM)** Marauder build. So:
+
+- The three **Lonely Binary Gold** boards = **classic ESP32 (WROOM-class, CH340)**. Use the
+  standard ESP32 Marauder build, "ESP32 Dev Module" in Arduino IDE, `--chip esp32`, bootloader
+  at `0x1000`. The old `01-esp32-marauder/README.md` §12 ("ESP32-WROOM") was actually RIGHT.
+- The **Heltec LoRa V3 genuinely IS an ESP32-S3** — that one is correct (flashed via Meshtastic's
+  own web flasher anyway).
+- All affected integration guides were re-corrected: `01-esp32-marauder`, `06-flock-drone-detection`,
+  `08-ble-detection`, `13-esp-terminator`, the `integrations/README.md` index, and `parts/displays`.
+
+### CYD vs Gold — they are TWO INDEPENDENT Marauders (corrected 2026-06-07)
+
+The original design implied "CYD = serial display for the Gold." That's not how Marauder works —
+it runs *on* the board it's flashed to. The CYD (ESP32 + screen on one PCB) is a **standalone
+touchscreen Marauder**; the Gold is a **headless** Marauder (CLI over serial). They do NOT wire
+together. A headless Gold's "screen" is the Pi's 7" dashboard. The Marauder + displays guides now
+reflect this, including a "Does the Gold get its own screen?" section (Pi dashboard / standalone
+CYD / advanced wired-TFT).
 
 ---
 
 ## Critical Discoveries (still valid)
 
-1. **Lonely Binary ESP32 Gold is ESP32-S3** (N16R8: 16MB Flash, 8MB PSRAM), NOT ESP32-WROOM-32.
-   All firmware selections must use `_multiboardS3.bin` / "ESP32S3 Dev Module" variants.
+1. **Lonely Binary ESP32 Gold is a CLASSIC ESP32** (WROOM-class, CH340, 16MB flash) — verified
+   by esptool on all three boards 2026-06-07. **NOT an ESP32-S3.** Use the standard ESP32 Marauder
+   build, NOT `_multiboardS3.bin`. (Earlier notes claiming S3 were wrong — see correction below.)
 
 2. **Marauder has built-in Flock Sniff** — serial `sniffbt -t flock`. Gold #1 can cover Flock,
    so Gold #2 is kept dedicated only for flexibility (drop it and Marauder covers Flock).

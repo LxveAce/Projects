@@ -9,7 +9,7 @@
 
 This subsystem covers **two detectors on two boards** that share one screen:
 
-- **FLOCK** — detects Flock Safety ALPR cameras by their WiFi emissions, on **Gold #2 (ESP32-S3)**.
+- **FLOCK** — detects Flock Safety ALPR cameras by their WiFi emissions, on **Gold #2 (classic ESP32)**.
 - **DRONE** — detects FAA RemoteID broadcasts, on a separate **ESP32-WROOM-32**.
 
 Both are receive-only (they never transmit), both feed serial alerts to the Pi 5, and both surface on **CYD #2**.
@@ -21,9 +21,9 @@ Both are receive-only (they never transmit), both feed serial alerts to the Pi 5
 | Question | Flock detector | Drone detector |
 |----------|----------------|----------------|
 | **Board** | Lonely Binary ESP32 **Gold #2** | **ESP32-WROOM-32** (generic) |
-| **Chip** | ESP32-S3 | ESP32-WROOM-32 |
+| **Chip** | Classic ESP32 (CH340, *not* S3) | ESP32-WROOM-32 |
 | **Detects** | Flock ALPR cameras (31 known OUIs) | FAA RemoteID drones (WiFi + BLE) |
-| **Firmware** | [colonelpanichacks/flock-you](https://github.com/colonelpanichacks/flock-you) (or Marauder `sniffbt -t flock`) | [colonelpanichacks/Sky-Spy](https://github.com/colonelpanichacks) |
+| **Firmware** | Marauder Flock mode `sniffbt -t flock` (confirmed on classic ESP32) — or [colonelpanichacks/flock-you](https://github.com/colonelpanichacks/flock-you) if its build targets classic ESP32 | [colonelpanichacks/Sky-Spy](https://github.com/colonelpanichacks) |
 | **Antenna** | IPEX → U.FL → **SMA bulkhead #2** ("FLOCK", 2.4 GHz) | Internal PCB antenna (no SMA) |
 | **Power** | Hub → toggle **SW2** | Hub → toggle **SW5** |
 | **Display** | CYD #2 (shared) | CYD #2 (shared) |
@@ -52,17 +52,21 @@ Both are receive-only (they never transmit), both feed serial alerts to the Pi 5
 
 #### 1. Flash the firmware
 
-1. Open **Chrome or Edge** (WebSerial required).
-2. Use [ESP Terminator](../13-esp-terminator/) (espterminator.com), or build [flock-you](https://github.com/colonelpanichacks/flock-you) with PlatformIO.
-3. Plug Gold #2 into your PC with a USB-C data cable; hold **BOOT**, connect, release.
-4. Flash the flock-you ESP32-S3 firmware (the upstream firmware targets ESP32-S3 — correct for the Gold).
-5. Wait for "complete," press **RST**. On boot it plays a short tune and starts scanning.
+Gold #2 is a **classic ESP32**, so the confirmed path is the **standard ESP32 (WROOM) Marauder
+build**, then turn Flock detection on over serial:
 
-PlatformIO alternative:
+1. Open **Chrome or Edge** and use [ESP Terminator](../13-esp-terminator/) (espterminator.com).
+2. Plug Gold #2 in with a USB-C data cable; hold **BOOT**, connect, release.
+3. Flash the **standard ESP32 (WROOM)** Marauder target (same as [Gold #1](../01-esp32-marauder/) — *not* MultiBoard S3).
+4. Press **RST**, then run Flock detection over serial: `sniffbt -t flock` (and `Flock Wardrive` for GPS-tagged logging).
+
+**Alternative — dedicated flock-you firmware:** [colonelpanichacks/flock-you](https://github.com/colonelpanichacks/flock-you)
+is a purpose-built Flock scanner, but **confirm its PlatformIO env targets classic ESP32** before
+flashing this board (several of its envs are ESP32-S3, which won't run on the Gold):
 ```bash
 git clone https://github.com/colonelpanichacks/flock-you.git
 cd flock-you
-git checkout promiscious-dev   # latest WiFi promiscuous-mode firmware
+# select/verify a classic-ESP32 build env, then:
 pio run -t upload
 ```
 
