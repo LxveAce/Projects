@@ -46,6 +46,8 @@ Each maps to a numbered project in the repo. Numbers match the source project fo
 | 11 | [NyanBOX](11-nyan-box/) | Pre-built pentest toolkit (companion) | NyanBOX unit | [11-nyan-box](../../11-nyan-box/) |
 | 12 | [USB Rubber Ducky](12-usb-rubber-ducky/) | Keystroke injection payload runner | Hak5 Ducky / DIY ESP32 | [12-usb-rubber-ducky](../../12-usb-rubber-ducky/) |
 | 13 | [ESP Terminator](13-esp-terminator/) | The web flasher used to flash the deck's ESP32s | espterminator.com | [13-esp-terminator](../../13-esp-terminator/) |
+| 15 | [ESP32-DIV](15-esp32-div/) | Sub-GHz / IR / RFID-NFC / 2.4GHz multitool (companion) | ESP32-DIV (CC1101 + NRF24) | [15-esp32-div](../../15-esp32-div/) |
+| 16 | [RF Interference Detection](16-bluejammer/) | Lawful detector side of BlueJammer — **no jammer** | nRF24L01+ (RX-only) | [16-bluejammer](../../16-bluejammer/) |
 
 ## Hardware Part Guides
 
