@@ -3,7 +3,7 @@
 > **Part of:** [Project 14 — The Cyberdeck](../../README.md) · **Integrations index:** [integrations/](../README.md)
 > **Full reference (all options):** [projects/01-esp32-marauder](../../../01-esp32-marauder/)
 > **Deck role:** Primary WiFi/BLE offensive tool
-> **Status:** Ready to build (boards + display in inventory)
+> **Status:** Both Marauders built — CYD #1 (touchscreen) complete, Gold #1 (headless) complete and running standalone in Meshnology Heltec V4 case
 
 ---
 
@@ -129,11 +129,23 @@ touchscreen GUI, no Pi or Gold involved.
 - **Power modes:** SW1 fully cuts Marauder power for the "stealth" / low-draw profiles in the
   [power guide](../parts/power/) — zero RF emission when off.
 
+## Current Status (June 2026)
+
+Both Marauders are flashed and working:
+
+- **CYD #1 (touchscreen Marauder):** Complete. Standalone touchscreen Marauder — power it via USB, use the touch GUI directly. No Pi needed.
+- **Gold #1 (headless Marauder):** Complete. Currently housed in a **Meshnology Heltec V4 case** — the case has the right USB port and antenna cutouts, so it was rigged up as a standalone portable unit. Controlled over USB via [Headless Marauder GUI](https://github.com/LxveAce/headless-marauder-gui) (any laptop/Pi, four front-ends).
+
+**For the cyberdeck:** Gold #1 is currently committed to the standalone setup. To free it up for the deck, either pull it from the Heltec case (it's removable), or **purchase a 4th Lonely Binary Gold** to dedicate to the deck. A 4th Gold is the cleaner path — keeps the standalone headless unit intact while the deck gets its own board on SMA #1.
+
+| Item | For | Est. Price |
+|------|-----|-----------|
+| Lonely Binary ESP32 Gold (single or 3-pack) | Cyberdeck Gold #1 slot (or standalone replacement) | ~$12-36 |
+
 ## Standalone Mode
 
 Both Marauders work with the Pi off. **CYD #1** is a self-contained touchscreen Marauder —
-power it and use it by hand (scans, attacks, PCAP to SD). **Gold #1** runs headless; drive it
-from any serial terminal (a laptop works exactly like the Pi). Nothing about the deck wiring
+power it and use it by hand (scans, attacks, PCAP to SD). **Gold #1** runs headless in the Heltec V4 case; plug it into any laptop via USB, run [Headless Marauder GUI](https://github.com/LxveAce/headless-marauder-gui), and it's fully operational. Nothing about the deck wiring
 ties either one down — pull either board out and it's the same Marauder on the bench.
 
 ## Headless Marauder GUI (the control app)
