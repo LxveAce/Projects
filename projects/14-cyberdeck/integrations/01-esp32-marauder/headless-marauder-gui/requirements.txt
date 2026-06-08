@@ -5,4 +5,4 @@
 
 pyserial>=3.5      # serial link to the board (both apps)
 textual>=0.50      # terminal UI (tui/app.py only)
-esptool>=4.7       # firmware flashing (Flash Firmware feature)
+esptool>=4.7,<6    # firmware flashing — pinned <6: v6 removes the chip_id/write_flash/--flash_size aliases this app uses

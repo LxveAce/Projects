@@ -32,14 +32,26 @@ class FlasherWindow(tk.Toplevel):
         self._label_to_asset = {}
         self._busy = False
         self._need_refill = False   # set by worker threads; applied on the UI thread in _poll
+        self._poll_id = None
+        self._closed = False
 
         self._build()
+        self.protocol("WM_DELETE_WINDOW", self._on_close)
         self._poll()
         if not flasher.esptool_available():
             self._log("[!] esptool not found. Install it:  pip install esptool")
 
         if default_port:
             self.port_var.set(default_port)
+
+    def _on_close(self):
+        self._closed = True
+        if self._poll_id is not None:
+            try:
+                self.after_cancel(self._poll_id)
+            except Exception:
+                pass
+        self.destroy()
 
     # --- layout ----------------------------------------------------------- #
     def _build(self):
@@ -110,6 +122,8 @@ class FlasherWindow(tk.Toplevel):
         self.q.put(s)
 
     def _poll(self):
+        if self._closed or not self.winfo_exists():
+            return
         try:
             while True:
                 line = self.q.get_nowait()
@@ -126,7 +140,7 @@ class FlasherWindow(tk.Toplevel):
         if self._need_refill:
             self._need_refill = False
             self._refill_variants()
-        self.after(40, self._poll)
+        self._poll_id = self.after(40, self._poll)
 
     def _free_port(self):
         """esptool needs exclusive access — drop the live serial connection."""
@@ -197,6 +211,7 @@ class FlasherWindow(tk.Toplevel):
             return self.chip
         self._log("[*] chip unknown — detecting first...")
         self.chip = flasher.detect_chip(port, self._log)
+        self._need_refill = True       # keep the variant list/chip label consistent
         return self.chip
 
     def _flash(self):

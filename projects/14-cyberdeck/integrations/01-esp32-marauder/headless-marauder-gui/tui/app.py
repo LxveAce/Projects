@@ -17,7 +17,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from marauder_core import MarauderController, MarauderParser, commands, flasher
+from marauder_core import MarauderController, MarauderParser, CaptureLogger, commands, flasher
 
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
@@ -73,9 +73,11 @@ class FlashScreen(ModalScreen):
     def _line(self): return lambda s: self.app.call_from_thread(self._log, s)
     def _port(self): return self.query_one("#fport", Input).value.strip()
 
-    def _free(self):
+    def _free(self, on=None):
+        # called from worker threads — never touch widgets here; log via the on() callback
         if self.ctl.connected:
-            self._log("[i] closing serial session so esptool can use the port")
+            if on:
+                on("[i] closing serial session so esptool can use the port")
             self.ctl.disconnect()
 
     def on_button_pressed(self, event: Button.Pressed):
@@ -84,31 +86,39 @@ class FlashScreen(ModalScreen):
         if bid == "close":
             self.dismiss(); return
         if bid == "detect":
-            self._free(); self.run_worker(lambda: self._detect(port), thread=True); return
+            self.run_worker(lambda: self._detect(port), thread=True); return
         if bid == "load":
             self.run_worker(self._load, thread=True); return
         if bid == "erase":
-            self._free(); self.run_worker(lambda: self._erase(port), thread=True); return
+            self.run_worker(lambda: self._erase(port), thread=True); return
         if bid in ("flash_app", "flash_full"):
-            self._free()
             mode = "app" if bid == "flash_app" else "full"
             name = self.query_one("#variant", Select).value
             self.run_worker(lambda: self._flash(mode, port, name), thread=True)
 
-    # workers (run in threads)
+    # workers (run in threads) — all widget access via call_from_thread, all bodies guarded
+    def _set_chip_label(self):
+        self.query_one("#chiplbl", Static).update(f"chip: {self.chip or 'unknown'}")
+
     def _detect(self, port):
         on = self._line()
-        chip = flasher.detect_chip(port, on)
-        self.chip = chip
-        self.app.call_from_thread(self.query_one("#chiplbl", Static).update, f"chip: {chip or 'unknown'}")
-        self.app.call_from_thread(self._refill)
+        try:
+            self._free(on)
+            self.chip = flasher.detect_chip(port, on)
+            self.app.call_from_thread(self._set_chip_label)
+            self.app.call_from_thread(self._refill)
+        except Exception as e:
+            on(f"[error] {e}")
 
     def _load(self):
         on = self._line()
-        on("[*] fetching latest release...")
-        self.tag, self.assets = flasher.latest_release()
-        on(f"[i] {self.tag}: {len(self.assets)} variants")
-        self.app.call_from_thread(self._refill)
+        try:
+            on("[*] fetching latest release...")
+            self.tag, self.assets = flasher.latest_release()
+            on(f"[i] {self.tag}: {len(self.assets)} variants")
+            self.app.call_from_thread(self._refill)
+        except Exception as e:
+            on(f"[error] {e}")
 
     def _refill(self):
         items = flasher.variants_for_chip(self.assets, self.chip) if self.chip else self.assets
@@ -132,29 +142,37 @@ class FlashScreen(ModalScreen):
 
     def _flash(self, mode, port, name):
         on = self._line()
-        if not port:
-            on("[error] enter a port"); return
-        asset = self._by_name.get(name)
-        if not asset:
-            on("[error] Load release + pick a variant first"); return
-        chip = self._resolve_chip(port, on)
-        if not chip:
-            on("[error] chip unknown"); return
-        if asset["chip"] != chip:
-            on(f"[!] variant is for {asset['chip']} but chip is {chip}")
-        cache = flasher.cache_dir()
-        app = flasher.download_to(asset["url"], os.path.join(cache, asset["name"]), on)
-        support = None
-        if mode == "full":
-            on("[*] fetching bootloader/partitions/boot_app0...")
-            support = flasher.support_files(chip, cache, on)
-        rc = flasher.flash(port, chip, app, on, mode=mode, baud=921600, support=support)
-        on("[done] power-cycle the board" if rc == 0 else f"[x] esptool exit {rc}")
+        try:
+            self._free(on)
+            if not port:
+                on("[error] enter a port"); return
+            asset = self._by_name.get(name)
+            if not asset:
+                on("[error] Load release + pick a variant first"); return
+            chip = self._resolve_chip(port, on)
+            if not chip:
+                on("[error] chip unknown"); return
+            if asset["chip"] != chip:
+                on(f"[!] variant is for {asset['chip']} but chip is {chip}")
+            cache = flasher.cache_dir()
+            app = flasher.download_to(asset["url"], os.path.join(cache, asset["name"]), on)
+            support = None
+            if mode == "full":
+                on("[*] fetching bootloader/partitions/boot_app0...")
+                support = flasher.support_files(chip, cache, on)
+            rc = flasher.flash(port, chip, app, on, mode=mode, baud=921600, support=support)
+            on("[done] power-cycle the board" if rc == 0 else f"[x] esptool exit {rc}")
+        except Exception as e:
+            on(f"[error] {e}")
 
     def _erase(self, port):
         on = self._line()
-        chip = self._resolve_chip(port, on) or "esp32"
-        flasher.erase(port, chip, on)
+        try:
+            self._free(on)
+            chip = self._resolve_chip(port, on) or "esp32"
+            flasher.erase(port, chip, on)
+        except Exception as e:
+            on(f"[error] {e}")
 
     def action_close(self):
         self.dismiss()
@@ -178,10 +196,11 @@ class MarauderTUI(App):
         ("c", "focus_input", "Command box"),
     ]
 
-    def __init__(self, controller: MarauderController):
+    def __init__(self, controller: MarauderController, logger=None):
         super().__init__()
         self.ctl = controller
         self.parser = MarauderParser()
+        self.logger = logger or CaptureLogger()
         self._q: "queue.Queue[str]" = queue.Queue()
         self.ctl.subscribe(self._q.put)
 
@@ -227,6 +246,7 @@ class MarauderTUI(App):
                 line = self._q.get_nowait()
                 self._log(line)
                 self.parser.feed(line)
+                self.logger.write_serial(line)
         except queue.Empty:
             pass
 
@@ -241,6 +261,8 @@ class MarauderTUI(App):
             idx = str(a.index) if a.index >= 0 else ""
             table.add_row(idx, a.ssid, a.channel, a.rssi, a.bssid)
         table.border_title = f"Access Points ({len(rows)})"
+        if self.logger.enabled:
+            self.logger.write_snapshot(rows, self.parser.station_rows(), {"port": self.ctl.port})
 
     def _log(self, line: str):
         self.query_one("#log", RichLog).write(line)
@@ -307,10 +329,15 @@ def main():
     ap.add_argument("--port", help="Serial port (default: auto-detect)")
     ap.add_argument("--baud", type=int, default=115200)
     ap.add_argument("--mock", action="store_true", help="Run without hardware")
+    ap.add_argument("--log", nargs="?", const=True, default=None,
+                    help="Log to a dir (default ~/marauder-logs)")
     args = ap.parse_args()
 
     ctl = MarauderController(port=args.port, baud=args.baud, mock=args.mock)
-    MarauderTUI(ctl).run()
+    logger = CaptureLogger(args.log if isinstance(args.log, str) else None)
+    if args.log:
+        logger.start()
+    MarauderTUI(ctl, logger=logger).run()
 
 
 if __name__ == "__main__":
