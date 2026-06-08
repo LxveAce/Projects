@@ -210,15 +210,21 @@ directly and verified):
 
 ## What's Left / Future Work
 
-- **Dashboard app:** Build the actual Flask + SocketIO dashboard (scaffold/protocols documented in
-  `integrations/parts/dashboard/`, still not coded).
-- **`temp_monitor.py`** for the 2.42" OLED (pattern in cooling/dashboard guides).
-- **systemd services:** auto-start files (gpsd → kismet → dashboard).
-- **Physical build:** follow the 9-phase plan in the cyberdeck README + the per-part guides.
+- **RF-research subsystem (OFFERED, awaiting user go-ahead):** make 2.4 GHz **interference/jamming
+  detection** + **nRF24 RX research** (Mousejack/Crazyradio) a first-class deck subsystem — write the
+  nRF24 RX scanner firmware sketch + add an "RF Research" panel/tab to the headless-marauder-gui.
+  Groundwork is in `integrations/16-bluejammer/`. (User wants RF research central; the **jammer itself
+  stays excluded** — see Constraints.)
+- **Headless Marauder GUI:** SHIPPED at github.com/LxveAce/headless-marauder-gui (public, MIT, v1.0.0)
+  — Qt+Tk+TUI, flasher, logging, self-update, installer, in-app Guide tab, deep-debugged. Possible next:
+  response-table polish, the RF-research tab above.
+- **Dashboard app (deck):** the all-in-one Flask/SocketIO dashboard is still designed-not-coded
+  (`integrations/parts/dashboard/`); reuse `marauder_core` from the GUI.
+- **`temp_monitor.py`** for the 2.42" OLED; **systemd** auto-start (gpsd → kismet → dashboard).
+- **Physical build:** follow the 9-phase plan + per-part guides.
 - **Purchases still needed:** Pelican 1300 NF, IP67 SMA bulkheads + pigtails, Coolerguys IP67 fans,
-  Noctua, VK-162 GPS, 2.42" OLED, Flipper Zero (+ AWOK Dual C5 Touch), Orbic RC400L, etc.
-- **Optional:** mirror the corrected S3 firmware note back into the original `01` README if the
-  "don't edit originals" rule is ever relaxed.
+  Noctua, VK-162 GPS, 2.42" OLED, Flipper Zero (+ AWOK Dual C5 Touch), Orbic RC400L, ESP32-DIV
+  board+shield, NRF24L01+PA/LNA, etc.
 
 ---
 
@@ -233,15 +239,28 @@ directly and verified):
 - **No Bluetooth keyboard** — wired only (BLE stealth).
 - **Anker 347** = power bank. **Pelican 1300** = case.
 - **Do NOT modify** `C:\Users\mmrla\Downloads\Barcode Label Gen` (original copy).
+- **No operational RF jammer.** Building/operating a broadband jammer (BlueJammer) is illegal
+  (47 U.S.C. §333 / FCC) with **no research/personal-use exemption** — stated "research/design intent"
+  does NOT change this (unlike deauth, which is an authorized-target technique). BlueJammer is
+  cataloged as reference only; the deck integrates the **lawful detector** instead. Assistant will not
+  write/operationalize the jammer.
 
 ---
 
-## Files Modified This Session
+## Repo state (as of 2026-06-07 — both clean & pushed)
 
-```
-projects/14-cyberdeck/integrations/                     (NEW — 22 files: index + exemplar +
-                                                          12 project guides + 8 part guides)
-CLAUDE-TRANSFER.md                                       (this file)
-```
+**Two repos, both authored as LxveAce, fully pushed:**
+1. **`LxveAce/Projects`** (private) — the kit/cyberdeck repo. Latest: projects 15/16 + their
+   cyberdeck integrations. Contains `projects/01..16/`, `14-cyberdeck/integrations/` (index +
+   exemplar + project guides 01-13,15,16 + 8 `parts/` guides), and a **mirror** of the GUI under
+   `14-cyberdeck/integrations/01-esp32-marauder/headless-marauder-gui/`.
+2. **`LxveAce/headless-marauder-gui`** (PUBLIC, MIT) — the shipped GUI product (authoritative for the
+   app; self-update pulls from here). Qt + Tk + TUI on shared `marauder_core` + flasher + capture +
+   updater + install.sh + GUIDE.md + in-app Guide tab.
 
-No existing files were edited (verified via `git status` — only the new `integrations/` tree).
+`.gitattributes` in both forces LF for `*.sh`/`*.py` (Windows-edited → Linux-run safe).
+Local working copies: `C:\Users\extra\projects\Projects` and `C:\Users\extra\projects\headless-marauder-gui`
+(user's canonical path for the kit repo is `C:\Users\mmrla\Projects`). After restart: `git pull` both.
+
+Honored throughout: don't edit original project READMEs / cyberdeck `README.md`; commit as LxveAce,
+no Claude co-author.
