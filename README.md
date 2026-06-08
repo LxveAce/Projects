@@ -103,6 +103,7 @@ Full inventory of all purchased hardware with datasheets, drivers, and setup gui
 | USB Rubber Ducky (Hak5) | Rubber Ducky | ~$80 | Low (can DIY) |
 | Orbic Speed RC400L | RayHunter | ~$20-30 used | Medium |
 | Lonely Binary ESP32 Gold (1 or 3-pack) | Cyberdeck Marauder (Gold #1 in use as standalone) | ~$12-36 | Medium |
+| Foldable USB Solar Panel (20-28W) | Cyberdeck (solar charging) | ~$40-70 | Medium |
 | GPS Module (USB or UART) | Kismet Wardriving | ~$15-25 | Medium |
 | LattePanda Delta 3 (or x64 SBC) | Project Nomad | ~$200-300 | Low |
 | Alfa AWUS036ACM (or similar) | Kismet (monitor mode) | ~$40-50 | Medium |
