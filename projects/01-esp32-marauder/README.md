@@ -1,4 +1,4 @@
-# ESP32 Marauder -- Comprehensive Guide
+# ESP32 Marauder
 
 ---
 
@@ -19,18 +19,11 @@
 
 ## 1. Overview
 
-**What it is:** ESP32 Marauder is an open-source suite of WiFi and Bluetooth offensive and defensive security tools built for ESP32 microcontrollers. It transforms an inexpensive ESP32 development board into a portable wireless penetration testing toolkit capable of scanning, attacking, sniffing, and analyzing WiFi and Bluetooth traffic.
+ESP32 Marauder is an open-source WiFi and Bluetooth security toolkit for ESP32 boards. Flash it onto a $10 dev board and you get a pocket-sized scanner, sniffer, and attack platform for wireless pentesting.
 
-**Creator:** Developed and maintained by **justcallmekoko** (GitHub). Official store at [justcallmekokollc.com](https://justcallmekokollc.com).
+**Creator:** justcallmekoko ([GitHub](https://github.com/justcallmekoko)) · [justcallmekokollc.com](https://justcallmekokollc.com)
 
-**Project Stats (as of June 2026):**
-
-- 11,100+ GitHub stars, 1,300+ forks
-- 1,751 commits, 169 releases (latest: v1.12.1, May 5 2026)
-- Codebase: 77.2% C++, 21.4% C
-- Active community via Gitter chat, Twitter, Instagram
-
-**Core Purpose:** Replaces bulky WiFi/Bluetooth traffic analysis equipment with a pocket-sized device. Designed for authorized security research, penetration testing, network auditing, and educational use.
+**Stats (June 2026):** 11,100+ stars, 1,300+ forks, 169 releases (latest v1.12.1). Codebase is 77.2% C++, 21.4% C.
 
 ---
 

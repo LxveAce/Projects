@@ -1,6 +1,6 @@
-# Comprehensive OSINT (Open Source Intelligence) & CTI Guide
+# OSINT & CTI
 
-A practical reference covering tools, methodology, workstation setup, training resources, and legal/ethical guidelines for Open Source Intelligence and Cyber Threat Intelligence.
+Tools, methodology, workstation setup, training, and legal guidelines for open-source intelligence and cyber threat intelligence.
 
 ---
 
@@ -21,13 +21,11 @@ A practical reference covering tools, methodology, workstation setup, training r
 
 ### What is OSINT?
 
-Open Source Intelligence (OSINT) is a methodology and set of practices for collecting, processing, analyzing, and disseminating actionable intelligence derived from publicly accessible information sources. These sources include websites, social media platforms, public records, academic publications, news articles, government reports, satellite imagery, radio broadcasts, and more.
-
-The critical distinction between OSINT and casual internet searching is the structured intelligence cycle: requirements definition, collection, processing, analysis, dissemination, and feedback. OSINT transforms raw public data into validated, contextualized intelligence products.
+OSINT is intelligence gathered from publicly available sources — websites, social media, public records, news, government reports, satellite imagery, etc. The difference between OSINT and just googling something is structure: you follow an intelligence cycle (define requirements, collect, process, analyze, report) instead of ad-hoc searching.
 
 ### What is CTI?
 
-Cyber Threat Intelligence (CTI) is a specialized subdomain that applies OSINT methodologies specifically to cybersecurity threats. CTI focuses on understanding threat actors, their tactics/techniques/procedures (TTPs), indicators of compromise (IOCs), vulnerabilities, and the broader threat landscape. CTI is typically divided into three tiers:
+CTI (Cyber Threat Intelligence) applies OSINT specifically to cybersecurity — tracking threat actors, their TTPs, IOCs, and the broader threat landscape. It breaks down into three tiers:
 
 - **Strategic Intelligence** -- Long-term trends, threat actor motivations, geopolitical context. Audience: executives and decision-makers.
 - **Operational Intelligence** -- Campaigns, attack patterns, breach data, vulnerability tracking. Audience: security managers and incident responders.

@@ -1,8 +1,8 @@
-# Project N.O.M.A.D. -- Comprehensive Guide
+# Project N.O.M.A.D.
 
 **Node for Offline Media, Archives, and Data**
 
-> A free, open-source, self-contained offline knowledge and education server packed with critical tools, knowledge bases, and local AI -- accessible via any web browser, anytime, anywhere.
+> An offline knowledge server with local AI, Wikipedia, Khan Academy, survival references, and more — runs on a single box, no internet required.
 
 ---
 
@@ -23,7 +23,7 @@
 
 ## 1. Overview and Use Cases
 
-Project N.O.M.A.D. is a free, open-source (Apache 2.0), self-contained offline knowledge and education server created by [Crosstalk Solutions](https://github.com/Crosstalk-Solutions). It bundles critical tools, knowledge bases, and local AI into a single Docker-orchestrated platform accessible via any web browser. The core philosophy: download everything while online, then run entirely disconnected -- no internet, no cloud, no signal required. Zero telemetry by design.
+Project N.O.M.A.D. is an open-source (Apache 2.0) offline server by [Crosstalk Solutions](https://github.com/Crosstalk-Solutions) that bundles knowledge bases, local AI, and educational content into a Docker stack you access through a browser. Download everything while you have internet, then run it fully disconnected. No cloud, no telemetry.
 
 **Repository stats (as of June 2026):** 29.1k GitHub stars, 2.9k forks, 69 releases (latest v1.32.1), 582 commits, Apache 2.0 license.
 

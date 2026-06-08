@@ -1,4 +1,4 @@
-# RayHunter by EFF: Comprehensive Guide to IMSI Catcher Detection
+# RayHunter
 
 ## Table of Contents
 

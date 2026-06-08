@@ -1,4 +1,4 @@
-# Chasing Your Tail NG -- Comprehensive Guide to BLE/Wi-Fi Surveillance Detection
+# Chasing Your Tail NG
 
 ## 1. Overview and Problem It Solves
 

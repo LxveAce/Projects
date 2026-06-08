@@ -1,6 +1,6 @@
-# USB Rubber Ducky by Hak5 -- Comprehensive Guide
+# USB Rubber Ducky
 
-A complete reference covering the Hak5 USB Rubber Ducky keystroke injection platform: hardware specifications, DuckyScript 3.0 language, setup instructions, payload examples, DIY alternatives, defense strategies, legal considerations, and purchasing information.
+Hak5's keystroke injection tool — hardware, DuckyScript 3.0, payloads, DIY alternatives, and defenses.
 
 ---
 
