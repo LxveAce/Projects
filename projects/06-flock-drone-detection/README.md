@@ -1,6 +1,6 @@
-# Comprehensive Guide: Flock Camera Detection & Drone Detection
+# Flock Camera & Drone Detection
 
-A complete technical reference covering DIY detection of Flock Safety ALPR surveillance cameras and drone detection using ESP32-based hardware, SDR, and acoustic methods.
+DIY detection of Flock Safety ALPR cameras and drones using ESP32, SDR, and acoustic methods.
 
 ---
 

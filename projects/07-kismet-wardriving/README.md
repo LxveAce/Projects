@@ -1,4 +1,4 @@
-# Kismet Wireless Network Detector and Wardriving -- Comprehensive Guide
+# Kismet Wardriving
 
 ---
 

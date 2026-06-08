@@ -1,4 +1,4 @@
-# BLE (Bluetooth Low Energy) Detection and Tracking -- Comprehensive Guide
+# BLE Detection & Tracking
 
 ---
 

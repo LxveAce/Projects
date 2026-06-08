@@ -1,4 +1,4 @@
-# NyanBOX Portable Pentesting Toolkit -- Comprehensive Guide
+# NyanBOX
 
 ## Table of Contents
 

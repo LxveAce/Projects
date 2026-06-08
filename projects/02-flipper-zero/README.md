@@ -1,4 +1,4 @@
-# Flipper Zero -- Comprehensive Guide
+# Flipper Zero
 
 > Last updated: June 2026
 
@@ -485,7 +485,7 @@ Visit flipper.net/pages/resellers and select your country for a complete list of
 
 ---
 
-## Sources
+## 8. Sources
 
 - [Flipper Zero Official Product Page](https://flipper.net/products/flipper-zero)
 - [Flipper Zero Technical Specs (Official Docs)](https://docs.flipper.net/zero/development/hardware/tech-specs)

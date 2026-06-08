@@ -1,4 +1,4 @@
-# ESP Terminator -- Comprehensive Guide
+# ESP Terminator
 
 ## Table of Contents
 
@@ -16,7 +16,7 @@
 
 ## 1. Overview
 
-**ESP Terminator** is a browser-based web flasher tool designed to simplify the process of flashing firmware onto ESP32 microcontrollers, Flipper Zero WiFi dev boards, and Meshtastic devices. It is NOT a piece of hardware or a standalone hacking device -- it is a **web application** hosted at [https://espterminator.com](https://espterminator.com) that acts as a universal firmware installer for the ESP32 security research ecosystem.
+**ESP Terminator** is a browser-based web flasher for ESP32 boards, Flipper Zero WiFi dev boards, and Meshtastic devices. It's not hardware — it's a web app at [espterminator.com](https://espterminator.com) that flashes security firmware onto your boards without needing Arduino IDE or command-line tools.
 
 The tool was created/promoted by **dagnazty** (GitHub: [github.com/dagnazty](https://github.com/dagnazty)), a security researcher and developer who builds tools for hardware hacking, penetration testing, and embedded systems. dagnazty maintains 54 GitHub repositories spanning Flipper Zero payloads, ESP32 firmware, evil portal tools, and more.
 

@@ -1,4 +1,4 @@
-# Pwnagotchi: Comprehensive Guide
+# Pwnagotchi
 
 An AI-powered WiFi auditing tool built on Raspberry Pi Zero W, using deep reinforcement learning to maximize WPA handshake captures.
 

@@ -1,4 +1,4 @@
-# Meshtastic Mesh Networking Platform -- Comprehensive Guide
+# Meshtastic
 
 ---
 
@@ -22,7 +22,7 @@
 
 ### What is Meshtastic?
 
-Meshtastic is an open-source, off-grid, decentralized mesh networking platform built to run on affordable, low-power devices. It enables text messaging, GPS location sharing, and telemetry data exchange without any reliance on cellular networks, Wi-Fi, or internet infrastructure. Communication is pure peer-to-peer.
+Meshtastic is an open-source mesh networking platform that runs on cheap LoRa radios. It does text messaging, GPS sharing, and telemetry over peer-to-peer radio links — no cell towers, no WiFi, no internet needed.
 
 ### How Mesh Networking Works
 
@@ -656,11 +656,11 @@ For a "Project Nomad" concept (mobile, off-grid, autonomous communication and co
 - **Sensor network**: Environmental monitoring sensors (temperature, weather, motion) reporting over the mesh
 - **MQTT gateway**: One node with internet access (cellular hotspot or satellite like Starlink) bridges the local mesh to remote contacts worldwide
 
-The combination of Meshtastic (long-range text/GPS) + HAVEN (IP mesh/internet sharing) + a portable power system (solar + batteries) creates a complete off-grid mobile communication platform that requires zero existing infrastructure.
+Pair Meshtastic (long-range text/GPS) with HAVEN (IP mesh/internet sharing) and a solar power setup, and you've got text, GPS, and internet sharing off-grid with no infrastructure needed.
 
 ---
 
-## Sources
+## 11. Sources
 
 - [Meshtastic Official Site](https://meshtastic.org/)
 - [Meshtastic Getting Started Guide](https://meshtastic.org/docs/getting-started/)
