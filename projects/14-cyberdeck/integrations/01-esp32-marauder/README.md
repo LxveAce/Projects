@@ -14,7 +14,7 @@
 | **Board** | Lonely Binary ESP32 **Gold #1** |
 | **Chip** | **Classic ESP32** (WROOM-class, 16 MB flash, CH340 USB) — *not* an S3 |
 | **Firmware** | ESP32 Marauder, the **standard ESP32 (WROOM)** build — *not* `_multiboardS3.bin` |
-| **Flash tool** | [ESP Terminator](https://espterminator.com/) web flasher |
+| **Flash tool** | [ESP Terminator](https://espterminator.com/) web flasher, or the [built-in flasher](https://github.com/LxveAce/headless-marauder-gui) in Headless Marauder GUI |
 | **Display** | CYD #1 — its *own* standalone touchscreen Marauder (a separate device, **not** a display wired to the Gold) |
 | **Antenna** | IPEX → U.FL pigtail → **SMA bulkhead #1** ("MAR") → Bingfu 2.4/5.8 GHz |
 | **Power** | Powered USB hub, gated by toggle **SW1** |
@@ -136,7 +136,24 @@ power it and use it by hand (scans, attacks, PCAP to SD). **Gold #1** runs headl
 from any serial terminal (a laptop works exactly like the Pi). Nothing about the deck wiring
 ties either one down — pull either board out and it's the same Marauder on the bench.
 
+## Headless Marauder GUI (the control app)
+
+The Gold runs headless — no screen, serial CLI only. To actually use it from the Pi, there's a dedicated app:
+
+**[Headless Marauder GUI](https://github.com/LxveAce/headless-marauder-gui)** (v1.2.0) — a native Python app with four front-ends (PyQt5 GUI, Tkinter, TUI, browser UI), 70+ Marauder commands, live AP/Station tables, a target picker, built-in firmware flasher, and data logging.
+
+**On the cyberdeck (Pi 5 / ARM64):**
+
+- **Standalone binary (easiest):** download the [Linux ARM64 build](https://github.com/LxveAce/headless-marauder-gui/releases/latest) from the Releases page. No Python, no pip, no venv — just `chmod +x` and run. Requires a 64-bit Pi OS.
+- **From source:** `git clone https://github.com/LxveAce/headless-marauder-gui.git && cd headless-marauder-gui && ./install.sh` — installs all four UIs as commands.
+- **Browser UI:** run `headless-marauder-web` and open `localhost:5000` on the Pi's display or from any device on the same network (`--host 0.0.0.0`).
+
+The app's `marauder_core` library is importable — the cyberdeck [dashboard](../parts/dashboard/) reuses it to show Marauder data alongside Kismet, Meshtastic, and GPS.
+
+For the manual serial approach (picocom, screen, etc.) and third-party Web Serial GUIs, see [headless-on-kali](headless-on-kali/).
+
 ## Source / Upstream
 
 - Upstream firmware: [justcallmekoko/ESP32Marauder](https://github.com/justcallmekoko/ESP32Marauder)
+- Headless Marauder GUI: [LxveAce/headless-marauder-gui](https://github.com/LxveAce/headless-marauder-gui)
 - Full options, attack usage, legal notes: [projects/01-esp32-marauder](../../../01-esp32-marauder/)
