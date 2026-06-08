@@ -136,11 +136,12 @@ Pi 5, WiFi adapters, and storage ready. Need GPS module for full wardriving. See
 
 ## Projects Needing Troubleshooting
 
-### Pwnagotchi -- Display Not Working
-- **Issue:** E-ink display blank, HDMI output also blank
-- **Likely Cause:** GPIO soldering issues on Pi Zero
-- **Action Items:** Test solder joints with Fluke multimeter, check continuity, potentially reflow joints
-- **Full troubleshooting guide:** [projects/03-pwnagotchi/](projects/03-pwnagotchi/)
+### Pwnagotchi -- Not Booting
+- **Issue:** Display blank, not broadcasting on 2.4GHz (Marauder's sniffpwn detected nothing)
+- **Hardware ruled out:** Fluke 17B+ confirmed proper voltage and continuity on all GPIO pins
+- **Likely Cause:** Boot/image issue — Pi probably isn't running Pwnagotchi at all
+- **Next Step:** Connect to PC via USB RNDIS, check if Pi responds to SSH at 10.0.0.2
+- **Full debug plan:** [cyberdeck integration guide](projects/14-cyberdeck/integrations/03-pwnagotchi/)
 
 ### Meshtastic -- Node Not Detected via USB
 - **Issue:** Computer doesn't detect node when plugged in
