@@ -24,6 +24,8 @@ A curated collection of cybersecurity, wireless, and hardware hacking projects -
 | 12 | [USB Rubber Ducky](projects/12-usb-rubber-ducky/) | Not Yet Purchased | Easy | Keystroke injection tool (or DIY with ESP32) |
 | 13 | [ESP Terminator](projects/13-esp-terminator/) | Ready to Use | Easy | Web-based ESP32 firmware flasher for multiple tools |
 | 14 | [Cyberdeck](projects/14-cyberdeck/) | Brainstorm | Hard | All-in-one portable security rig (Pi 5 + ESP32s + Meshtastic + Kismet) |
+| 15 | [ESP32-DIV](projects/15-esp32-div/) | Evaluating | Medium | Open-source ESP32-S3 multitool — Sub-GHz, IR, RFID/NFC, 2.4GHz (Flipper-class) |
+| 16 | [BlueJammer-V2](projects/16-bluejammer/) | Reference only | -- | 2.4GHz RF jammer — cataloged for reference; deck uses the lawful **detector** instead |
 
 ---
 
@@ -102,6 +104,8 @@ Full inventory of all purchased hardware with datasheets, drivers, and setup gui
 | GPS Module (USB or UART) | Kismet Wardriving | ~$15-25 | Medium |
 | LattePanda Delta 3 (or x64 SBC) | Project Nomad | ~$200-300 | Low |
 | Alfa AWUS036ACM (or similar) | Kismet (monitor mode) | ~$40-50 | Medium |
+| ESP32-DIV board + RF shield (ESP32-S3, CC1101, 3x NRF24, IR) | ESP32-DIV | ~$40-70 DIY | Medium |
+| NRF24L01+ PA/LNA module (+ 3.3V adapter/cap) | RF interference detect / Mousejack research | ~$8-12 | Low |
 | ~~Soldering Iron + Accessories~~ | ~~General~~ | -- | **Owned** |
 
 ---
@@ -195,6 +199,9 @@ Pi 5, WiFi adapters, and storage ready. Need GPS module for full wardriving. See
 | Chasing Your Tail NG | Chasing Your Tail | [ArgeliusLabs/Chasing-Your-Tail-NG](https://github.com/ArgeliusLabs/Chasing-Your-Tail-NG) |
 | Kismet | Kismet | [kismetwireless](https://github.com/kismetwireless) |
 | Open Source CTI Tools | OSINT (Resource) | [BushidoUK/Open-source-tools-for-CTI](https://github.com/BushidoUK/Open-source-tools-for-CTI) |
+| ESP32-DIV | ESP32-DIV | [cifertech/esp32-div](https://github.com/cifertech/esp32-div) |
+| Headless Marauder GUI | Marauder / Cyberdeck | [LxveAce/headless-marauder-gui](https://github.com/LxveAce/headless-marauder-gui) |
+| Mousejack (nRF24 research) | BlueJammer detector | [BastilleResearch/mousejack](https://github.com/BastilleResearch/mousejack) |
 
 ---
 

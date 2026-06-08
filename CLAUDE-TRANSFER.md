@@ -175,6 +175,25 @@ Added this session:
   default fixed (`sourapple`). Kept the 6 "dead BT command" flags — the official Marauder wiki CLI
   list includes them, contradicting the agent's firmware-source reading.
 
+### Added projects 15 & 16 (2026-06-07): ESP32-DIV + BlueJammer (researched)
+
+Evaluated two community tools (research workflow's fetch agents failed on network; re-fetched repos
+directly and verified):
+- **Project 15 — ESP32-DIV** (`cifertech/esp32-div`, **MIT, open**): ESP32-S3 handheld multitool,
+  shield = 3× NRF24 + CC1101 + IR. Genuinely **new to the deck**: Sub-GHz (CC1101), IR, RFID/NFC,
+  raw 2.4 GHz NRF24 analyzer, deauth detector. WiFi/BLE attack features duplicate Marauder; **jam
+  modes excluded (illegal)**. Added as `projects/15-esp32-div/` + cyberdeck integration
+  `integrations/15-esp32-div/` (companion device, like Flipper — overlaps Flipper's Sub-GHz/RFID/IR).
+- **Project 16 — BlueJammer-V2** (`EmenstaNougat/BlueJammer-V2`, **closed-source, "All Rights
+  Reserved"**): pure 2.4 GHz **RF jammer** (NRF24 ×1–4 + BW16 5 GHz controller). **Operating a jammer
+  is illegal** (47 U.S.C. §333 / FCC, no exception; DoS). Cataloged as reference-only in
+  `projects/16-bluejammer/`; the **cyberdeck integration is the LAWFUL counterpart** —
+  `integrations/16-bluejammer/` = 2.4 GHz interference/**jamming detection** (nRF24 RX RSSI sweep) +
+  Mousejack/Crazyradio research. **No jammer on the deck.** (Deck already has 5 GHz via Panda+Kismet,
+  so BW16 redundant.)
+- Updated root `README.md` (project table rows 15/16, git-repos, still-need), `integrations/README.md`
+  index, and the still-need list.
+
 ## Critical Discoveries (still valid)
 
 1. **Lonely Binary ESP32 Gold is a CLASSIC ESP32** (WROOM-class, CH340, 16MB flash) — verified
