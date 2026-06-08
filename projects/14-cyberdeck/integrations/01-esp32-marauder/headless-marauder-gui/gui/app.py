@@ -34,6 +34,32 @@ DANGER = "#ff4d4d"
 MUTED = "#7a8f76"
 
 
+class _Tooltip:
+    """Tiny hover tooltip for a Tk widget."""
+    def __init__(self, widget, text):
+        self.widget = widget
+        self.text = text
+        self.tip = None
+        widget.bind("<Enter>", self._show)
+        widget.bind("<Leave>", self._hide)
+
+    def _show(self, _evt):
+        if self.tip or not self.text:
+            return
+        x = self.widget.winfo_rootx() + 18
+        y = self.widget.winfo_rooty() + self.widget.winfo_height() + 4
+        self.tip = tk.Toplevel(self.widget)
+        self.tip.wm_overrideredirect(True)
+        self.tip.wm_geometry(f"+{x}+{y}")
+        tk.Label(self.tip, text=self.text, bg=PANEL, fg=FG, justify="left",
+                 relief="solid", borderwidth=1, wraplength=360, padx=6, pady=3).pack()
+
+    def _hide(self, _evt):
+        if self.tip:
+            self.tip.destroy()
+            self.tip = None
+
+
 class ParamDialog(tk.Toplevel):
     """Modal form to fill a command's parameters; returns values via .result."""
 
@@ -211,6 +237,8 @@ class MarauderGUI(tk.Tk):
                 btn = ttk.Button(lf, text=c.label, width=22,
                                  style="Danger.TButton" if c.danger else "TButton",
                                  command=lambda cmd=c: self._run_command(cmd))
+                tip = c.desc + ("\n(attack — authorized only)" if c.danger else "") + f"\nsends: {c.base}"
+                _Tooltip(btn, tip)
                 btn.grid(row=row, column=col, padx=3, pady=3, sticky="w")
                 col += 1
                 if col >= 2:
