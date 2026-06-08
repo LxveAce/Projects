@@ -21,30 +21,40 @@ import threading
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QKeySequence
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
     QPushButton, QLabel, QLineEdit, QComboBox, QPlainTextEdit, QTabWidget,
     QTableWidget, QTableWidgetItem, QGroupBox, QScrollArea, QSplitter, QDialog,
     QFormLayout, QCheckBox, QRadioButton, QFileDialog, QMessageBox, QAbstractItemView,
-    QHeaderView, QButtonGroup,
+    QHeaderView, QButtonGroup, QAction, QShortcut, QStatusBar,
 )
 
-from marauder_core import MarauderController, MarauderParser, commands, flasher
+from marauder_core import (
+    MarauderController, MarauderParser, CaptureLogger, commands, flasher, updater, __version__,
+)
+
+# Scan commands that should kick off auto "list" polling so the tables fill themselves.
+_AP_SCANS = {"scanap", "scanall"}
+_STA_SCANS = {"scansta"}
 
 DARK_QSS = """
 QWidget { background: #0b0f0a; color: #c8f7c5; font-size: 12px; }
 QGroupBox { border: 1px solid #1d2b18; border-radius: 6px; margin-top: 10px; }
 QGroupBox::title { subcontrol-origin: margin; left: 8px; padding: 0 4px; color: #39ff14; }
-QPushButton { background: #14210f; border: 1px solid #2a3d22; border-radius: 5px; padding: 5px; }
+QPushButton { background: #14210f; border: 1px solid #2a3d22; border-radius: 5px; padding: 6px 8px; min-height: 26px; }
 QPushButton:hover { background: #1c3016; border-color: #39ff14; }
 QPushButton#danger { color: #ff6b6b; border-color: #5a2222; }
 QPushButton#stop { background: #ff4d4d; color: #ffffff; font-weight: bold; }
 QPlainTextEdit, QTableWidget { background: #05080a; color: #39ff14; border: 1px solid #1d2b18; }
-QLineEdit, QComboBox { background: #11160f; border: 1px solid #2a3d22; border-radius: 4px; padding: 3px; }
-QHeaderView::section { background: #14210f; color: #39ff14; border: 0; padding: 4px; }
-QTabBar::tab { background: #11160f; padding: 6px 12px; }
+QLineEdit, QComboBox { background: #11160f; border: 1px solid #2a3d22; border-radius: 4px; padding: 5px; min-height: 22px; }
+QHeaderView::section { background: #14210f; color: #39ff14; border: 0; padding: 5px; }
+QTabBar::tab { background: #11160f; padding: 8px 14px; }
 QTabBar::tab:selected { background: #1c3016; color: #39ff14; }
+QCheckBox { spacing: 6px; }
+QMenuBar { background: #11160f; } QMenuBar::item:selected { background: #1c3016; }
+QMenu { background: #11160f; border: 1px solid #2a3d22; } QMenu::item:selected { background: #1c3016; }
+QStatusBar { background: #11160f; color: #7a8f76; }
 QLabel#status_ok { color: #39ff14; }
 QLabel#status_bad { color: #ff4d4d; }
 """
@@ -90,6 +100,12 @@ class ParamDialog(QDialog):
             if p.required and not isinstance(w, QCheckBox) and not str(vals[p.name]).strip():
                 QMessageBox.warning(self, "Missing", f"'{p.name}' is required.")
                 return
+            if p.kind == "int" and str(vals[p.name]).strip():
+                try:
+                    vals[p.name] = int(str(vals[p.name]).strip())
+                except ValueError:
+                    QMessageBox.warning(self, "Invalid number", f"'{p.name}' must be a whole number.")
+                    return
         self.values = vals
         self.accept()
 
@@ -98,12 +114,13 @@ class ParamDialog(QDialog):
 class TargetPicker(QDialog):
     """Pick APs to select from the parsed list (index-accurate) + manual fallback."""
 
-    def __init__(self, parent, controller, parser, base, list_cmd):
+    def __init__(self, parent, controller, parser, base, list_cmd, kind="ap"):
         super().__init__(parent)
         self.ctl = controller
         self.parser = parser
         self.base = base               # e.g. "select -a"
         self.list_cmd = list_cmd       # e.g. "list -a"
+        self.kind = kind               # "ap" or "sta"
         self.result_cmd = None
         self.setWindowTitle("Select targets")
         self.resize(580, 500)
@@ -118,7 +135,7 @@ class TargetPicker(QDialog):
         row.addStretch(); lay.addLayout(row)
 
         self.table = QTableWidget(0, 5)
-        self.table.setHorizontalHeaderLabels(["pick", "#", "SSID", "Ch", "RSSI"])
+        self.table.setHorizontalHeaderLabels(["pick", "#", "SSID / MAC", "Ch", "RSSI"])
         self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)
@@ -138,20 +155,25 @@ class TargetPicker(QDialog):
         lay.addLayout(brow)
 
         self._populate()
-        if not self.parser.indexed_aps():       # nothing pulled yet — grab it
+        if not self._source_rows():             # nothing pulled yet — grab it
             self._refresh()
 
+    def _source_rows(self):
+        return self.parser.indexed_stations() if self.kind == "sta" else self.parser.indexed_aps()
+
     def _populate(self):
-        aps = self.parser.indexed_aps()
-        self.table.setRowCount(len(aps))
+        rows = self._source_rows()
+        self.table.setRowCount(len(rows))
         self._checks = []
-        for r, a in enumerate(aps):
+        for r, a in enumerate(rows):
             cb = QCheckBox()
             holder = QWidget(); h = QHBoxLayout(holder)
             h.addWidget(cb); h.setAlignment(Qt.AlignCenter); h.setContentsMargins(0, 0, 0, 0)
             self.table.setCellWidget(r, 0, holder)
             self._checks.append((a.index, cb))
-            for c, val in enumerate([a.index, a.ssid, a.channel, a.rssi], start=1):
+            name = getattr(a, "ssid", "") or getattr(a, "mac", "")
+            ch = getattr(a, "channel", "")
+            for c, val in enumerate([a.index, name, ch, a.rssi], start=1):
                 self.table.setItem(r, c, QTableWidgetItem(str(val)))
 
     def _refresh(self):
@@ -365,23 +387,42 @@ class FlasherDialog(QDialog):
         self._free()
         self._work(lambda: flasher.erase(port, self._resolve_chip(port) or "esp32", self._log))
 
+    def closeEvent(self, ev):
+        if self._busy:
+            QMessageBox.warning(self, "Flashing",
+                                "A flash/erase is in progress — let it finish before closing.")
+            ev.ignore(); return
+        try:
+            self.timer.stop()
+        except Exception:
+            pass
+        ev.accept()
+
 
 # --------------------------------------------------------------------------- #
 class MainWindow(QMainWindow):
-    def __init__(self, controller):
+    def __init__(self, controller, log_dir=None):
         super().__init__()
         self.ctl = controller
         self.parser = MarauderParser()
+        self.logger = CaptureLogger(log_dir)
         self.q = queue.Queue()
         self.ctl.subscribe(self.q.put)
+        self._updating = False
+        self._autolist_cmd = None
+        self._snap_skip = 0
 
-        self.setWindowTitle("Headless Marauder — Qt")
-        self.resize(1180, 760)
+        self.setWindowTitle("Headless Marauder")
+        self.resize(1200, 780)
         self.setStyleSheet(DARK_QSS)
         self._build()
+        self._build_menu()
+        self._build_shortcuts()
 
+        self.t_autolist = QTimer(self); self.t_autolist.timeout.connect(self._do_autolist)
         self.t_drain = QTimer(self); self.t_drain.timeout.connect(self._drain); self.t_drain.start(40)
         self.t_tables = QTimer(self); self.t_tables.timeout.connect(self._refresh_tables); self.t_tables.start(700)
+        self._update_statusbar()
 
     # --- ui --------------------------------------------------------------- #
     def _build(self):
@@ -396,10 +437,16 @@ class MainWindow(QMainWindow):
         rb = QPushButton("↻"); rb.setFixedWidth(32); rb.clicked.connect(self._refresh_ports); bar.addWidget(rb)
         self.connect_btn = QPushButton("Connect"); self.connect_btn.clicked.connect(self._toggle); bar.addWidget(self.connect_btn)
         self.status = QLabel("disconnected"); self.status.setObjectName("status_bad"); bar.addWidget(self.status)
+        self.autolist_cb = QCheckBox("Auto-list"); self.autolist_cb.setChecked(True)
+        self.autolist_cb.setToolTip("While scanning, auto-pull 'list -a' so the tables fill themselves")
+        bar.addWidget(self.autolist_cb)
+        self.log_btn = QPushButton("● Log: off"); self.log_btn.setCheckable(True)
+        self.log_btn.clicked.connect(self._toggle_log); bar.addWidget(self.log_btn)
         bar.addStretch()
         fb = QPushButton("⚡ Flash Firmware"); fb.clicked.connect(self._flasher); bar.addWidget(fb)
         sb = QPushButton("STOP"); sb.setObjectName("stop"); sb.clicked.connect(self._stop); bar.addWidget(sb)
         root.addLayout(bar)
+        self.setStatusBar(QStatusBar())
 
         # body splitter
         split = QSplitter(Qt.Horizontal); root.addWidget(split, 1)
@@ -412,7 +459,7 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(self.console, "Console")
         self.ap_table = self._make_table(["#", "SSID", "Ch", "RSSI", "BSSID"])
         self.tabs.addTab(self.ap_table, "Access Points")
-        self.sta_table = self._make_table(["Station MAC", "AP BSSID", "RSSI"])
+        self.sta_table = self._make_table(["#", "Station MAC", "AP", "RSSI"])
         self.tabs.addTab(self.sta_table, "Stations")
         rl.addWidget(self.tabs, 1)
 
@@ -448,13 +495,17 @@ class MainWindow(QMainWindow):
         t.setEditTriggers(QAbstractItemView.NoEditTriggers)
         t.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         t.verticalHeader().setVisible(False)
+        t.verticalHeader().setDefaultSectionSize(28)   # touch-friendly rows
+        t.setSelectionBehavior(QAbstractItemView.SelectRows)
         return t
 
     # --- actions ---------------------------------------------------------- #
     def _run(self, cmd):
-        # Selecting APs: open the picker fed by the parsed list (index-accurate).
-        if cmd.id == "select_ap":
-            dlg = TargetPicker(self, self.ctl, self.parser, cmd.base, "list -a")
+        # Selecting APs/Stations: open the picker fed by the parsed indexed list.
+        if cmd.id in ("select_ap", "select_sta"):
+            kind = "sta" if cmd.id == "select_sta" else "ap"
+            list_cmd = "list -c" if kind == "sta" else "list -a"
+            dlg = TargetPicker(self, self.ctl, self.parser, cmd.base, list_cmd, kind=kind)
             if dlg.exec_() == QDialog.Accepted and dlg.result_cmd:
                 self._guarded_send(dlg.result_cmd)
             return
@@ -477,18 +528,138 @@ class MainWindow(QMainWindow):
 
     def _guarded_send(self, line):
         if not self.ctl.connected:
-            self._append("[error] not connected"); return
+            self._append("[error] not connected — click Connect first"); return
         try:
             self.ctl.send(line)
         except Exception as e:
-            self._append(f"[error] {e}")
+            self._append(f"[error] {e}"); return
+        self._react_to_command(line)
+
+    def _react_to_command(self, line):
+        first = line.strip().split()[0] if line.strip() else ""
+        if first == "stopscan":
+            self._stop_autolist()
+        elif first in _AP_SCANS and self.autolist_cb.isChecked():
+            self._start_autolist("list -a")
+        elif first in _STA_SCANS and self.autolist_cb.isChecked():
+            self._start_autolist("list -c")
 
     def _stop(self):
         if self.ctl.connected:
             self.ctl.stop()
+        self._stop_autolist()
 
     def _flasher(self):
-        FlasherDialog(self, self.ctl, default_port=self.port.currentText().strip()).exec_()
+        self._stop_autolist()
+        self._flash_dlg = FlasherDialog(self, self.ctl, default_port=self.port.currentText().strip())
+        self._flash_dlg.exec_()
+
+    # --- auto-list: fills the AP/Station tabs while a scan runs ------------ #
+    def _start_autolist(self, cmd):
+        self._autolist_cmd = cmd
+        QTimer.singleShot(1200, self._do_autolist)   # one quick fill, then poll
+        self.t_autolist.start(3000)
+
+    def _stop_autolist(self):
+        self.t_autolist.stop()
+        self._autolist_cmd = None
+
+    def _do_autolist(self):
+        if self._autolist_cmd and self.ctl.connected:
+            try:
+                self.ctl.send(self._autolist_cmd)
+            except Exception:
+                pass
+        else:
+            self.t_autolist.stop()
+
+    # --- logging ---------------------------------------------------------- #
+    def _toggle_log(self):
+        if self.logger.enabled:
+            self.logger.stop()
+        else:
+            try:
+                path = self.logger.start()
+                self._append(f"[log] writing to {path}")
+            except Exception as e:
+                self._append(f"[log] failed: {e}")
+        self._update_log_btn()
+        self._update_statusbar()
+
+    def _update_log_btn(self):
+        on = self.logger.enabled
+        self.log_btn.setChecked(on)
+        self.log_btn.setText("● Log: ON" if on else "● Log: off")
+
+    def _set_log_folder(self):
+        d = QFileDialog.getExistingDirectory(self, "Choose log folder", self.logger.dir)
+        if d:
+            self.logger.set_dir(d)
+            self._append(f"[log] folder: {d}")
+            self._update_statusbar()
+
+    def _open_log_folder(self):
+        import subprocess
+        try:
+            os.makedirs(self.logger.dir, exist_ok=True)
+            if sys.platform.startswith("win"):
+                os.startfile(self.logger.dir)            # type: ignore[attr-defined]
+            elif sys.platform == "darwin":
+                subprocess.Popen(["open", self.logger.dir])
+            else:
+                subprocess.Popen(["xdg-open", self.logger.dir])
+        except Exception as e:
+            self._append(f"[log] can't open folder: {e}")
+
+    # --- menus / shortcuts / status / updates ----------------------------- #
+    def _build_menu(self):
+        m = self.menuBar()
+        filem = m.addMenu("&File")
+        act = QAction("Set Log Folder…", self); act.triggered.connect(self._set_log_folder); filem.addAction(act)
+        act = QAction("Open Log Folder", self); act.triggered.connect(self._open_log_folder); filem.addAction(act)
+        filem.addSeparator()
+        act = QAction("Quit", self); act.setShortcut(QKeySequence("Ctrl+Q")); act.triggered.connect(self.close); filem.addAction(act)
+        toolsm = m.addMenu("&Tools")
+        act = QAction("Flash Firmware…", self); act.triggered.connect(self._flasher); toolsm.addAction(act)
+        act = QAction("Refresh Ports", self); act.setShortcut(QKeySequence("F5")); act.triggered.connect(self._refresh_ports); toolsm.addAction(act)
+        helpm = m.addMenu("&Help")
+        act = QAction("Check for Updates…", self); act.triggered.connect(self._check_updates); helpm.addAction(act)
+        act = QAction("About", self); act.triggered.connect(self._about); helpm.addAction(act)
+
+    def _build_shortcuts(self):
+        QShortcut(QKeySequence("Ctrl+L"), self, activated=self._clear)
+        QShortcut(QKeySequence("F5"), self, activated=self._refresh_ports)
+        QShortcut(QKeySequence("Ctrl+K"), self, activated=lambda: self.raw.setFocus())
+        QShortcut(QKeySequence("Ctrl+."), self, activated=self._stop)
+        QShortcut(QKeySequence("Ctrl+U"), self, activated=self._check_updates)
+
+    def _clear(self):
+        self.console.clear(); self.parser.clear()
+
+    def _update_statusbar(self):
+        rev = updater.current_revision()
+        log = self.logger.serial_path if self.logger.enabled else "off"
+        self.statusBar().showMessage(f"v{__version__} ({rev})   ·   log: {log}")
+
+    def _check_updates(self):
+        if self._updating:
+            return
+        self._updating = True
+        self._append("[update] checking…")
+
+        def job():
+            updater.update(self.q.put)
+            self._updating = False
+        threading.Thread(target=job, daemon=True).start()
+
+    def _about(self):
+        QMessageBox.about(
+            self, "About Headless Marauder",
+            f"<b>Headless Marauder</b> v{__version__} ({updater.current_revision()})<br><br>"
+            "Native control + firmware flasher for a headless ESP32 Marauder.<br>"
+            "<a href='https://github.com/LxveAce/headless-marauder-gui'>"
+            "github.com/LxveAce/headless-marauder-gui</a><br><br>"
+            "For authorized security testing only.")
 
     # --- connection ------------------------------------------------------- #
     def _refresh_ports(self):
@@ -521,6 +692,7 @@ class MainWindow(QMainWindow):
                 line = self.q.get_nowait()
                 self._append(line)
                 self.parser.feed(line)
+                self.logger.write_serial(line)
         except queue.Empty:
             pass
 
@@ -541,12 +713,19 @@ class MainWindow(QMainWindow):
         stas = self.parser.station_rows()
         self.sta_table.setRowCount(len(stas))
         for r, s in enumerate(stas):
-            for c, val in enumerate([s.mac, s.ap_bssid, s.rssi]):
+            idx = s.index if s.index >= 0 else ""
+            for c, val in enumerate([idx, s.mac, s.ap_bssid, s.rssi]):
                 self.sta_table.setItem(r, c, QTableWidgetItem(str(val)))
         self.tabs.setTabText(2, f"Stations ({len(stas)})")
+        if self.logger.enabled:
+            self._snap_skip = (self._snap_skip + 1) % 5
+            if self._snap_skip == 0:        # snapshot ~every 3.5s, not on every 700ms refresh
+                self.logger.write_snapshot(aps, stas, {"port": self.ctl.port})
 
     def closeEvent(self, ev):
         try:
+            self.t_autolist.stop()
+            self.logger.stop()
             self.ctl.disconnect()
         except Exception:
             pass
@@ -558,11 +737,16 @@ def main():
     ap.add_argument("--port"); ap.add_argument("--baud", type=int, default=115200)
     ap.add_argument("--mock", action="store_true")
     ap.add_argument("--no-autoconnect", action="store_true")
+    ap.add_argument("--log", nargs="?", const=True, default=None,
+                    help="Start logging immediately (optionally to a given dir; default ~/marauder-logs)")
     args = ap.parse_args()
 
     ctl = MarauderController(port=args.port, baud=args.baud, mock=args.mock)
     app = QApplication(sys.argv)
-    win = MainWindow(ctl)
+    log_dir = args.log if isinstance(args.log, str) else None
+    win = MainWindow(ctl, log_dir=log_dir)
+    if args.log:
+        win.logger.start(); win._update_log_btn(); win._update_statusbar()
     win.show()
     if not args.no_autoconnect:
         try:

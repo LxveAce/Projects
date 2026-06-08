@@ -153,6 +153,28 @@ Firefox can't do Web Serial). **User requirement: native applications, NOT web-b
 3. Verified (stubbed subprocess) the esptool argv + offsets are exactly right (classic bootloader 0x1000, S3 0x0,
    app 0x10000) and the FlashFiles support filenames exist (no full-flash 404). 70 commands; controller + parser smoke-tested.
 
+### Productized + deep-debugged (2026-06-07): shipped to its own public repo
+
+Turned `headless-marauder-gui` into a full product and **published it standalone** at
+**github.com/LxveAce/headless-marauder-gui (public, MIT)**. The copy under
+`projects/14-cyberdeck/integrations/01-esp32-marauder/headless-marauder-gui/` mirrors it;
+**the standalone repo is now authoritative for the GUI** (self-update pulls from there).
+
+Added this session:
+- **Data logging** (`capture.py`): raw serial log + atomic `latest.json` + `aps.csv`/`stations.csv`
+  to a chosen dir, live-tailable. Batched flushes (no per-line UI stall).
+- **Self-update** (`updater.py`): *Help → Check for Updates* → `git pull` + pip; non-interactive
+  git env, pip exit-code checked, `safe.directory` handled.
+- **Qt overhaul**: `scanap` auto-fills the AP tab (auto `list -a` polling), menu bar, status bar,
+  keyboard shortcuts, touch-sized widgets, AP **and Station** target pickers (index-accurate).
+- **Packaging**: `install.sh`/`uninstall.sh` → app-menu entry + `headless-marauder`(-tui) commands;
+  `assets/icon.svg`. Real Kali app, launch by name, self-updating.
+- **Deep adversarial debug workflow** (11 reviewers + per-finding verifiers): 25 confirmed bugs,
+  **24 fixed**. Highlights: parser now routes `list -c` to stations (was wiping the AP table);
+  thread-safe TUI/Tk/Qt flasher workers; esptool pinned `<6`; robust subprocess cleanup; blespam
+  default fixed (`sourapple`). Kept the 6 "dead BT command" flags — the official Marauder wiki CLI
+  list includes them, contradicting the agent's firmware-source reading.
+
 ## Critical Discoveries (still valid)
 
 1. **Lonely Binary ESP32 Gold is a CLASSIC ESP32** (WROOM-class, CH340, 16MB flash) — verified

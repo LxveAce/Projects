@@ -50,8 +50,13 @@ class MarauderController:
 
     @classmethod
     def autodetect(cls) -> Optional[str]:
-        """Pick the most likely Marauder port (prefers CH340/CP210x)."""
-        best, best_score = None, -1
+        """Pick the most likely Marauder port (prefers CH340/CP210x).
+
+        Requires a positive signal — a bare port with no USB-serial hint scores 0 and is
+        never chosen, so we return None (and connect() raises the helpful 'plug it in' error)
+        rather than silently opening e.g. /dev/ttyS0 or a Bluetooth COM port.
+        """
+        best, best_score = None, 0
         for device, desc in cls.list_ports():
             score = 0
             text = (device + " " + desc).lower()
@@ -96,10 +101,14 @@ class MarauderController:
             if self.mock:
                 time.sleep(0.2)
                 continue
+            ser = self.ser                 # snapshot — disconnect() may null/close it
+            if ser is None:
+                break
             try:
-                data = self.ser.read(4096)
+                data = ser.read(4096)
             except Exception as e:
-                self._emit(f"[serial error] {e}")
+                if self._running:          # only noise if it wasn't a clean disconnect
+                    self._emit(f"[serial error] {e}")
                 break
             if data:
                 buf += data
@@ -109,14 +118,15 @@ class MarauderController:
 
     def disconnect(self):
         self._running = False
+        ser = self.ser
+        if ser:
+            try:
+                ser.close()        # unblocks a pending read() so the reader exits promptly
+            except Exception:
+                pass
         if self._reader:
             self._reader.join(timeout=1.0)
             self._reader = None
-        if self.ser:
-            try:
-                self.ser.close()
-            except Exception:
-                pass
         self.ser = None
 
     @property

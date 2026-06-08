@@ -23,7 +23,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import tkinter as tk
 from tkinter import ttk, messagebox
 
-from marauder_core import MarauderController, commands
+from marauder_core import MarauderController, CaptureLogger, commands
 
 # Dark theme colors
 BG = "#0b0f0a"
@@ -94,17 +94,26 @@ class ParamDialog(tk.Toplevel):
             if p.required and (v is None or str(v).strip() == ""):
                 messagebox.showwarning("Missing value", f"'{p.name}' is required.", parent=self)
                 return
+            if p.kind == "int" and str(v).strip():
+                try:
+                    v = int(str(v).strip())     # normalize + validate
+                except ValueError:
+                    messagebox.showwarning("Invalid number", f"'{p.name}' must be a whole number.", parent=self)
+                    return
             values[p.name] = v
         self.result = values
         self.destroy()
 
 
 class MarauderGUI(tk.Tk):
-    def __init__(self, controller: MarauderController):
+    def __init__(self, controller: MarauderController, logger=None):
         super().__init__()
         self.ctl = controller
+        self.logger = logger or CaptureLogger()
         self.q: "queue.Queue[str]" = queue.Queue()
         self.ctl.subscribe(self.q.put)
+        self._poll_id = None
+        self._closing = False
 
         self.title("Headless Marauder GUI")
         self.geometry("1100x720")
@@ -269,23 +278,29 @@ class MarauderGUI(tk.Tk):
 
     # --- console ---------------------------------------------------------- #
     def _poll_queue(self):
+        if self._closing:
+            return
         try:
             while True:
                 line = self.q.get_nowait()
                 tag = "tx" if line.startswith(">>") else ("sys" if line.startswith("[") else None)
                 self._append(line, tag)
+                self.logger.write_serial(line)
         except queue.Empty:
             pass
-        self.after(40, self._poll_queue)
+        self._poll_id = self.after(40, self._poll_queue)
 
     def _append(self, line, tag=None):
-        self.console.config(state="normal")
-        if tag:
-            self.console.insert("end", line + "\n", tag)
-        else:
-            self.console.insert("end", line + "\n")
-        self.console.see("end")
-        self.console.config(state="disabled")
+        try:
+            self.console.config(state="normal")
+            if tag:
+                self.console.insert("end", line + "\n", tag)
+            else:
+                self.console.insert("end", line + "\n")
+            self.console.see("end")
+            self.console.config(state="disabled")
+        except tk.TclError:
+            pass   # window torn down mid-update
 
     def _clear_console(self):
         self.console.config(state="normal")
@@ -293,7 +308,14 @@ class MarauderGUI(tk.Tk):
         self.console.config(state="disabled")
 
     def _on_close(self):
+        self._closing = True
+        if self._poll_id is not None:
+            try:
+                self.after_cancel(self._poll_id)
+            except Exception:
+                pass
         try:
+            self.logger.stop()
             self.ctl.disconnect()
         except Exception:
             pass
@@ -306,10 +328,15 @@ def main():
     ap.add_argument("--baud", type=int, default=115200)
     ap.add_argument("--mock", action="store_true", help="Run without hardware")
     ap.add_argument("--no-autoconnect", action="store_true", help="Don't connect on launch")
+    ap.add_argument("--log", nargs="?", const=True, default=None,
+                    help="Log to a dir (default ~/marauder-logs)")
     args = ap.parse_args()
 
     ctl = MarauderController(port=args.port, baud=args.baud, mock=args.mock)
-    app = MarauderGUI(ctl)
+    logger = CaptureLogger(args.log if isinstance(args.log, str) else None)
+    if args.log:
+        logger.start()
+    app = MarauderGUI(ctl, logger=logger)
     if not args.no_autoconnect:
         try:
             port = ctl.connect()

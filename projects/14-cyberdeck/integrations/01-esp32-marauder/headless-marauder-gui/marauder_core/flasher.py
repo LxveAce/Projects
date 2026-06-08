@@ -102,17 +102,37 @@ def esptool_available() -> bool:
 
 
 def _run_stream(argv: List[str], on_line: Line) -> int:
-    """Run a command, stream combined stdout/stderr line-by-line, return exit code."""
+    """Run a command, stream combined stdout/stderr line-by-line, return exit code.
+
+    On any exception mid-stream (e.g. the UI callback raises because a dialog closed), the
+    child is killed and reaped so it can't keep holding the serial port — otherwise the next
+    flash fails with 'port busy'.
+    """
     on_line("$ " + " ".join(argv))
     try:
         proc = subprocess.Popen(argv, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                text=True, bufsize=1)
+                                stdin=subprocess.DEVNULL, text=True, bufsize=1)
     except FileNotFoundError as e:
         on_line(f"[error] {e}")
         return 127
-    for line in proc.stdout:                       # type: ignore[union-attr]
-        on_line(line.rstrip("\n"))
-    proc.wait()
+    try:
+        for line in proc.stdout:                   # type: ignore[union-attr]
+            on_line(line.rstrip("\n"))
+        proc.wait()
+    except Exception as e:
+        on_line(f"[error] {e}")
+        try:
+            proc.kill()
+            proc.wait(timeout=5)
+        except Exception:
+            pass
+        return -1
+    finally:
+        try:
+            if proc.stdout:
+                proc.stdout.close()
+        except Exception:
+            pass
     on_line(f"[exit {proc.returncode}]")
     return proc.returncode
 
