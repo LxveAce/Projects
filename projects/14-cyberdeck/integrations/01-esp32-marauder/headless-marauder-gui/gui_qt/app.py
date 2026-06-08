@@ -27,7 +27,7 @@ from PyQt5.QtWidgets import (
     QPushButton, QLabel, QLineEdit, QComboBox, QPlainTextEdit, QTabWidget,
     QTableWidget, QTableWidgetItem, QGroupBox, QScrollArea, QSplitter, QDialog,
     QFormLayout, QCheckBox, QRadioButton, QFileDialog, QMessageBox, QAbstractItemView,
-    QHeaderView, QButtonGroup, QAction, QShortcut, QStatusBar,
+    QHeaderView, QButtonGroup, QAction, QShortcut, QStatusBar, QTextBrowser,
 )
 
 from marauder_core import (
@@ -37,6 +37,22 @@ from marauder_core import (
 # Scan commands that should kick off auto "list" polling so the tables fill themselves.
 _AP_SCANS = {"scanap", "scanall"}
 _STA_SCANS = {"scansta"}
+
+
+def _cmd_tooltip(c) -> str:
+    """Hover text for a command button: what it does + key behaviour flags."""
+    tip = c.desc or c.label
+    extra = []
+    if c.danger:
+        extra.append("⚠ attack — authorized targets only")
+    if c.longrunning:
+        extra.append("runs until STOP")
+    if c.params:
+        extra.append("opens options")
+    if extra:
+        tip += "\n(" + "; ".join(extra) + ")"
+    tip += f"\nsends:  {c.base}"
+    return tip
 
 DARK_QSS = """
 QWidget { background: #0b0f0a; color: #c8f7c5; font-size: 12px; }
@@ -78,6 +94,8 @@ class ParamDialog(QDialog):
                 w = QComboBox(); w.addItems(p.choices)
             else:
                 w = QLineEdit(); w.setPlaceholderText(p.placeholder or p.help)
+            if p.help or p.placeholder:
+                w.setToolTip(p.help or p.placeholder)
             self.widgets[p.name] = w
             form.addRow(p.name + (" *" if p.required else ""), w)
         lay.addLayout(form)
@@ -461,6 +479,9 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(self.ap_table, "Access Points")
         self.sta_table = self._make_table(["#", "Station MAC", "AP", "RSSI"])
         self.tabs.addTab(self.sta_table, "Stations")
+        self.guide = QTextBrowser(); self.guide.setOpenExternalLinks(True)
+        self._load_guide()
+        self.tabs.addTab(self.guide, "Guide")
         rl.addWidget(self.tabs, 1)
 
         raw = QHBoxLayout()
@@ -482,12 +503,29 @@ class MainWindow(QMainWindow):
                 btn = QPushButton(c.label)
                 if c.danger:
                     btn.setObjectName("danger")
+                btn.setToolTip(_cmd_tooltip(c))      # hover description
                 btn.clicked.connect(lambda _, cmd=c: self._run(cmd))
                 grid.addWidget(btn, i // 2, i % 2)
             v.addWidget(box)
         v.addStretch()
         scroll.setWidget(inner)
         return scroll
+
+    def _load_guide(self):
+        path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "GUIDE.md")
+        try:
+            with open(path, encoding="utf-8") as f:
+                text = f.read()
+        except Exception:
+            text = ("# Guide\n\nGUIDE.md not found next to the app.\n\n"
+                    "Online: https://github.com/LxveAce/headless-marauder-gui/blob/main/GUIDE.md")
+        try:
+            self.guide.setMarkdown(text)         # Qt 5.14+
+        except Exception:
+            self.guide.setPlainText(text)
+
+    def _show_guide(self):
+        self.tabs.setCurrentWidget(self.guide)
 
     def _make_table(self, headers):
         t = QTableWidget(0, len(headers))
@@ -623,6 +661,7 @@ class MainWindow(QMainWindow):
         act = QAction("Flash Firmware…", self); act.triggered.connect(self._flasher); toolsm.addAction(act)
         act = QAction("Refresh Ports", self); act.setShortcut(QKeySequence("F5")); act.triggered.connect(self._refresh_ports); toolsm.addAction(act)
         helpm = m.addMenu("&Help")
+        act = QAction("Guide", self); act.setShortcut(QKeySequence("F1")); act.triggered.connect(self._show_guide); helpm.addAction(act)
         act = QAction("Check for Updates…", self); act.triggered.connect(self._check_updates); helpm.addAction(act)
         act = QAction("About", self); act.triggered.connect(self._about); helpm.addAction(act)
 

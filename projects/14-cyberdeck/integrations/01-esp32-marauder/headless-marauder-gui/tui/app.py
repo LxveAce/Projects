@@ -20,9 +20,40 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from marauder_core import MarauderController, MarauderParser, CaptureLogger, commands, flasher
 
 from textual.app import App, ComposeResult
-from textual.containers import Horizontal, Vertical
+from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.screen import ModalScreen
 from textual.widgets import Header, Footer, Tree, Input, Button, Select, Static, Label, DataTable
+
+try:
+    from textual.widgets import Markdown
+except ImportError:
+    Markdown = None
+
+
+def _guide_text():
+    p = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "GUIDE.md")
+    try:
+        with open(p, encoding="utf-8") as f:
+            return f.read()
+    except Exception:
+        return ("# Guide\n\nGUIDE.md not found.\n\n"
+                "https://github.com/LxveAce/headless-marauder-gui/blob/main/GUIDE.md")
+
+
+class GuideScreen(ModalScreen):
+    CSS = "#guidebox { width: 92%; height: 92%; border: round $accent; background: $surface; padding: 1; }"
+    BINDINGS = [("escape", "close", "Close"), ("g", "close", "Close")]
+
+    def compose(self) -> ComposeResult:
+        with VerticalScroll(id="guidebox"):
+            if Markdown is not None:
+                yield Markdown(_guide_text())
+            else:
+                yield Static(_guide_text())
+        yield Footer()
+
+    def action_close(self):
+        self.dismiss()
 
 try:                       # widget was renamed across Textual versions
     from textual.widgets import RichLog
@@ -186,12 +217,14 @@ class MarauderTUI(App):
     #rightcol { width: 1fr; }
     #log  { height: 1fr; border: round $accent; }
     #aptable { height: 45%; border: round $accent; }
+    #desc { height: 1; color: $text-muted; padding: 0 1; }
     Input { dock: bottom; border: round $accent; }
     """
     BINDINGS = [
         ("q", "quit", "Quit"),
         ("s", "stop", "Stop scan"),
         ("f", "flash", "Flash fw"),
+        ("g", "guide", "Guide"),
         ("ctrl+l", "clear", "Clear log"),
         ("c", "focus_input", "Command box"),
     ]
@@ -211,6 +244,7 @@ class MarauderTUI(App):
             with Vertical(id="rightcol"):
                 yield RichLog(id="log", highlight=False, markup=False, wrap=True)
                 yield DataTable(id="aptable")
+        yield Static("Select a command to see what it does · press g for the full Guide", id="desc")
         yield Input(placeholder="raw command (e.g. scanap) — Enter to send", id="raw")
         yield Footer()
 
@@ -268,6 +302,16 @@ class MarauderTUI(App):
         self.query_one("#log", RichLog).write(line)
 
     # --- interactions ----------------------------------------------------- #
+    def on_tree_node_highlighted(self, event: Tree.NodeHighlighted):
+        cmd = commands.get(event.node.data) if event.node.data else None
+        if cmd:
+            tip = f"{cmd.desc}  ·  sends: {cmd.base}"
+            if cmd.danger:
+                tip += "  ·  ⚠ attack"
+            self.query_one("#desc", Static).update(tip)
+        else:
+            self.query_one("#desc", Static).update("press g for the full Guide")
+
     def on_tree_node_selected(self, event: Tree.NodeSelected):
         cmd_id = event.node.data
         if not cmd_id:
@@ -307,6 +351,9 @@ class MarauderTUI(App):
 
     def action_flash(self):
         self.push_screen(FlashScreen(self.ctl))
+
+    def action_guide(self):
+        self.push_screen(GuideScreen())
 
     def action_clear(self):
         self.query_one("#log", RichLog).clear()
