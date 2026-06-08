@@ -2,8 +2,8 @@
 
 > **Part of:** [ESP32 Marauder — Cyberdeck Integration](../README.md) · [Project 14 — The Cyberdeck](../../../README.md)
 > **For:** the **Gold board** Marauder (flashed with the standard ESP32 build, **no screen**).
-> **Goal:** use it from Kali over USB serial, and the open-source GUIs/TUIs you can run now
-> or **pre-package into the cyberdeck's all-in-one UI** later.
+
+> **Recommended:** Use **[Headless Marauder GUI](https://github.com/LxveAce/headless-marauder-gui)** — a dedicated app with four front-ends (Qt GUI, Tkinter, TUI, browser), 70+ commands, live tables, firmware flasher, and data logging. Pre-built ARM64 binaries available for the Pi. The rest of this page covers the manual serial approach and third-party Web Serial GUIs if you want alternatives.
 
 A headless Marauder is just an ESP32 exposing a **text command line over USB serial at
 115200 baud**. That's the whole interface — anything that can read/write a serial port can
@@ -15,10 +15,10 @@ drive it, which is exactly why it's easy to wrap in your own UI.
 
 | Need | Use |
 |------|-----|
+| **Full-featured app (recommended)** | **[Headless Marauder GUI](https://github.com/LxveAce/headless-marauder-gui)** — Qt/Tk/TUI/Browser, 70+ commands, flasher, logging. [ARM64 binary](https://github.com/LxveAce/headless-marauder-gui/releases/latest) for the Pi. |
 | **Just use it now (terminal)** | `picocom -b 115200 /dev/ttyUSB0`, type `help` |
-| **A real GUI today (on Kali)** | A **Web Serial** UI in **Chromium** — [marauder-ui-pro](https://github.com/ElectronicCats/marauder-ui-pro) or [Pranav Web GUI](https://github.com/Pranav-V-20/ESP32-Marauder-Web-GUI) |
-| **Base to fork for the all-in-one deck UI** | [michelangelomo/marauder-ui](https://github.com/michelangelomo/marauder-ui) — Vue 3 + Vite, **MIT** |
-| **Embed headless on the Pi (kiosk/auto-start)** | A **server-side pyserial bridge** (see [parts/dashboard](../../parts/dashboard/)) — *not* Web Serial |
+| **A Web Serial GUI (Chromium only)** | [marauder-ui-pro](https://github.com/ElectronicCats/marauder-ui-pro) or [Pranav Web GUI](https://github.com/Pranav-V-20/ESP32-Marauder-Web-GUI) |
+| **Embed on the Pi (kiosk/auto-start)** | Headless Marauder GUI's browser UI at `localhost:5000`, or the [dashboard](../../parts/dashboard/) pyserial bridge |
 
 ---
 
@@ -103,10 +103,11 @@ npm run dev            # then open the printed http://localhost:5173 in CHROMIUM
 
 ---
 
-## 4. TUI / scriptable control (for your own packaging)
+## 4. TUI / scriptable control
 
-There isn't a mature dedicated *terminal-UI* app for Marauder — but you don't need one. Because
-the interface is plain serial text, wrapping it is a few lines of [`pyserial`](https://pyserial.readthedocs.io/):
+> **Note:** [Headless Marauder GUI](https://github.com/LxveAce/headless-marauder-gui) already includes a Textual TUI (`headless-marauder-tui`). The section below is for rolling your own if you want something custom.
+
+Because the interface is plain serial text, wrapping it is a few lines of [`pyserial`](https://pyserial.readthedocs.io/):
 
 ```python
 import serial
@@ -126,25 +127,14 @@ From that core you can build:
 
 ## 5. Pre-packaging into the cyberdeck all-in-one UI
 
-When you fold Marauder into the deck's single UI, **don't use Web Serial** — it requires Chromium,
-a manual port-pick, and a user gesture every session, which is awkward to auto-start headless.
-Instead use a **server-side serial bridge**:
+[Headless Marauder GUI](https://github.com/LxveAce/headless-marauder-gui) already handles this. Its `marauder_core` library is importable, and the deck's [dashboard](../../parts/dashboard/) reuses it to show Marauder alongside Kismet, Meshtastic, and GPS. The app's browser UI (`headless-marauder-web` at `localhost:5000`) can also run in a kiosk-style setup.
 
-- A small **Python (`pyserial`) backend** owns `/dev/ttyUSB0`, auto-connects on boot (systemd),
-  and exposes a **websocket/REST** API.
-- A web frontend (Chromium **kiosk** on the 7" screen) talks to that backend — and to Kismet,
-  Meshtastic, GPS, etc. — in one UI. This is exactly the architecture in
-  [parts/dashboard](../../parts/dashboard/).
+If you want to build something completely custom instead, avoid Web Serial (requires Chromium + manual port pick + user gesture each session — awkward to auto-start headless). Use a **server-side serial bridge**:
 
-**Recommended path:**
-1. Fork [michelangelomo/marauder-ui](https://github.com/michelangelomo/marauder-ui) (**MIT** — safe to
-   reuse/repackage) for the look and component layout.
-2. Replace its Web Serial layer with calls to your pyserial websocket backend so it auto-connects.
-3. Merge it as the "Marauder" tab of the deck dashboard alongside the other tools.
+- A pyserial backend owns `/dev/ttyUSB0`, auto-connects on boot (systemd), exposes a websocket/REST API.
+- A web frontend (Chromium kiosk on the 7" screen) talks to that backend alongside the other tools.
 
-> **License check before shipping:** `marauder-ui` is MIT (clear to fork/redistribute). The other
-> projects above either don't state a license or use an open-hardware license — verify each repo's
-> `LICENSE` before bundling it into a product you distribute.
+For a from-scratch frontend, [michelangelomo/marauder-ui](https://github.com/michelangelomo/marauder-ui) (MIT) is a clean Vue 3 base to fork.
 
 ---
 
@@ -182,6 +172,7 @@ The board isn't showing up as a serial port. Work down this list — on Kali the
 
 ## Source / Upstream
 
+- **Headless Marauder GUI:** [LxveAce/headless-marauder-gui](https://github.com/LxveAce/headless-marauder-gui) — the recommended control app (Qt/Tk/TUI/Browser, ARM64 binary for Pi)
 - Marauder CLI reference: [justcallmekoko/ESP32Marauder Wiki — CLI](https://github.com/justcallmekoko/ESP32Marauder/wiki/cli) · [CLI Usage](https://github.com/justcallmekoko/ESP32Marauder/wiki/cli-usage)
-- GUIs: [marauder-ui (MIT)](https://github.com/michelangelomo/marauder-ui) · [marauder-ui-pro](https://github.com/ElectronicCats/marauder-ui-pro) · [Pranav Web GUI](https://github.com/Pranav-V-20/ESP32-Marauder-Web-GUI) · [CLI-Esp32Marauder](https://github.com/Linuxndroid/CLI-Esp32Marauder)
+- Third-party Web Serial GUIs: [marauder-ui (MIT)](https://github.com/michelangelomo/marauder-ui) · [marauder-ui-pro](https://github.com/ElectronicCats/marauder-ui-pro) · [Pranav Web GUI](https://github.com/Pranav-V-20/ESP32-Marauder-Web-GUI)
 - Deck dashboard architecture: [parts/dashboard](../../parts/dashboard/)
