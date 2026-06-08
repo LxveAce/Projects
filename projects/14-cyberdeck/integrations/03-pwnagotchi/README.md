@@ -92,27 +92,68 @@ The Pwnagotchi assembles and runs as a standalone unit, then **docks** into the 
 
 ### 3. Verify
 
-> **STATUS (current):** e-ink display **blank** and HDMI **blank** on the assembled unit.
-> Per the [source troubleshooting](../../../03-pwnagotchi/), the prime suspect is the
-> self-soldered GPIO header. **Test continuity with the Fluke 17B+ on every SPI pin, then
-> reflow any cold/missing joint.** (Source flowchart notes earlier full-pin continuity passed
-> 2026-06-06 — if it passes again, move to config/SPI software checks.)
+> **STATUS (current):** Not working. Display blank, may have messed something up during
+> assembly or config. Need to connect to a computer and debug properly.
 
-First confirm the Pi is actually alive (display issues are usually display-only):
+### Debug plan (connect to PC)
 
+The approach: plug the Pwnagotchi into a computer via the **DATA** micro-USB port and work through the problem layer by layer — first confirm the Pi boots at all, then isolate whether it's a software config issue or a hardware issue.
+
+**Step 1 — Check if the Pi is alive (USB RNDIS/Ethernet over USB):**
 ```
-# Connect via the DATA micro-USB port, set host adapter to 10.0.0.1 / 255.255.255.0
+# On Windows: install RNDIS driver if needed, set the USB Ethernet adapter to:
+#   IP: 10.0.0.1   Subnet: 255.255.255.0   Gateway: (blank)
+# On Linux: the gadget should appear as usb0, set it to 10.0.0.1/24
+
 ping 10.0.0.2
-ssh pi@10.0.0.2          # default password: raspberry  (change with: passwd)
+ssh pi@10.0.0.2          # default password: raspberry
 ```
+- **If SSH works** → Pi boots fine, the problem is display/config only. Go to step 2.
+- **If ping fails** → Pi may not be booting, or RNDIS gadget isn't working. Check:
+  - Is the green activity LED blinking at all? (No blink = bad SD image or power issue)
+  - Try re-flashing the jayofelony image fresh onto the SD card
+  - Make sure you're using the **DATA** USB port, not the POWER port
+  - Try a different USB cable (charge-only cables won't enumerate the gadget)
 
-If SSH works, the Pi boots — the problem is the display. Work the checks in order:
+**Step 2 — Check the config (most common cause of blank display):**
+```bash
+# Over SSH:
+cat /etc/pwnagotchi/config.toml | grep -i display
+# ui.display.type MUST be "waveshare_4" (or "waveshare213inb_v4" on some images)
+# ui.display.enabled MUST be true
+# ui.fps MUST be 0 (required for e-ink)
+```
+Also check:
+```bash
+grep spi /boot/config.txt
+# Must have: dtparam=spi=on
+```
+If `ui.display.type` is wrong, fix it, reboot, and see if the display comes up.
 
-1. `ui.display.type` must be `waveshare_4` (or `waveshare213inb_v4`) — wrong value is the #1 cause.
-2. Confirm `dtparam=spi=on` in `/boot/config.txt`.
-3. **Fluke** continuity on the SPI pins: MOSI (pin 19), SCLK (23), CE0 (24), DC (22), RST (11), BUSY (18) — and power pins 1/2/6. Reflow any that fail; don't press hard (false pass).
-4. Validate `config.toml` at https://www.toml-lint.com (TOML is strict).
-5. Set `ui.display.type = "dummydisplay"` and check the web UI at `http://10.0.0.2:8080` — if it works there, the fault is display-specific, not boot.
+**Step 3 — Test with dummy display (isolate display vs. everything else):**
+```bash
+# Edit config.toml:
+sudo nano /etc/pwnagotchi/config.toml
+# Change: ui.display.type = "dummydisplay"
+sudo systemctl restart pwnagotchi
+```
+Then open `http://10.0.0.2:8080` in a browser. If the web UI shows the Pwnagotchi face and status → the software stack is fine, the problem is hardware (display/GPIO).
+
+**Step 4 — If software is fine, check the hardware:**
+- **GPIO continuity (Fluke 17B+):** test every SPI pin the display uses:
+  - MOSI (pin 19), SCLK (23), CE0 (24), DC (22), RST (11), BUSY (18)
+  - Power: 3.3V (pin 1), 5V (pin 2), GND (pin 6)
+  - Don't press the probes hard — pressing can compress a cold joint and give a false pass
+  - Any pin that fails → reflow that solder joint
+- **Try a different display** if available (rules out a dead display)
+- **Reseat the HAT** — take it off, check all 40 pins are straight, push it back on firmly
+
+**Step 5 — Nuclear option (start fresh):**
+If nothing else works:
+1. Re-flash a fresh jayofelony image
+2. Write a minimal `config.toml` with just the display settings
+3. First boot with display seated, wait the full 3-10 minutes
+4. If still blank after fresh flash → it's almost certainly a hardware issue (bad solder joint or dead display)
 
 Captures verify without a display: `ls -lh /home/pi/handshakes/` over SSH, or the web UI.
 
