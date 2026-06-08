@@ -132,6 +132,90 @@ Not applicable as a standalone tool — this subsystem **is** the power for the 
 no scan data of its own; it just delivers a clean 5V (and a 12V fan rail) to the Pi 5, the
 hub, and the switched devices. Pull the Anker 347 and it's an ordinary USB-C PD power bank.
 
+---
+
+## Solar Charging (brainstorm)
+
+The Anker 347 supports pass-through charging — a solar panel can feed the battery while the deck runs. The panel-mount USB-C on the case wall is the entry point. Here's the breakdown of what makes sense.
+
+### The math
+
+The deck's power draw depends on what's running:
+
+| Mode | Draw | To charge at this rate, you need |
+|------|------|----------------------------------|
+| Stealth (Pi 5 only) | ~4W | Panel > 4W to gain charge |
+| Wardriving | ~7.5W | Panel > 7.5W to gain charge |
+| Full scan (everything on) | ~15W | Panel > 15W to gain charge |
+| Deck off (just charging the Anker) | 0W | Any panel works |
+
+A 20W-rated panel produces roughly 12-15W in direct sun (panel rating is lab conditions). So a 20W foldable can sustain wardriving mode in good sunlight, and charge the battery with the deck off. A 5W lid-mount panel realistically produces ~3W — not enough to run anything, but it can slowly top up a parked deck.
+
+The Anker 347's USB-C input accepts up to ~18W. Anything above that is wasted, so there's no reason to go past a 30W panel (real-world output maxes out the Anker's input).
+
+### Option A: Foldable panel (recommended — the one that actually matters)
+
+A 20-30W USB foldable panel. Deploy it when you're stationary, plug into the case USB-C port, fold up and carry when moving.
+
+**Why this is the move:**
+- 12-18W real output — enough to charge the Anker from empty in ~8-10 hours of sun, or sustain the deck in low-power modes indefinitely
+- No case modifications beyond the already-planned USB-C panel mount
+- Can angle toward the sun (huge efficiency gain vs. flat-mounted)
+- Folds to roughly book-sized, weighs ~1-2 lbs
+- $40-70
+
+**Options:**
+- BigBlue 28W (~$55) — 3× USB-A, SunPower cells, proven outdoor. Need a USB-A to USB-C cable for the Anker.
+- Nekteck 28W (~$50) — 2× USB-A, SunPower, similar to BigBlue.
+- Anker 625 24W (~$85) — USB-C output, charges the Anker 347 natively over PD. Cleaner but pricier.
+- Generic 20-25W USB-C panels on Amazon (~$30-45) — hit or miss on quality, but cheap.
+
+**Use case:** Set up at a park bench, campsite, rooftop, car dashboard. Panel sits in the sun, cable runs to the deck. Deck runs in wardriving or surveillance mode. Solar sustains the battery — you run all day.
+
+### Option B: Lid-mounted panel (cool factor — trickle only)
+
+A small rigid or flexible panel attached to the outside of the Pelican 1300 lid. Charges whenever the case is in sunlight, even closed.
+
+**The reality:** The Pelican 1300 lid is ~10.7" × 9.8", but after the handle, latches, and edges, you have maybe 7" × 8" of flat surface. That fits a 5W panel at best. Real-world output: ~3W. To charge the Anker 347 from empty at 3W would take **40+ hours of direct sun**. This is maintenance/trickle charging, not real power.
+
+**Still worth it if:** you leave the deck in a car, on a windowsill, or outdoors between sessions. The battery stays topped without thinking about it. It's the "leave it and forget it" option.
+
+**How to mount without killing IP67:**
+- Adhesive or industrial velcro on the lid exterior (no drill holes = no sealing issues)
+- Route the cable through an IP67 cable gland on the case wall (same as the antenna bulkheads)
+- Or run the cable to the existing panel-mount USB-C port (external routing, no penetration)
+
+**Panels that fit:**
+- Generic 5V 5W mini solar panel (~$10-15, ~7" × 5") — wire to a small USB charge board inside
+- Voltaic 3.5W or 6W panels (~$30-50) — designed for tactical/outdoor, USB output built in, rugged ETFE coating
+
+### Option C: Both (the full setup)
+
+A small panel on the lid for passive trickle + a foldable for active charging. Best of both, and they share the same USB-C input on the case.
+
+- **Lid panel (5W):** keeps the battery alive between sessions without any effort — leave the case by a window or in the car
+- **Foldable (20-28W):** deploy when you need real power in the field
+
+Total cost: ~$60-100 for both.
+
+### Option D: Backpack/MOLLE strap panel
+
+A foldable panel with MOLLE straps or carabiners on the back of a backpack. Cable runs down to the deck while walking.
+
+**Pros:** Charges on the move. **Cons:** Inconsistent angle (you're turning, shading changes), lower output than stationary, cable management is annoying. Better than nothing but worse than just stopping and deploying a foldable properly.
+
+### What I'd do
+
+**Start with a 20-28W foldable panel** (BigBlue or Nekteck, ~$50). That's the one that actually extends your runtime. If you like the concept, add a cheap 5W lid panel later for passive trickle. The foldable is the real workhorse; the lid panel is a nice-to-have.
+
+| Item | Est. Price | Priority |
+|------|-----------|----------|
+| Foldable USB solar panel (20-28W) | ~$40-70 | High — this is the one that matters |
+| Small rigid/flex panel for lid (5W) | ~$10-30 | Low — cool but trickle only |
+| IP67 cable gland (if routing lid panel internally) | ~$5 | Only if doing lid mount |
+
+---
+
 ## Source / Upstream
 
 - Deck power design: [deck README §5 Power System](../../../README.md) and
