@@ -26,8 +26,11 @@ boards (WROOM-32, CYDs) get **no** bulkhead.
 > itself — and a bead of marine silicone makes it belt-and-suspenders.
 
 > **No bulkhead for:** the **WROOM-32** (drone RemoteID — PCB trace antenna only, no IPEX)
-> and both **CYD 2.8"** screens (PCB antenna, serial-only, no WiFi scanning). Adding external
-> antennas to those would require soldering a U.FL feed point — not done.
+> and the **CYD ESP32 chips** (PCB trace antenna for WiFi/BLE). However, the **HaleHound
+> external radio modules** (CC1101 + NRF24L01+PA+LNA) have their own SMA/RP-SMA connectors
+> with included antennas. These work fine inside the case (SubGHz/2.4GHz penetrate ABS/polycarbonate
+> with minimal loss), but can optionally be routed through additional bulkheads for maximum range
+> and field-swappable frequency-specific antennas — see Optional HaleHound Expansion below.
 
 ---
 
@@ -107,6 +110,32 @@ For each Gold board and the Heltec V3 (the WROOM-32 and CYDs are skipped — PCB
 - **Cable loss** at 15 cm is ~0.3 dB — negligible. Don't run longer than ~20 cm pigtails.
 - **Field swaps:** because every radio terminates at an SMA bulkhead, you can swap a stubby
   for a 9 dBi mag-mount (wardriving) or a panel/Yagi (directional) without opening the case.
+
+## Optional HaleHound Expansion (SMA #6 + #7)
+
+If you want to route HaleHound's CC1101 and NRF24 through the bulkhead panel for maximum range
+and external antenna swapping, add two more bulkheads:
+
+| Bulkhead | Module | Antenna | Frequency |
+|----------|--------|---------|-----------|
+| **SMA #6** | CC1101 (HaleHound CYD #2) | Swap: 315 / 433 / 915 MHz whips | SubGHz |
+| **SMA #7** | NRF24L01+PA+LNA (HaleHound CYD #2) | 2.4GHz duck (included) | 2.4 GHz |
+
+**Routing:**
+- CC1101 has **SMA female** → short SMA male-to-male cable (15-20cm) → bulkhead #6
+- NRF24 has **RP-SMA female** → Boobrie RP-SMA→SMA adapter (already in inventory) + SMA cable → bulkhead #7
+- Swap frequency-matched CC1101 antennas from outside without opening the case (433MHz for EU, 315MHz for US Tesla, 915MHz for ISM)
+
+**Not required:** SubGHz (300-928 MHz) and 2.4GHz both penetrate ABS/polycarbonate well. Internal
+antennas work for close-range ops. Route through bulkheads only if you need maximum range or
+field-swappable frequency bands.
+
+**Additional parts needed:**
+- 2× IP67 SMA bulkheads (buy another 5-pack for spares)
+- 2× SMA male-to-male cables (15-20cm)
+- 315MHz + 915MHz SMA whip antennas (needed regardless of bulkhead decision)
+
+---
 
 ## Standalone Mode
 

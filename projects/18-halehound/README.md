@@ -66,13 +66,19 @@ IoT Recon is an automated LAN attack suite added in HaleHound v3.2.0. This is th
 
 ### External Radio Modules (Optional — Expand Capabilities)
 
-| Module | Enables | Cost | Notes |
-|--------|---------|------|-------|
-| CC1101 (HW-863 or E07-433M20S) | SubGHz 300-928 MHz (replay, brute force, Tesla charge port) | ~$3-8 | SPI wiring to CYD GPIO |
-| NRF24L01+PA+LNA | 2.4 GHz sniffer, MouseJack keystroke injection, spectrum analyzer | ~$3-5 | SPI wiring, shared bus with CC1101 |
-| PN532 V3 (SPI mode) | NFC/RFID scan, read, clone, brute force | ~$5-8 | SPI mode required (NOT I2C) |
-| GT-U7 or NEO-6M GPS | Wardriving, location tagging | ~$5-10 | UART to CYD RX/TX |
-| Independent 3.3V buck converter | Brownout prevention for PA modules | ~$2-3 | Required if using Ebyte PA variant CC1101 |
+| Module | Enables | Cost | Antenna | Notes |
+|--------|---------|------|---------|-------|
+| CC1101 2-pack (SMA connector) | SubGHz 300-928 MHz (replay, brute force, Tesla charge port) | ~$22 | **Included:** 433MHz SMA whip. **Need:** 315MHz + 915MHz whips for full band coverage | SPI wiring to CYD GPIO |
+| NRF24L01+PA+LNA 2-pack (RP-SMA) | 2.4 GHz sniffer, MouseJack keystroke injection, spectrum analyzer | ~$8-10 | **Included:** 2.4GHz RP-SMA duck antenna (sufficient) | SPI wiring, +20 dBm with PA+LNA |
+| PN532 V3 (SPI mode) | NFC/RFID scan, read, clone, brute force | ~$6-8 | **Built-in:** PCB coil antenna (1-4cm range, by NFC spec) | SPI mode required (NOT I2C) |
+| GT-U7 or NEO-6M GPS | Wardriving, location tagging | ~$5-10 | Built-in ceramic patch | UART to CYD RX/TX |
+| Independent 3.3V buck converter | Brownout prevention for PA modules | ~$2-3 | — | Required if using Ebyte PA variant CC1101 |
+
+### Antenna Notes
+
+- **CC1101:** The included 433MHz whip works for EU Tesla charge port, garage doors, and common remotes. For US Tesla (315MHz) and ISM band operations (915MHz), you MUST use a frequency-matched antenna — a mismatched antenna cuts effective range by 50-80%. Swap antennas on the SMA connector as needed.
+- **NRF24L01+PA+LNA:** The PA+LNA version with included duck antenna provides 100-250m indoor / 800-1100m LOS range. This is already the long-range variant — no upgrade needed.
+- **PN532:** NFC operates at 13.56MHz near-field. The built-in PCB coil provides 1-4cm read range, which is the NFC standard. No external antenna connector exists on the HiLetgo V3 module.
 
 **Total for full build with all modules: ~$25-40 on top of existing CYD**
 
