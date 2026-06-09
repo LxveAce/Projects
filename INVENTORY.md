@@ -1,8 +1,8 @@
 # Hardware Inventory - Purchased Items
 
-All items below have been purchased via Amazon. Organized by category with links to manufacturer pages, datasheets, and setup guides where available.
+All items purchased via Amazon and specialty PCB shops. Organized by category with links to manufacturer pages, datasheets, and setup guides where available.
 
-**Estimated Total Spend: ~$1,600 - $1,900**
+**Estimated Total Spend: ~$1,900 - $2,200**
 
 ---
 
@@ -20,6 +20,8 @@ All items below have been purchased via Amazon. Organized by category with links
 | 8 | Waveshare ESP32-C5 WiFi 6 Dev Board (variant) | [B0G3Q1QS93](https://amazon.com/dp/B0G3Q1QS93) | ~$18-22 | [Waveshare](https://www.waveshare.com/product/arduino/boards-kits/esp32-c5.htm) | **Cyberdeck: Dual-band scanner C5 #2** (2.4+5GHz, IPEX antenna) |
 | 9 | LILYGO T-Display-S3 ESP32-S3 1.9" TFT (ST7789, 170x320) | [B0B93NWL6G](https://amazon.com/dp/B0B93NWL6G) | ~$18-22 | [LILYGO](https://www.lilygo.cc/products/t-display-s3) | OUI-Spy, portable tools |
 | 10 | DIGISHUO Raspberry Pi Zero 2 W Kit (w/ SD, cables, headers) | — | ~$35-45 | DIGISHUO / [RPi Foundation](https://www.raspberrypi.com/products/raspberry-pi-zero-2-w/) | **RaspyJack (Project 19)** |
+| 11 | EC Buying BW16-Kit 3-Pack (RTL8720DN, dual-freq WiFi 2.4+5GHz, BT5.0) | — | ~$23 | EC Buying / [Realtek](https://www.realtek.com/en/products/communications-networking/item/rtl8720dn) | Dual-band WiFi/BLE projects |
+| 12 | ESP32-S2U Dev Board 3-Pack (extended antennas, 4MB flash, Type-C, CP2102) | — | ~$20 | TOP DIY TECH / [Espressif](https://www.espressif.com/en/products/socs/esp32-s2) | USB-native ESP32 projects |
 
 ### Datasheets & Drivers
 - **Raspberry Pi 5**: [Datasheet](https://www.raspberrypi.com/products/raspberry-pi-5/) | [Quick Start](https://www.canakit.com/quick-start/pi)
@@ -43,6 +45,7 @@ All items below have been purchased via Amazon. Organized by category with links
 | 5 | ESP32 2.8" CYD Touchscreen 2-Pack (240x320, ILI9341) | [B0G4YZ7532](https://amazon.com/dp/B0G4YZ7532) | ~$15-18 | Generic (Sunton) | IoT panels, tools |
 | 6 | AITRIP 4.0" ESP32 Touchscreen (320x480, ST7796) | [B0GGB5W5XK](https://amazon.com/dp/B0GGB5W5XK) | ~$15-20 | AITRIP | IoT panels, tools |
 | 7 | Waveshare 1.44" LCD Display HAT (ST7735S, 128x128, SPI, joystick+3 buttons) | [B077Z7DWW1](https://amazon.com/dp/B077Z7DWW1) | ~$12-15 | [Waveshare](https://www.waveshare.com/1.44inch-lcd-hat.htm) | **RaspyJack (Project 19)** |
+| 8 | Hosyond 1.3" OLED Display 5-Pack (SH1106, I2C, 128x64, blue) | — | ~$18 | Hosyond | ESP32 status displays, general |
 
 ### Datasheets & Drivers
 - **Waveshare 2.13" E-Ink V4**: [Spec PDF](https://files.waveshare.com/upload/4/4e/2.13inch_e-Paper_V4_Specification.pdf) | [Wiki](https://www.waveshare.com/wiki/2.13inch_e-Paper_HAT_Manual) | [GitHub Demo Code](https://github.com/waveshareteam/e-Paper) | [Schematic](https://www.waveshare.com/wiki/File:2.13inch_e-Paper_HAT_Schematic.pdf)
@@ -65,6 +68,7 @@ All items below have been purchased via Amazon. Organized by category with links
 | 6 | Boobrie RP-SMA to SMA Adapter 2-Pack | [B07D9JYMYJ](https://amazon.com/dp/B07D9JYMYJ) | ~$5-7 | [Boobrie](https://www.boobrie.net/) | Antenna adapting |
 | 7 | Rydocyee IPEX U.FL to SMA Female Pigtail Cables (15cm) | — | ~$5-8 | Rydocyee | **Cyberdeck: ESP32-C5 IPEX→SMA bulkhead** |
 | 8 | Cable Matters USB to Ethernet Adapter (AX88772, USB 2.0, 10/100) | — | ~$8-12 | [Cable Matters](https://www.cablematters.com/) | **RaspyJack (Project 19)** |
+| 9 | Eifagur 315MHz SMA Male Antenna 2-Pack (for CC1101 / garage door openers) | — | ~$11 | Eifagur | **HaleHound (Project 18)** — CC1101 US band |
 
 ### Datasheets & Drivers
 - **Panda PAU0F (MT7921A)**: [Specs](https://www.pandawireless.com/Specs%20|%20Panda%20Wireless.html) | [Windows Driver](https://www.pandawireless.com/pandaWiFi6E.htm) | [Linux in-kernel](https://github.com/morrownr/USB-WiFi)
@@ -137,6 +141,23 @@ All items below have been purchased via Amazon. Organized by category with links
 | 5 | HiLetgo NRF24L01+PA+LNA 2-Pack (2.4GHz, 1100m range, SMA antenna) | [B00WG9HO6Q](https://amazon.com/dp/B00WG9HO6Q) | ~$8-10 | [HiLetgo](https://www.hiletgo.com/) | **HaleHound (Project 18)** — 2.4GHz RF |
 | 6 | HiLetgo PN532 NFC/RFID Module V3 (I2C/SPI/HSU, 13.56MHz, incl. S50 cards) | [B01I1J17LC](https://amazon.com/dp/B01I1J17LC) | ~$6-8 | [HiLetgo](https://www.hiletgo.com/) | **HaleHound (Project 18)** — NFC read/write/emulate |
 | 7 | Cylewet 10Pcs 5V Active Buzzer (electromagnetic, continuous tone) | [B01N7NHSY6](https://amazon.com/dp/B01N7NHSY6) | ~$5-7 | Cylewet | **OUI-Spy** alert buzzer, general |
+| 8 | HiRCTR NRF24L01+ Wireless Transceiver 4-Pack (2.4GHz) | — | ~$8 | HiRCTR / XKD store | Spares, future RF projects |
+| 9 | NRF24L01 Socket Adapter Board 5-Pack (8-pin breakout) | — | ~$9 | jumu | Easy NRF24 module mounting |
+| 10 | NRF24L01+ Module (bare, from PCB order) | — | ~$1.20 | WRF24010R | Spare, low-power variant |
+| 11 | ALLECIN 24-Value Electrolytic Capacitor Assortment Kit (0.1uF-1000uF) | — | ~$14 | ALLECIN | General prototyping, power filtering |
+
+---
+
+## Custom DIY PCBs (Order #301544)
+
+| # | Product | SKU | Price | Notes |
+|---|---------|-----|-------|-------|
+| 1 | ESP32-RF_Ebyte DIY-PCB | PDE25598P | $20.00 | Custom PCB for ESP32 + Ebyte RF module |
+| 2 | WiFiX DIY-PCB | PDE25594P | $20.00 | Custom WiFi scanner PCB |
+| 3 | ESP32-RF DIY-PCB | PIE25592P | $20.00 | Custom PCB for ESP32 + RF projects |
+| 4 | C3Mini-RF | PDE25591P | $15.00 | Compact ESP32-C3 + RF PCB |
+
+**Order Total: $157.77** (subtotal $76.20 + $46.14 shipping + $35.43 tariff)
 
 ---
 
@@ -212,8 +233,8 @@ All items below have been purchased via Amazon. Organized by category with links
 - [x] CC1101 SubGHz module 2-pack (315/433/868/915MHz + included 433MHz SMA whip)
 - [x] HiLetgo NRF24L01+PA+LNA 2-pack (2.4GHz, 1100m range, included RP-SMA duck antenna)
 - [x] HiLetgo PN532 V3 NFC/RFID module (I2C/SPI/HSU, built-in PCB coil antenna, includes S50 cards)
-- [ ] 315MHz SMA whip antenna (for CC1101 — US Tesla/garage frequency) — ~$3-5
-- [ ] 915MHz SMA whip antenna (for CC1101 — ISM band) — ~$3-5
+- [x] 915MHz SMA whip antenna (for CC1101 — ISM band) — reuse spare from LoRa 2-pack (Networking #3)
+- [x] 315MHz SMA whip antenna 2-pack (Eifagur, for CC1101 — US Tesla/garage frequency)
 
 ### RaspyJack (Project 19)
 - [x] DIGISHUO Raspberry Pi Zero 2 W Kit (w/ SD, cables, headers)
@@ -266,3 +287,9 @@ Some items were purchased in multiples, allowing dedicated assignment to separat
 | NRF24L01+PA+LNA | 2 | #1 → HaleHound (cyberdeck SW8) · #2 → Spare/future project |
 | Cylewet Active Buzzer | 10 | #1 → OUI-Spy alert · #2-10 → Spares for future ESP32 projects |
 | ESD Brushes | 10 | General PCB/component cleaning across all projects |
+| Eifagur 315MHz SMA Antenna | 2 | #1 → HaleHound CC1101 (US Tesla/garage) · #2 → Spare |
+| NRF24L01+ (HiRCTR basic) | 4 | Spares for future 2.4GHz RF projects |
+| NRF24L01 Socket Adapter | 5 | Easy mounting for NRF24 modules across projects |
+| Hosyond 1.3" OLED Display | 5 | Status displays for ESP32/Pi projects |
+| EC Buying BW16-Kit (RTL8720DN) | 3 | Dual-band WiFi/BT5.0 dev boards |
+| ESP32-S2U Dev Board | 3 | USB-native ESP32 projects |
