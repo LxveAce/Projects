@@ -253,3 +253,9 @@ Many projects share the same ESP32 boards, Raspberry Pi units, WiFi adapters, an
 - **Panda PAU0F WiFi 6E adapter** -> Kismet, general pentesting
 - **SD cards & USB drives** -> All projects needing OS images or data storage
 - **Fluke multimeter** -> Troubleshooting all electronics projects
+
+---
+
+## Disclaimer
+
+These are **personal security-research and hardware projects shared for educational purposes.** Use any tools, firmware, or techniques referenced here **only** on systems, networks, and devices that you own or are explicitly authorized to test. Some techniques may be illegal to use against systems you do not own. You are solely responsible for complying with all applicable laws. Everything is provided **as-is, with no warranty** and **no liability** for misuse or damage.
