@@ -193,6 +193,22 @@ See [cyberdeck integration guide](../14-cyberdeck/integrations/19-raspyjack/) fo
 
 ---
 
+## Feature Brainstorm — What Else Can This Do
+
+- **Responder credential capture** — deploy Responder on a wired connection to poison LLMNR/NBT-NS/MDNS and capture NTLMv2 hashes from Windows hosts on the target network during authorized pentests
+- **ARP MITM for traffic interception** — run arpspoof + mitmproxy to intercept and inspect plaintext traffic between hosts on the same subnet; log credentials, cookies, and API keys for the engagement report
+- **DNS spoofing for social engineering assessments** — redirect DNS queries to a controlled evil portal running on RaspyJack to test employee awareness against phishing during an authorized red team exercise
+- **Nmap automated discovery with Discord webhook alerts** — schedule periodic Nmap scans of a target subnet and push new-host alerts to a Discord channel via webhook for real-time asset discovery monitoring
+- **Scapy custom packet crafting** — write Python scripts using Scapy to craft and send custom protocol packets for testing firewall rules, IDS evasion, or protocol-level fuzzing on authorized networks
+- **WebUI payload IDE for custom scripts** — use the built-in browser-based code editor to write, test, and deploy custom Python/Bash attack payloads without needing SSH or a separate dev environment
+- **Bluetooth MITM via built-in BLE** — leverage the Pi Zero 2W's onboard Bluetooth to intercept BLE GATT communications between a peripheral and its app, testing for insecure pairing or plaintext attribute writes
+- **WiFi attacks with external USB adapter** — add a monitor-mode-capable USB WiFi dongle (RT5370 from inventory) to run deauth, evil twin, and handshake capture attacks alongside wired pentesting
+- **Community payload contributions** — submit custom payloads to [wickednull/raspyjack-payloads](https://github.com/wickednull/raspyjack-payloads) and pull new community payloads to expand the 231+ payload library
+- **SSH tunnel back to cyberdeck Pi 5** — establish a reverse SSH tunnel from RaspyJack to the cyberdeck's Pi 5 so you can control the device remotely from the deck's dashboard while it is plugged into a distant switch
+- **Drop box deployment** — configure RaspyJack as a covert "drop box" left on an authorized target network: auto-connect via Ethernet, run Responder + Nmap on a cron schedule, exfiltrate loot via Tailscale or Discord C2, and retrieve the device later
+
+---
+
 ## Resources
 
 | Resource | Link |

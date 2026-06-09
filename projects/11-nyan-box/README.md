@@ -445,6 +445,37 @@ The legality depends entirely on **how you use it**.
 
 ---
 
+## Standalone Build Guide
+
+Pre-built 2.4GHz wireless security toolkit -- arrives ready to use.
+
+1. Purchase NyanBOX kit (~$220, includes board + antennas + case)
+2. Unbox and connect USB-C power
+3. NyanBOX boots into its own menu system -- no flashing needed
+4. Connect external antenna for better range (RP-SMA port on board)
+5. Use standalone for WiFi scanning, deauth testing, beacon spam
+6. Compare results with ESP32 Marauder for cross-validation
+7. Good as a backup/redundant scanner if primary Marauder boards fail
+
+> **Note:** NyanBOX is largely redundant with the cyberdeck's 3 Gold + 2 C5 boards.
+
+---
+
+## Feature Brainstorm -- What Else Can This Do
+
+- **MouseJack wireless keyboard injection** -- Flash the nyanBEE community firmware to unlock NRF24-based MouseJack attacks. The NyanBOX's three NRF24 GTmini modules can sniff and inject keystrokes into unencrypted wireless keyboards and mice during authorized physical security assessments.
+- **Spectrum analysis for finding hidden wireless devices** -- Use the built-in Spectrum Analyzer to sweep rooms, offices, or vehicles for unexpected 2.4 GHz transmitters (hidden cameras, rogue APs, planted bugs) that would not appear in a standard WiFi scan.
+- **BLE proximity monitoring with tracker sweep** -- Run the AirTag, SmartTag, and Tile detectors in sequence (or nyanBEE's Tracker Sweep for all at once) as a portable counter-surveillance sweep tool when entering a new vehicle, hotel room, or meeting space.
+- **WiFi channel congestion analysis for site surveys** -- Use the Channel Analyzer during wireless site assessments to identify which 2.4 GHz channels are overloaded, recommending optimal channel assignments for the target network.
+- **Cross-validation scan results with ESP32 Marauder** -- Run the same WiFi/BLE reconnaissance with both NyanBOX and your Marauder-flashed ESP32 boards to compare detection results, validating scan completeness and identifying any devices one tool misses.
+- **NRF24 sniffer mode for custom protocol analysis** -- Use the NRF24 modules to sniff non-WiFi, non-Bluetooth 2.4 GHz protocols (baby monitors, wireless sensors, proprietary IoT devices) for security research on custom RF implementations.
+- **Custom SSID lists for targeted beacon spam testing** -- Create curated SSID lists mimicking specific target environments (corporate networks, government SSIDs) for authorized Evil Twin and beacon spam testing during red team engagements.
+- **Portable RF survey tool for physical site assessments** -- Combine the WiFi Scanner, BLE Scanner, Spectrum Analyzer, and Drone Detector into a single walk-through survey workflow, documenting the complete 2.4 GHz RF environment of a facility in one pass.
+- **Deauth detection for defensive monitoring** -- Deploy the Deauth Scanner in continuous mode on your home or office network to alert you when someone is actively running deauthentication attacks against your infrastructure.
+- **Pwnagotchi and Pineapple detection for blue team sweeps** -- Use the built-in Pwnagotchi and Pineapple detectors during physical security patrols to identify if any unauthorized offensive tools are operating within your facility.
+
+---
+
 ## 12. Best-Fit Hardware from Your Inventory
 
 ### Status: In Transit -- Pre-Built Kit

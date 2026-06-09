@@ -92,7 +92,22 @@ For **authorized testing / your own devices only**. Two specific cautions:
 
 ---
 
-## 6. Resources
+## 6. Feature Brainstorm — What Else Can This Do
+
+- **SubGHz replay on garage doors / gates** — use CC1101 to capture and replay rolling-code-free remotes during authorized physical pentests (pair with HaleHound for CYD touchscreen UI)
+- **IR remote cloning + universal remote** — record IR signals from TVs, projectors, and A/V equipment, then replay on demand; build a universal remote profile library on the microSD
+- **NRF24 2.4 GHz spectrum analyzer** — sweep all 126 channels in real time to hunt interference sources, rogue wireless peripherals, or congested bands in a facility
+- **Custom SubGHz protocol decoding** — write decoders for weather stations, tire-pressure monitors (TPMS), and other OOK/FSK devices broadcasting on 315/433/915 MHz
+- **RFID/NFC badge cloning for access control audits** — read and clone low-frequency (125 kHz) and 13.56 MHz badges on authorized sites; log UIDs for audit reports
+- **Flipper Zero gap-filler** — until a Flipper is purchased (Project 02), ESP32-DIV covers the same SubGHz/IR/NFC/RFID ground in a DIY package; document feature parity gaps so the Flipper purchase is informed
+- **Multi-protocol scanning dashboard** — build a single touchscreen view that cycles through WiFi AP count, BLE device count, SubGHz signal activity, and NRF24 channel utilization in one glance
+- **SubGHz weather station monitoring** — passively decode nearby 433 MHz weather sensors (Acurite, LaCrosse, Oregon Scientific) and log temperature/humidity/wind over time
+- **MouseJack keyboard injection via NRF24** — test wireless keyboards and mice for the MouseJack vulnerability (CVE-2016-10761) on authorized targets using the three onboard NRF24 modules
+- **Tesla charge port opener (educational)** — replay the 315 MHz (US) or 433.92 MHz (EU) signal to pop a Tesla charge port door; useful for demonstrating SubGHz replay in a controlled lab setting (HaleHound Project 18 also covers this — DIV is the standalone/handheld route)
+
+---
+
+## 7. Resources
 
 - Repo: https://github.com/cifertech/esp32-div · Site: https://cifertech.net
 - Cyberdeck integration: [14-cyberdeck/integrations/15-esp32-div](../14-cyberdeck/integrations/15-esp32-div/)

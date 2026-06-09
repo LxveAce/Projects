@@ -420,6 +420,21 @@ CYT-NG occupies a unique niche: it is the only open-source tool that combines **
 
 ---
 
+## Feature Brainstorm -- What Else Can This Do
+
+- **Automated route-change analysis** -- Script a detection mode that triggers GPS route deviations (random turns) and checks whether the same device MACs/SSID fingerprints persist through 3+ location changes, dramatically increasing confidence in surveillance detection.
+- **Integration with Kismet for WiFi-based persistence detection** -- Feed Kismet's real-time device stream directly into CYT-NG's persistence engine, enabling WiFi probe request analysis and BLE detection simultaneously from a single data pipeline.
+- **BLE + WiFi combined persistence scoring** -- Weight the persistence score higher when the same entity is detected on both WiFi (probe requests) and BLE (advertising packets), since a legitimate coincidence is far less likely across two protocols.
+- **Phone notification when persistence score exceeds threshold** -- Use Pushover, Ntfy, or MQTT to push an alert to your phone when any device crosses a configurable persistence threshold (e.g., 0.7+), so you do not need to watch the screen while driving.
+- **Historical analysis database of detected followers** -- Store all persistence events in a SQLite database with timestamps, GPS coordinates, device fingerprints, and scores. Query historical data to identify repeat surveillance across days or weeks.
+- **GPS-correlated tracking maps** -- Auto-generate KML files after each session showing your route with color-coded markers for persistent devices. Open in Google Earth to visualize exactly where surveillance began and ended.
+- **Pre-programmed detection routes for daily commute** -- Define your regular commute route in the config. CYT-NG can then focus scoring on devices that appear on your commute but are NOT part of your baseline ignore list, reducing false positives from fellow commuters.
+- **Export suspicious device lists for reporting** -- Generate a formatted report (Markdown + HTML via Pandoc) listing all high-persistence devices with timestamps, GPS coordinates, SSID fingerprints, and MAC addresses for filing with law enforcement or security teams.
+- **Integration with dashcam timestamp correlation** -- Log CYT-NG detection timestamps to a file that can be cross-referenced with dashcam footage timestamps, letting you review video of the exact moment a persistent device appeared.
+- **Passive TPMS sensor detection** -- With an RTL-SDR dongle and Kismet's RTL-433 plugin, detect Tire Pressure Monitoring System sensors from nearby vehicles. TPMS IDs are static and unique per vehicle, adding another tracking vector to the persistence engine.
+
+---
+
 ## Sources
 
 - [ArgeliusLabs/Chasing-Your-Tail-NG - GitHub](https://github.com/ArgeliusLabs/Chasing-Your-Tail-NG)

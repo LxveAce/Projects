@@ -10,7 +10,9 @@
 6. [Detection Heuristics and Limitations](#6-detection-heuristics-and-limitations)
 7. [Legal Context](#7-legal-context)
 8. [Alternative Tools](#8-alternative-tools)
-9. [Resources](#9-resources)
+9. [Feature Brainstorm -- What Else Can This Do](#9-feature-brainstorm----what-else-can-this-do)
+10. [Resources](#10-resources)
+11. [Best-Fit Hardware from Your Inventory](#10-best-fit-hardware-from-your-inventory)
 
 ---
 
@@ -447,7 +449,38 @@ The EFF states: *"We believe running this program does not currently violate any
 
 ---
 
-## 9. Resources
+## Standalone Build Guide
+
+Phone-based IMSI catcher detector -- runs continuously on a pocket hotspot.
+
+1. Purchase Orbic Speed RC400L mobile hotspot (~$20-30 used)
+2. Enable ADB: dial ##3424## on the Orbic, enable ADB in Developer Options
+3. Connect via USB-C and run `adb devices` to verify connection
+4. Clone EFF RayHunter repo: `git clone https://github.com/EFF/rayhunter`
+5. Run install script: `./install.sh` (installs binary to Orbic)
+6. Reboot Orbic -- RayHunter starts automatically on boot
+7. Access web UI at http://192.168.68.1:8080 from any device on the hotspot's WiFi
+8. Carry in pocket or car cupholder -- runs continuously monitoring cellular connections
+9. Check alerts periodically -- red/yellow indicators mean suspicious base station activity
+
+---
+
+## 9. Feature Brainstorm -- What Else Can This Do
+
+- **Continuous background monitoring during daily commute** -- Keep the Orbic powered on in your car or bag during your regular commute to build a baseline of normal tower behavior on your route, making genuine anomalies easier to spot over time
+- **GPS-correlated alert logging for pattern analysis** -- Pair the Orbic with a GPS logger or phone GPS app and cross-reference alert timestamps with locations to identify whether alerts cluster around specific buildings, intersections, or government facilities
+- **Protest and event surveillance mapping** -- Run RayHunter at public events and demonstrations to document whether cell-site simulators are deployed for crowd surveillance, contributing evidence to civil liberties organizations
+- **Contributing data to EFF's global CSS mapping effort** -- Export log files from the web interface after each monitoring session and submit them to EFF via their Mattermost channel to help build the first empirical map of IMSI catcher deployments worldwide
+- **Automated alert-to-phone notification pipeline** -- Write a script on a connected laptop or Pi that polls the RayHunter web interface at `192.168.1.1:8080` and sends a push notification to your phone (via Pushover, ntfy, or Telegram bot) whenever a red alert triggers
+- **Historical analysis of repeated detections at the same location** -- Keep a spreadsheet or database of every alert with date, time, and GPS coordinates, then analyze for patterns like recurring alerts at the same intersection that would suggest a permanent or frequently-deployed CSS
+- **Multi-carrier comparison** -- Run RayHunter on multiple Orbic devices with different carrier SIMs (Verizon, T-Mobile, AT&T) simultaneously to compare whether alerts correlate across carriers or are carrier-specific tower behavior
+- **Dashcam pairing for visual context** -- Run RayHunter alongside a dashcam so that when an alert fires, you have synchronized video footage of the surrounding area showing any suspicious vehicles, temporary cell towers, or law enforcement activity
+- **Baseline your home and workplace** -- Run extended monitoring sessions at locations you frequent to establish what normal tower behavior looks like, so you can distinguish genuine anomalies from routine tower reconfigurations
+- **Cross-validation with SnoopSnitch** -- Run SnoopSnitch on a rooted Android phone alongside the Orbic to compare detections between two independent tools, increasing confidence when both flag the same event
+
+---
+
+## 10. Resources
 
 ### Official
 

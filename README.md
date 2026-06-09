@@ -32,6 +32,48 @@ A curated collection of cybersecurity, wireless, and hardware hacking projects -
 
 ---
 
+## Cyberdeck Classification
+
+Every project falls into one of three categories relative to the [Cyberdeck build](projects/14-cyberdeck/) (Pelican 1300, 13 devices, 7 SMA bulkheads, 11 switches):
+
+### Deck-Integrated (Board Mounted Inside)
+
+| Project | Board | Role | Antenna |
+|---------|-------|------|---------|
+| 01 Marauder | Gold #1 + CYD #1 | 2.4GHz WiFi/BLE offensive | SMA 1 (5 dBi) |
+| 06 Flock | Gold #2 | ALPR camera detection | SMA 2 (5 dBi) |
+| 08/10 BLE+CYT | Gold #3 | BLE tracker + tail detection | SMA 3 (5 dBi) |
+| 01 Marauder 5G | C5 #1 | Dual-band 2.4+5GHz attacks | SMA 4 (dual-band) |
+| 07 Kismet 5G | C5 #2 | Dual-band scanning/wardriving | SMA 5 (dual-band) |
+| 04 Meshtastic | Heltec V3 | LoRa 915MHz mesh comms | SMA 6 (4 dBi) |
+| 06 Drone | WROOM-32 | RemoteID drone detection | Internal |
+| 18 HaleHound | CYD #2 | IoT Recon + SubGHz + NFC | Internal |
+| 19 RaspyJack | Pi Zero 2W | Wired network pentesting | Internal |
+| 07 Kismet | PAU0F + RT5370 | WiFi 6E wardriving | SMA 7 (tri-band) |
+| Shared | VK-162 GPS | GPS for all tools via gpsd | Internal |
+
+### Standalone (Separate Portable Device)
+
+| Project | Why | Hardware |
+|---------|-----|----------|
+| 02 Flipper Zero | Pocket multi-tool, own screen/battery | Flipper Zero + AWOK C5 Touch |
+| 03 Pwnagotchi | Autonomous AI, pocket carry | Pi Zero 2W + e-ink + PiSugar |
+| 05 RayHunter | Requires Orbic cellular modem | Orbic Speed RC400L |
+| 09 Project Nomad | x64 only (blocked on ARM) | LattePanda / x64 SBC |
+| 11 NyanBOX | Pre-built sealed unit | NyanBOX kit ($220) |
+| 12 USB Rubber Ducky | USB stick, physical access | Hak5 Ducky / DIY ESP32-S2 |
+
+### Companion / Tool (Software or Reference)
+
+| Project | Role |
+|---------|------|
+| 13 ESP Terminator | Web flasher for the deck's ESP32s |
+| 15 ESP32-DIV | Superseded by HaleHound (Project 18) |
+| 16 BlueJammer | Reference only — jamming is illegal; lawful detector side merged |
+| 17 OUI-Spy | Detection merged into Flock + BLE firmware |
+
+---
+
 ## Resources
 
 | Resource | Description |
@@ -243,33 +285,34 @@ Both Waveshare ESP32-C5 boards are ready to flash with Marauder C5 firmware for 
 ## Project Ecosystem Map
 
 ```
-                    ┌─────────────────────────────────────────┐
-                    │          SECURITY TOOLKIT               │
-                    └─────────────────────────────────────────┘
-                                      │
-           ┌──────────────────────────┼──────────────────────────┐
-           │                          │                          │
-    ┌──────┴──────┐           ┌───────┴───────┐          ┌──────┴──────┐
-    │   WIRELESS  │           │  SURVEILLANCE │          │  OFFENSIVE  │
-    │   DEFENSE   │           │  DETECTION    │          │   TOOLS     │
-    └──────┬──────┘           └───────┬───────┘          └──────┬──────┘
-           │                          │                          │
-    ┌──────┴──────┐           ┌───────┴───────┐          ┌──────┴──────┐
-    │ RayHunter   │           │ OUI-Spy ★     │          │ Marauder    │
-    │ Kismet      │           │ Flock Detect  │          │ Marauder C5 │
-    │ Meshtastic  │           │ Drone Detect  │          │ HaleHound   │
-    │ BLE Detect  │           │ Chasing Tail  │          │ Flipper     │
-    └─────────────┘           │ BLE Tracking  │          │ RaspyJack   │
-                              └───────────────┘          │ Pwnagotchi  │
-                                                         └─────────────┘
-           ┌──────────────────────────┼──────────────────────────┐
-           │                          │                          │
-    ┌──────┴──────┐           ┌───────┴───────┐          ┌──────┴──────┐
-    │    COMMS    │           │ INTELLIGENCE  │          │   PLATFORM  │
-    └──────┬──────┘           └───────┬───────┘          └──────┬──────┘
-    │ Meshtastic  │           │ OSINT / CTI   │          │ Proj Nomad  │
-    │ Proj Nomad  │           │ Kismet Data   │          │ ESP Terminal│
-    └─────────────┘           └───────────────┘          └─────────────┘
+                         ┌──────────────────────────┐
+                         │   CYBERDECK (Pelican 1300) │
+                         │  13 devices, 7 SMA, 11 SW │
+                         └────────────┬─────────────┘
+              ┌──────────────┬────────┼────────┬──────────────┐
+              │              │        │        │              │
+       ┌──────┴──────┐ ┌────┴────┐ ┌─┴──┐ ┌──┴─────┐ ┌──────┴──────┐
+       │  WiFi/BLE   │ │  RECON  │ │MESH│ │WIRED   │ │SURVEILLANCE │
+       │  OFFENSE    │ │         │ │COMM│ │ATTACKS │ │ DETECTION   │
+       └──────┬──────┘ └────┬────┘ └─┬──┘ └──┬─────┘ └──────┬──────┘
+       │ Gold#1 MAR  │ │ PAU0F    │ │Heltec│ │PiZero RJ│ │ Gold#2 FLK │
+       │ C5#1 5G MAR │ │ RT5370   │ │LoRa  │ │HaleHound│ │ Gold#3 BLE │
+       │ C5#2 5G SCN │ │ Kismet   │ │915MHz│ │IoT Rec  │ │ WROOM Drn  │
+       └─────────────┘ └─────────┘ └──────┘ └─────────┘ │ CYT Tail   │
+                                                         └────────────┘
+
+       ┌──────────────────── STANDALONE ────────────────────────┐
+       │                                                         │
+       │  Flipper Zero (pocket)    Pwnagotchi (pocket AI)        │
+       │  RayHunter (Orbic phone)  NyanBOX (pre-built)           │
+       │  USB Rubber Ducky (USB)   Project Nomad (x64 blocked)   │
+       └─────────────────────────────────────────────────────────┘
+
+       ┌──────────────────── COMPANION ─────────────────────────┐
+       │  ESP Terminator (flasher)  OSINT/CTI (software)         │
+       │  ESP32-DIV (→ HaleHound)  BlueJammer (reference)        │
+       │  OUI-Spy (→ Flock+BLE)                                  │
+       └─────────────────────────────────────────────────────────┘
 ```
 
 ---

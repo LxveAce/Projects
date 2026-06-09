@@ -964,6 +964,23 @@ OUI-Spy Blue Edition firmware is **receive-only**. It captures publicly broadcas
 
 ---
 
+## Feature Brainstorm — What Else Can This Do
+
+- **LILYGO T-Display S3 portable build** — flash Unified Blue onto a T-Display S3 with its built-in 1.9" color TFT for a pocketable, screen-equipped detector that needs no phone or laptop
+- **Unified multi-engine mode (WiFi + BLE simultaneously)** — run Flock-You WiFi promiscuous and BLE Detector concurrently on a single ESP32-S3, catching both WiFi-probing and BLE-advertising surveillance devices without rebooting between modes (Omni fork does this already -- port to Unified Blue)
+- **Custom regional OUI database** — curate an OUI watchlist specific to your area's surveillance hardware (local ALPR vendors, municipal camera brands, building access systems) beyond the default Flock/Ring lists
+- **Foxhunter direction-finding for cameras** — pair Foxhunter mode with a 2.4 GHz Yagi antenna to physically locate a detected Flock or surveillance camera by walking toward the strongest RSSI signal
+- **GPS-tagged detection logging with heatmaps** — log every detection with GPS coordinates (phone geolocation API or external GPS module) and generate heatmaps showing surveillance device density across a route or neighborhood
+- **Community OUI database contributions** — submit newly discovered surveillance OUI prefixes back to the Ringmast4r OUI Master Database or Colonel Panic's detection lists to benefit the wider community
+- **Flock-You integration for enhanced camera detection** — combine OUI-Spy's WiFi promiscuous Flock scanning with BLE advertisement matching for dual-layer Flock camera detection with fewer false negatives
+- **BLE Detector mode for AirTag / SmartTag scanning** — use the Detector's BLE engine to watch for Apple AirTag, Samsung SmartTag, and Tile tracker advertisements, complementing the Chasing Your Tail project (Project 10)
+- **Sky Spy drone RemoteID alerting** — add audible/visual alerts and serial logging to Sky Spy mode so drone overflights are captured with timestamp, GPS, altitude, and operator location for later review
+- **Webhook / push notifications** — send detection alerts to a phone via MQTT, Discord webhook, or Pushover so you get notified even when you are not watching the device screen
+- **Companion Flutter app for real-time monitoring** — adopt or contribute to Luke Switzer's Omni Flutter app for phone-based live detection, wardrive mapping, and per-engine control over BLE
+- **Standalone portable unit vs. cyberdeck-integrated** — build two units: one compact T-Display S3 for pocket carry on walks/drives, and one XIAO S3 wired into the cyberdeck for always-on base station monitoring
+
+---
+
 ## Related Projects in This Repo
 
 | Project | Overlap | Notes |

@@ -20,7 +20,9 @@
 11. [Software Integration](#11-software-integration)
 12. [Bill of Materials (Case + New Parts)](#12-bill-of-materials)
 13. [Build Phases](#13-build-phases)
-14. [Inspiration and References](#14-inspiration-and-references)
+14. [Project Classification — Deck vs Standalone vs Companion](#14-project-classification--deck-vs-standalone-vs-companion)
+15. [Feature Brainstorm — Cyberdeck Platform](#15-feature-brainstorm--cyberdeck-platform)
+16. [Inspiration and References](#16-inspiration-and-references)
 
 ---
 
@@ -259,14 +261,19 @@ Each ESP32 connects to the Pi 5 via USB for serial communication and power. The 
 | Device | Voltage | Current (typical) | Current (peak) |
 |--------|---------|-------------------|----------------|
 | Pi 5 8GB | 5V | 800mA | 2.5A (under load) |
-| ESP32 x4 | 5V (USB) | 100-180mA each | 300mA each (WiFi TX) |
+| ESP32 Gold x3 | 5V (USB) | 100-180mA each | 300mA each (WiFi TX) |
+| ESP32-C5 x2 | 5V (USB) | 120-200mA each | 350mA each (WiFi 6 TX) |
 | Heltec LoRa V3 | 5V (USB) | 80mA | 200mA (LoRa TX) |
-| CYD 2.8" display | 5V (USB) | 150mA | 250mA |
+| ESP32-WROOM-32 | 5V (USB) | 100mA | 250mA |
+| CYD 2.8" #1 (Marauder) | 5V (USB) | 150mA | 250mA |
+| CYD 2.8" #2 (HaleHound) | 5V (USB) | 150mA | 250mA |
+| Pi Zero 2W (RaspyJack) | 5V (USB) | 200mA | 400mA |
 | 7" DSI display | 5V (DSI) | 400mA | 500mA |
-| Panda PAU0F WiFi | 5V (USB 3.0) | 400mA | 600mA |
+| Panda PAU0F WiFi 6E | 5V (USB 3.0) | 400mA | 600mA |
 | RT5370 WiFi | 5V (USB) | 150mA | 200mA |
+| VK-162 GPS | 5V (USB) | 50mA | 80mA |
 | USB Hub | 5V | 50mA | 100mA |
-| **TOTAL** | | **~2.7A** | **~5.0A** |
+| **TOTAL** | | **~3.6A** | **~6.5A** |
 
 ### Battery Sizing
 
@@ -386,11 +393,30 @@ CASE SIDE PANEL (external view)
 - The Panda PAU0F has its own antenna -- use an SMA extension cable from the adapter to a bulkhead
 - The RT5370 uses its internal antenna (secondary, short-range OK)
 
+### Optimized Antenna Gain Strategy (Per Port)
+
+Different ports benefit from different gain levels. Higher gain compresses the radiation pattern into a flatter donut — great for flat terrain but creates dead zones above/below:
+
+| Port | Radio | Default Antenna | Gain | Upgrade Option |
+|------|-------|----------------|------|----------------|
+| SMA 1-3 | ESP32 Gold (2.4G) | 5 dBi omni rubber duck | 5 dBi | 8 dBi fiberglass for flat terrain scanning |
+| SMA 4-5 | ESP32-C5 (dual-band) | Bingfu 5 dBi tri-band | 5 dBi | Bingfu WiFi 6E tri-band (covers 2.4/5/6GHz) |
+| SMA 6 | Heltec LoRa V3 | MESHTAC 4 dBi gooseneck | 4 dBi | Rokland 8 dBi outdoor fiberglass (stationary) |
+| SMA 7 | Panda PAU0F (WiFi 6E) | Bingfu 5 dBi tri-band | 5 dBi | Alfa APA-M25-6E 10 dBi panel (directed work) |
+
+**Range estimates with external antennas:**
+- 2.4GHz, 5 dBi omni, open field: ~400-600m passive detection
+- 2.4GHz, 8 dBi fiberglass, line-of-sight: ~800m-1.2km
+- 5GHz (ESP32-C5), 5 dBi omni: ~150-300m (higher frequency = shorter range)
+- 915MHz LoRa, 4 dBi gooseneck: ~2-5km suburban, ~10km+ line-of-sight
+- 915MHz LoRa, 8 dBi fiberglass: ~8-15km line-of-sight
+
 ### Field Antenna Options
 
-For normal carry: screw on short stubby antennas (3dBi) on all bulkheads.
-For wardriving: swap the Kismet bulkhead antenna for a 9dBi magnetic-base roof-mount.
-For directional work: swap Marauder bulkhead for a panel or Yagi antenna.
+For normal carry: screw on 5 dBi omni antennas on all bulkheads.
+For wardriving: swap Port 1 or 7 for a 7 dBi NMO magnetic roof-mount (AIR802 ANMM2407, ~$40, 3m RP-SMA cable — sits on car roof, cable runs to Pelican case inside).
+For directional work: swap Marauder or Kismet bulkhead for Alfa APA-M25-6E 10 dBi tri-band panel (8 dBi at 2.4G, 10 dBi at 5G, 9 dBi at 6G, 70°×60° beam).
+For max LoRa range: swap Port 6 for Rokland 8 dBi outdoor fiberglass omni or BOOBRIE 5.8 dBi with 5m cable for elevated deployment.
 
 ### Antenna Stow Mode
 
@@ -460,10 +486,9 @@ The CYD boards also use PCB antennas with no IPEX connector. Since they're mount
 
 Every hole drilled in the Pelican 1300 compromises the IP67 seal. Here's how to maintain water resistance:
 
-**Option 1: IP67-Rated Waterproof SMA Bulkheads (Best)**
-- Buy SMA bulkheads with built-in O-ring gaskets and waterproof threading
-- These seal the hole by design — no additional sealant needed for the SMA connections
-- Exgoofit waterproof SMA bulkheads (~$12 for 5-pack)
+**Option 1: IP68-Rated Waterproof SMA Bulkheads (Best)**
+- **DataPro CCP-SMA-RPFF IP68 RP-SMA Panel-Mount Coupler** (~$15 each) — nickel-plated brass, gold contacts, O-ring included, 50 Ohm, rated 0-18 GHz. Exceeds IP67, verified waterproof when torqued to 0.6-0.8 N·m
+- Alternative: Exgoofit waterproof SMA bulkheads (~$12 for 5-pack) — cheaper but verify O-rings are included
 
 **Option 2: Standard SMA Bulkheads + Marine Sealant**
 - Apply **3M Marine Grade Silicone Sealant** (clear, ~$8) around each bulkhead hole before tightening the nut
@@ -572,19 +597,22 @@ Options:
 ### USB Hub Architecture
 
 ```
-Pi 5 USB 3.0 Port #1 ──→ Panda PAU0F WiFi 6E (Kismet primary)
-Pi 5 USB 3.0 Port #2 ──→ Powered USB Hub (7-port)
-                              ├── Lonely Binary #1 (Marauder) -- serial
-                              ├── Lonely Binary #2 (Flock) -- serial
-                              ├── Lonely Binary #3 (BLE) -- serial
-                              ├── Heltec LoRa V3 (Meshtastic) -- serial
-                              ├── ESP32-WROOM-32 (Drone) -- serial
-                              ├── RT5370 WiFi (Kismet secondary)
-                              └── USB flash drive (data export)
-Pi 5 USB 2.0 Port #1 ──→ GPS module (UART over USB)
-Pi 5 USB 2.0 Port #2 ──→ (spare / Pwnagotchi dock)
+Pi 5 USB 3.0 Port #1 ──→ Panda PAU0F WiFi 6E (Kismet primary, always on)
+Pi 5 USB 3.0 Port #2 ──→ Powered USB Hub (10-port or chained 2x CH334F)
+                              ├── SW1  → Lonely Binary Gold #1 (Marauder) -- serial
+                              ├── SW2  → Lonely Binary Gold #2 (Flock) -- serial
+                              ├── SW3  → Lonely Binary Gold #3 (BLE/CYT) -- serial
+                              ├── SW4  → ESP32-C5 #1 (Dual-band Marauder) -- serial
+                              ├── SW5  → ESP32-C5 #2 (Dual-band scanner) -- serial
+                              ├── SW6  → Heltec LoRa V3 (Meshtastic) -- serial
+                              ├── SW7  → ESP32-WROOM-32 (Drone RemoteID) -- serial
+                              ├── SW8  → CYD #2 (HaleHound/IoT Recon) -- serial
+                              ├── SW9  → Pi Zero 2W (RaspyJack) -- USB gadget
+                              ├── SW10 → RT5370 WiFi (Kismet secondary)
+                              └── SW11 → VK-162 GPS module
+Pi 5 USB 2.0 Port #1 ──→ USB flash drive (data export)
+Pi 5 USB 2.0 Port #2 ──→ Wired USB keyboard (when plugged in)
 Pi 5 DSI Port ──→ 7" Touchscreen
-Pi 5 USB 2.0 Port #2 ──→ Wired USB mini keyboard (BLE stealth)
 ```
 
 ### Powered USB Hub Selection
@@ -606,17 +634,18 @@ Need a compact, powered 7-port USB hub that can supply 500mA per port:
 Every component gets its own **SPST mini toggle switch** in the USB 5V power line. When a switch is OFF, that device draws **zero power** — completely dead, no standby drain.
 
 ```
-SWITCH PANEL (mounted on case side panel)
+SWITCH PANEL (mounted on case front panel)
 
- [MAIN]  [MAR]  [FLOCK]  [BLE]  [MESH]  [DRONE]  [KISM]
-  (o)     (o)     (o)     (o)     (o)      (o)      (o)
+ [SW1] [SW2] [SW3] [SW4] [SW5] [SW6] [SW7] [SW8] [SW9] [SW10][SW11]
+  (o)   (o)   (o)   (o)   (o)   (o)   (o)   (o)   (o)   (o)   (o)
 
-   ↑       ↑       ↑       ↑       ↑        ↑        ↑
-  Pi 5   Gold    Gold    Gold   Heltec  WROOM-32  RT5370
-  +Hub    #1      #2      #3    LoRa              2.4GHz
+   ↑     ↑     ↑     ↑     ↑     ↑     ↑     ↑     ↑     ↑     ↑
+ Gold  Gold  Gold  C5    C5   Heltec WROOM  Hale  Raspy RT5370  GPS
+  #1    #2    #3    #1    #2   LoRa  Drone  Hound Jack  Kism2  VK162
+ MAR   FLK   BLE   5G-M  5G-S  MESH  DRN   IOT   NET   WiFi   GPS
 ```
 
-**7 switches total.** Each wired inline on the USB 5V line between the hub port and the device.
+**11 switches total.** Each wired inline on the USB 5V line between the hub port and the device. Pi 5 + Panda PAU0F are always on (no switch — direct USB 3.0 to Pi 5).
 
 **Wiring per switch:**
 ```
@@ -630,13 +659,15 @@ Use **SPST mini toggle switches with waterproof boot caps** (Twidec 10-pack, ~$1
 
 | Mode | Switches ON | Est. Draw | Use Case |
 |------|------------|-----------|----------|
-| Full scan | All 7 | ~3A | All tools simultaneously |
-| Wardriving only | MAIN + KISM | ~1.5A | Kismet + GPS, everything else off |
-| Surveillance detect | MAIN + FLOCK + BLE | ~1.2A | Driving, detecting cameras + trackers |
-| Mesh comms only | MAIN + MESH | ~0.9A | Off-grid messaging |
-| Stealth (passive) | MAIN only | ~0.8A | Pi 5 only, no ESP32 RF emissions |
+| Full scan | All 11 | ~4.5A | All 13 devices simultaneously |
+| Wardriving only | SW10 + SW11 | ~1.5A | Kismet + GPS, everything else off |
+| Dual-band attack | SW1 + SW4 + SW11 | ~1.6A | 2.4GHz + 5GHz Marauder + GPS |
+| Surveillance detect | SW2 + SW3 + SW11 | ~1.2A | Flock cameras + BLE trackers + GPS |
+| IoT Recon | SW8 + SW9 | ~1.1A | HaleHound credential harvest + RaspyJack wired |
+| Mesh comms only | SW6 | ~0.9A | Meshtastic off-grid messaging |
+| Stealth (passive) | None | ~0.8A | Pi 5 + PAU0F only, no ESP32 RF emissions |
 
-**Note:** The Panda PAU0F WiFi 6E adapter connects directly to Pi 5 USB 3.0 (not through the hub), so it's always powered when the Pi is on. This is intentional — Kismet is the primary tool and needs full USB 3.0 bandwidth.
+**Note:** The Panda PAU0F WiFi 6E adapter and Pi 5 are always on (direct USB 3.0, no switch). Kismet runs continuously as the primary passive tool.
 
 ---
 
@@ -897,21 +928,27 @@ Only **3-4 GPIO pins** are used. Everything else connects via USB.
 
 **No conflicts:** The DSI touchscreen uses a separate I2C bus through the DSI connector — it does not share I2C1 with the OLED. All ESP32 boards, WiFi adapters, and GPS connect via USB only.
 
-### USB Port Budget
+### USB Port Budget (13 Devices)
 
-| Port | Device | Type |
-|------|--------|------|
-| Pi 5 USB 3.0 #1 | Panda PAU0F WiFi 6E (Kismet) | Direct — needs full bandwidth |
-| Pi 5 USB 3.0 #2 | Powered USB Hub → 7 devices below | Hub upstream |
-| Hub Port 1 | Lonely Binary Gold #1 (Marauder) | Serial |
-| Hub Port 2 | Lonely Binary Gold #2 (Flock/BLE) | Serial |
-| Hub Port 3 | Lonely Binary Gold #3 (BLE/CYT) | Serial |
-| Hub Port 4 | Heltec LoRa V3 (Meshtastic) | Serial |
-| Hub Port 5 | ESP32-WROOM-32 (Drone RemoteID) | Serial |
-| Hub Port 6 | RT5370 WiFi (Kismet secondary) | Monitor mode |
-| Hub Port 7 | USB flash drive (data export) | Storage |
-| Pi 5 USB 2.0 #1 | VK-162 USB GPS module | UART/GPS |
-| Pi 5 USB 2.0 #2 | Wired USB keyboard (when plugged in) | HID |
+| Port | Device | Type | Switch |
+|------|--------|------|--------|
+| Pi 5 USB 3.0 #1 | Panda PAU0F WiFi 6E (Kismet) | Direct — full bandwidth | Always on |
+| Pi 5 USB 3.0 #2 | Powered USB Hub (upstream) | Hub | Always on |
+| Hub Port 1 | Lonely Binary Gold #1 (Marauder 2.4G) | Serial | SW1 |
+| Hub Port 2 | Lonely Binary Gold #2 (Flock) | Serial | SW2 |
+| Hub Port 3 | Lonely Binary Gold #3 (BLE/CYT) | Serial | SW3 |
+| Hub Port 4 | ESP32-C5 #1 (Dual-band Marauder) | Serial | SW4 |
+| Hub Port 5 | ESP32-C5 #2 (Dual-band scanner) | Serial | SW5 |
+| Hub Port 6 | Heltec LoRa V3 (Meshtastic) | Serial | SW6 |
+| Hub Port 7 | ESP32-WROOM-32 (Drone RemoteID) | Serial | SW7 |
+| Hub Port 8 | CYD #2 (HaleHound/IoT Recon) | Serial | SW8 |
+| Hub Port 9 | Pi Zero 2W (RaspyJack) | USB gadget | SW9 |
+| Hub Port 10 | RT5370 WiFi (Kismet secondary) | Monitor mode | SW10 |
+| Hub Port 11 | VK-162 USB GPS module | UART/GPS | SW11 |
+| Pi 5 USB 2.0 #1 | USB flash drive (data export) | Storage | — |
+| Pi 5 USB 2.0 #2 | Wired USB keyboard | HID | — |
+
+**Note:** 11 hub ports require either a 10+ port powered hub or two chained Adafruit CH334F 4-port breakouts ($5 each). The CH334F approach is more compact for internal mounting.
 
 ### Dashboard: Flask + SocketIO (Recommended)
 
@@ -1242,31 +1279,34 @@ All tools connect to `gpsd` at `localhost:2947`:
 ### Front Panel (Switches + USB-C)
 
 ```
-┌───────────────────────────────────────────────────────┐
-│  FRONT PANEL - LATCH SIDE (EXTERNAL VIEW)             │
-│                                                       │
-│  ┌─────────────────────────────────────────────────┐  │
-│  │                                                 │  │
-│  │  POWER SWITCHES (SPST + waterproof boot caps)   │  │
-│  │                                                 │  │
-│  │  ┌───┐ ┌───┐ ┌───┐ ┌───┐ ┌───┐ ┌───┐ ┌───┐   │  │
-│  │  │ 1 │ │ 2 │ │ 3 │ │ 4 │ │ 5 │ │ 6 │ │ 7 │   │  │
-│  │  │MAR│ │FLK│ │BLE│ │MSH│ │DRN│ │KS2│ │GPS│   │  │
-│  │  └─┬─┘ └─┬─┘ └─┬─┘ └─┬─┘ └─┬─┘ └─┬─┘ └─┬─┘   │  │
-│  │    │     │     │     │     │     │     │       │  │
-│  │  Each switch inline with USB power to device    │  │
-│  │                                                 │  │
-│  │         ┌──────────┐                            │  │
-│  │         │  USB-C   │  Panel-mount               │  │
-│  │         │ CHARGE   │  charging port             │  │
-│  │         └──────────┘  → Anker 347 input         │  │
-│  │                                                 │  │
-│  └─────────────────────────────────────────────────┘  │
-│                                                       │
-│  1=Marauder  2=Flock  3=BLE Scanner  4=Meshtastic    │
-│  5=Drone ID  6=Kismet WiFi #2  7=GPS Module          │
-│  Pi 5 + primary WiFi always on (powered directly)     │
-└───────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────┐
+│  FRONT PANEL - LATCH SIDE (EXTERNAL VIEW)                                │
+│                                                                          │
+│  ┌──────────────────────────────────────────────────────────────────┐    │
+│  │                                                                  │    │
+│  │  POWER SWITCHES (11x SPST + waterproof boot caps)                │    │
+│  │                                                                  │    │
+│  │  ┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐      │    │
+│  │  │SW1││SW2││SW3││SW4││SW5││SW6││SW7││SW8││SW9││S10││S11│      │    │
+│  │  │MAR││FLK││BLE││5GM││5GS││MSH││DRN││IOT││NET││KS2││GPS│      │    │
+│  │  └─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘      │    │
+│  │    │    │    │    │    │    │    │    │    │    │    │          │    │
+│  │  Each switch inline with USB 5V power to its device             │    │
+│  │                                                                  │    │
+│  │   ┌──────────┐  ┌──────────┐  ┌─────┐                           │    │
+│  │   │  USB-C   │  │  USB-A   │  │ ETH │                           │    │
+│  │   │ CHARGE   │  │  DATA    │  │ RJ  │                           │    │
+│  │   └──────────┘  └──────────┘  └─────┘                           │    │
+│  │   → Anker in    → Export     → RaspyJack                        │    │
+│  │                                                                  │    │
+│  └──────────────────────────────────────────────────────────────────┘    │
+│                                                                          │
+│  SW1=Gold#1 Marauder   SW2=Gold#2 Flock     SW3=Gold#3 BLE              │
+│  SW4=C5#1 5G Marauder  SW5=C5#2 5G Scanner  SW6=Heltec Meshtastic       │
+│  SW7=WROOM DroneID     SW8=CYD#2 HaleHound  SW9=PiZero RaspyJack        │
+│  S10=RT5370 Kismet#2   S11=VK-162 GPS                                   │
+│  Pi 5 + Panda PAU0F always on (direct USB 3.0, no switch)               │
+└──────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Cross-Section View (Side Cut — Airflow Path)
@@ -1336,44 +1376,50 @@ All tools connect to `gpsd` at `localhost:2947`:
 └───────────────────────────────────────────────────────┘
 ```
 
-### Wiring Diagram (Power Distribution)
+### Wiring Diagram (Power Distribution — 13 Devices, 11 Switches)
 
 ```
-┌───────────────────────────────────────────────────────────┐
-│  POWER DISTRIBUTION                                       │
-│                                                           │
-│  ┌──────────────┐                                         │
-│  │  Anker 347   │                                         │
-│  │  40,000mAh   │                                         │
-│  │              │                                         │
-│  │  USB-C PD ───┼──► Pi 5 (5V/5A, 25W) ──► ALWAYS ON     │
-│  │  30W output  │                                         │
-│  │              │                                         │
-│  │  USB-A #1 ───┼──► Powered USB Hub                      │
-│  │  22.5W       │       │                                 │
-│  │              │       ├──► SW1 ──► Gold #1 (Marauder)   │
-│  │  USB-A #2 ───┼──►    ├──► SW2 ──► Gold #2 (Flock)     │
-│  │  (spare)     │       ├──► SW3 ──► Gold #3 (BLE)        │
-│  │              │       ├──► SW4 ──► Heltec V3 (Mesh)     │
-│  │  USB-C IN ◄──┼───── Panel-mount USB-C (charging)       │
-│  └──────────────┘       ├──► SW5 ──► WROOM-32 (Drone)     │
-│                         ├──► SW6 ──► RT5370 (Kismet #2)   │
-│  Pi 5 USB Ports:        └──► SW7 ──► VK-162 GPS           │
-│  ├─ USB 3.0 #1 ──► Panda PAU0F (direct, full bandwidth)  │
-│  ├─ USB 3.0 #2 ──► Powered USB Hub (upstream)            │
-│  ├─ USB 2.0 #1 ──► VK-162 GPS (via hub or direct)        │
-│  └─ USB 2.0 #2 ──► Wired USB Keyboard                    │
-│                                                           │
-│  SW1-SW7 = SPST toggle switches with waterproof boots     │
-│  Pi 5 + Panda WiFi are always on (no switch)              │
-│                                                           │
-│  12V rail (from buck converter or USB-to-12V):            │
-│  └──► 2x Coolerguys IP67 fans (intake + exhaust)          │
-│                                                           │
-│  5V from Pi 5 GPIO:                                       │
-│  └──► Noctua A4x10 fan (Pin 4, PWM on GPIO18)             │
-│  └──► 2.42" OLED (Pin 1: 3.3V, I2C on GPIO2/3)            │
-└───────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│  POWER DISTRIBUTION (13 devices, 11 switches)                  │
+│                                                                │
+│  ┌──────────────┐                                              │
+│  │  Anker 347   │                                              │
+│  │  25,600mAh   │                                              │
+│  │              │                                              │
+│  │  USB-C PD ───┼──► Pi 5 (5V/5A, 25W) ──► ALWAYS ON          │
+│  │  30W output  │                                              │
+│  │              │                                              │
+│  │  USB-A #1 ───┼──► Powered USB Hub (10-port or chained 2x4) │
+│  │  22.5W       │       │                                      │
+│  │              │       ├──► SW1  ──► Gold #1 (Marauder 2.4G)  │
+│  │  USB-A #2 ───┼──►    ├──► SW2  ──► Gold #2 (Flock)         │
+│  │  (to hub)    │       ├──► SW3  ──► Gold #3 (BLE/CYT)       │
+│  │              │       ├──► SW4  ──► C5 #1 (Dual-band MAR)   │
+│  │  USB-C IN ◄──┼───── Panel-mount USB-C (charging)            │
+│  └──────────────┘       ├──► SW5  ──► C5 #2 (Dual-band SCAN)  │
+│                         ├──► SW6  ──► Heltec V3 (Meshtastic)  │
+│  Pi 5 USB Ports:        ├──► SW7  ──► WROOM-32 (Drone RID)    │
+│  ├─ USB 3.0 #1 ──►      ├──► SW8  ──► CYD #2 (HaleHound)     │
+│  │  Panda PAU0F          ├──► SW9  ──► Pi Zero 2W (RaspyJack) │
+│  │  (direct, always on)  ├──► SW10 ──► RT5370 (Kismet #2)     │
+│  ├─ USB 3.0 #2 ──►      └──► SW11 ──► VK-162 GPS              │
+│  │  USB Hub (upstream)                                         │
+│  ├─ USB 2.0 #1 ──► VK-162 GPS (via hub)                       │
+│  └─ USB 2.0 #2 ──► Wired USB Keyboard                         │
+│                                                                │
+│  SW1-SW11 = SPST toggle switches with waterproof boots         │
+│  Pi 5 + Panda PAU0F = always on (no switch)                    │
+│                                                                │
+│  12V rail (5V-to-12V boost converter):                         │
+│  └──► 2x Coolerguys IP67 fans (intake + exhaust)               │
+│                                                                │
+│  5V from Pi 5 GPIO:                                            │
+│  ├──► Noctua A4x10 fan (Pin 4, PWM on GPIO18)                  │
+│  └──► 2.42" OLED (Pin 1: 3.3V, I2C on GPIO2/3)                 │
+│                                                                │
+│  RaspyJack Ethernet:                                           │
+│  └──► Panel-mount RJ45 ──► USB-Ethernet (AX88772) ──► Pi Zero │
+└────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -1477,7 +1523,72 @@ All tools connect to `gpsd` at `localhost:2947`:
 
 ---
 
-## 14. Inspiration and References
+## 14. Project Classification — Deck vs Standalone vs Companion
+
+Every project in this repo falls into one of three categories relative to the cyberdeck:
+
+### Deck-Integrated (Board Lives Inside the Case)
+
+These boards are permanently mounted inside the Pelican 1300, powered by the hub, controlled by the Pi 5:
+
+| Project | Board | Deck Role | SMA Port | Switch |
+|---------|-------|-----------|----------|--------|
+| 01 - ESP32 Marauder | Gold #1 + CYD #1 | Primary 2.4GHz WiFi/BLE offensive | SMA 1 | SW1 |
+| 06 - Flock Detection | Gold #2 | Flock ALPR camera detection | SMA 2 | SW2 |
+| 08 - BLE Detection / 10 - CYT | Gold #3 | BLE tracker scanning + tail detection | SMA 3 | SW3 |
+| 01 - Marauder (5GHz) | C5 #1 | Dual-band Marauder (2.4+5GHz WiFi 6) | SMA 4 | SW4 |
+| 07 - Kismet (5GHz scan) | C5 #2 | Dual-band passive scanning/wardriving | SMA 5 | SW5 |
+| 04 - Meshtastic | Heltec LoRa V3 | Off-grid 915MHz mesh comms | SMA 6 | SW6 |
+| 06 - Drone Detection | WROOM-32 | RemoteID drone detection | internal | SW7 |
+| 18 - HaleHound | CYD #2 | IoT Recon + SubGHz + NFC multi-protocol | internal | SW8 |
+| 19 - RaspyJack | Pi Zero 2W | Wired network pentesting (Shark Jack alt) | internal | SW9 |
+| 07 - Kismet | PAU0F + RT5370 | WiFi 6E wardriving (primary + secondary) | SMA 7 | always/SW10 |
+| Shared | VK-162 GPS | GPS feed via gpsd for all tools | internal | SW11 |
+
+### Standalone (Separate Device, Own Build Guide)
+
+These projects stay outside the cyberdeck — they're pocket-carry, phone-based, or use incompatible hardware:
+
+| Project | Why Standalone | Hardware |
+|---------|---------------|----------|
+| 02 - Flipper Zero | Not ESP32-based, pocket carry, own screen/battery | Flipper Zero (not yet purchased) |
+| 03 - Pwnagotchi | Autonomous AI, pocket carry, long-duration capture walks | Pi Zero 2W + e-ink + PiSugar |
+| 05 - RayHunter | Requires Orbic phone hardware (cellular modem) | Orbic Speed RC400L |
+| 11 - NyanBOX | Pre-built sealed unit, redundant with Marauder | NyanBOX ($220) |
+| 12 - USB Rubber Ducky | USB stick form factor, physical access tool | Hak5 Ducky / DIY ESP32-S2 |
+| 09 - Project Nomad | x64 only — blocked on ARM compatibility | LattePanda or x64 SBC |
+
+### Companion / Tool (Software or Reference Only)
+
+| Project | Role |
+|---------|------|
+| 13 - ESP Terminator | Web flasher — used to flash the deck's ESP32s, not a runtime device |
+| 15 - ESP32-DIV | Superseded by HaleHound (same base firmware, HaleHound adds IoT Recon) |
+| 16 - BlueJammer | Reference only — RF jamming is illegal. Lawful NRF24 RX detector side integrated into BLE scanning |
+| 17 - OUI-Spy | Detection capabilities merged into Flock (Gold #2) + BLE (Gold #3) firmware |
+
+---
+
+## 15. Feature Brainstorm — Cyberdeck Platform
+
+What else can this platform do beyond the current project lineup:
+
+- **Unified threat dashboard** — Flask/SocketIO web app aggregating all 13 device feeds on the 7" screen: WiFi APs, BLE trackers, Flock cameras, drones, Meshtastic messages, Kismet networks, IoT credentials, GPS position — all in one tabbed interface
+- **Automated wardriving pipeline** — boot the deck in a car, Kismet + GPS auto-log, C5 scans 5GHz simultaneously, Gold #2 watches for Flock cameras, export WiGLE-compatible CSV at end of drive
+- **IoT credential farm** — HaleHound auto-scans every connected network for default-credential IoT devices, exports harvested creds to Pi 5 for reporting
+- **Multi-band coordinated attack** — Gold #1 deauths on 2.4GHz while C5 #1 deauths on 5GHz, synchronized via Pi 5 serial commands
+- **Stingray detection overlay** — if RayHunter (companion) is running alongside, pipe its alerts to the cyberdeck dashboard via Bluetooth tether
+- **Portable WIDS (Wireless Intrusion Detection)** — Kismet in WIDS mode monitors your own network for rogue APs, evil twins, and deauth attacks
+- **Mesh emergency broadcast** — pre-programmed Meshtastic messages ("NEED EXTRACT", "ALL CLEAR", GPS coords) triggered by hardware button on the case
+- **Thermal-managed sustained operation** — IP67 fans + membrane vent keep Pi 5 under 65°C for 8+ hour field deployments
+- **Drop box mode** — power off everything except RaspyJack (SW9 only), close the case, connect Ethernet — passive credential capture as a network implant
+- **RF sweep mode** — all 7 SMA antennas active simultaneously across 915MHz/2.4GHz/5GHz/6GHz, maximum spectral coverage for site surveys
+- **Offline map tiles** — pre-load OpenStreetMap tiles on the Pi 5 for GPS-correlated scanning without internet
+- **GhostESP evaluation** — flash C5 #2 with GhostESP v1.9.10 instead of Marauder for live Wireshark streaming over USB and web dashboard
+
+---
+
+## 16. Inspiration and References
 
 ### Notable Cyberdeck Builds
 
@@ -1519,18 +1630,22 @@ All tools connect to `gpsd` at `localhost:2947`:
 | Question | Answer |
 |----------|--------|
 | **Case?** | Pelican 1300 (~$85-100) |
+| **Total devices?** | 13 (Pi 5 + 3 Gold + 2 C5 + Heltec + WROOM + 2 CYD + Pi Zero + PAU0F + RT5370 + GPS) |
 | **Displays?** | 5 total: 7" DSI + 2x CYD 2.8" + 2.42" OLED + Heltec built-in |
-| **Battery?** | Anker 347 Power Bank 40K (40,000mAh, 30W USB-C PD) |
+| **Battery?** | Anker 347 Power Bank (25,600mAh, 30W USB-C PD) |
 | **Cooling?** | 3-layer sealed: 2x IP67 Coolerguys + Noctua internal + membrane vent |
-| **Waterproofing?** | IP67 SMA bulkheads + 3M Marine Silicone + Amphenol VENT-PS1 |
-| **Antennas?** | 5x SMA bulkheads, screw-on externals, U.FL pigtails |
+| **Waterproofing?** | DataPro IP68 SMA bulkheads + 3M Marine Silicone + Amphenol VENT-PS1 |
+| **Antennas?** | 7x SMA bulkheads (3x 2.4G + 2x dual-band + 1x 915MHz + 1x WiFi 6E) |
+| **Antenna gain?** | Default 5 dBi omni all ports; swap to 8-10 dBi directional for targeted work |
 | **Mounting?** | 3mm acrylic plates + DIN rail brackets (no 3D printer) |
-| **Power switches?** | 7x SPST toggles with waterproof boot caps |
+| **Power switches?** | 11x SPST toggles with waterproof boot caps |
 | **Software?** | Kali Linux + Kismet + Flask/SocketIO dashboard |
 | **Input?** | Perixx PERIBOARD-409U wired USB (BLE stealth) |
-| **GPS?** | VK-162 USB module via gpsd |
+| **GPS?** | VK-162 USB module via gpsd (shared to all tools) |
 | **GPIO used?** | 3-4 of 26 pins (no expander needed) |
-| **New parts budget?** | ~$340-420 |
+| **Frequency coverage?** | 915MHz (LoRa) + 2.4GHz + 5GHz + 6GHz (WiFi 6E) |
+| **Deck projects?** | 11 integrated, 6 standalone, 4 companion/tool |
+| **New parts budget?** | ~$380-460 |
 | **Build time?** | 4-5 weekends (9 phases) |
 
 ---

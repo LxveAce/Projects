@@ -233,6 +233,22 @@ See [cyberdeck integration guide](../14-cyberdeck/integrations/18-halehound/) fo
 
 ---
 
+## Feature Brainstorm — What Else Can This Do
+
+- **IoT Recon credential harvesting on home lab** — connect to your own network and run IoT Recon against cameras, routers, smart plugs, and NAS devices to audit how many still use default credentials; export the loot report as a remediation checklist
+- **CC1101 SubGHz replay attacks** — capture and replay garage door openers, gate remotes, and car key fobs (authorized targets only) to demonstrate SubGHz vulnerabilities during physical security assessments
+- **Tesla charge port opener** — replay the 315 MHz (US) / 433.92 MHz (EU) signal to pop a Tesla charge port door as a controlled SubGHz demo; pairs with the CC1101 module already in the wiring guide
+- **PN532 NFC badge cloning for access control audits** — read and clone 13.56 MHz MIFARE / NTAG badges on authorized facilities; log UIDs and key sectors for audit documentation
+- **WiFi Guardian defensive monitoring** — deploy HaleHound in Blue Team Mode as a rogue AP detector on your home or lab network, alerting when unknown access points appear
+- **SubGHz Sentinel for nearby transmissions** — use the CC1101 spectrum analyzer to passively monitor 315/433/868/915 MHz bands and detect unexpected SubGHz activity (e.g., unknown remotes, jammers, or IoT devices)
+- **Stalkerware Detect for hidden devices** — scan for hidden cameras, microphones, and BLE-emitting surveillance devices in hotel rooms, Airbnbs, or meeting rooms using the built-in Stalkerware Detect module
+- **Custom credential wordlists for IoT** — expand IoT Recon's default 40-credential list with vendor-specific defaults (Hikvision, Dahua, Ubiquiti, TP-Link) via `/creds.txt` on SD card for deeper coverage
+- **BLE spam resilience testing** — use BLE Cinder and BLE Spoofer to test how your own devices (phones, headphones, smartwatches) handle malformed BLE advertisements and connection floods
+- **MouseJack keystroke injection via NRF24** — test wireless keyboards in your environment for the MouseJack vulnerability using the NRF24 module; inject a benign test string to prove exploitability on authorized hardware
+- **Marauder + IoT Recon combo workflow** — use Marauder to deauth a target off their AP, capture the handshake, then pivot to HaleHound's IoT Recon to scan the network for devices with default credentials once connected
+
+---
+
 ## Resources
 
 | Resource | Link |

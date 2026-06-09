@@ -670,6 +670,22 @@ Laws vary significantly by country. Some jurisdictions (e.g., Germany, parts of 
 
 ---
 
+## Feature Brainstorm -- What Else Can This Do
+
+- **WiFi 6E (6 GHz) scanning with Panda PAU0F** -- The PAU0F's MT7921A chipset supports 6 GHz channels. Configure it as a dedicated 6E source in Kismet to map the rapidly growing 6 GHz AP landscape that most wardrivers are not yet capturing.
+- **Dual-adapter simultaneous scanning** -- Run the PAU0F on 5/6 GHz channels and the RT5370 locked to 2.4 GHz channels 1, 6, 11 simultaneously. Doubles capture coverage per drive session without adding hardware.
+- **WiGLE community upload pipeline** -- Automate post-drive WiGLE CSV upload via the WiGLE API. Script a cron job that detects new `.wiglecsv` files and uploads them, building your contributor rank passively.
+- **Automated wardrive route planner** -- Write a Python script that takes your previous WiGLE uploads, overlays them on a local map, and highlights uncovered streets. Feeds into a GPS nav route for systematic coverage.
+- **Kismet REST API dashboard integration** -- Query `http://localhost:2501` from the cyberdeck dashboard to display live AP count, new network alerts, channel activity heatmap, and GPS-tagged network locations in real time.
+- **Bluetooth device tracking alongside WiFi** -- Enable Kismet's `kismet-capture-linux-bluetooth` plugin to passively log Bluetooth Classic and BLE devices during wardrives, adding a second data layer to each session.
+- **Zigbee/802.15.4 scanning via ESP32-C6** -- If you add an ESP32-C6 board (which supports 802.15.4), Kismet can capture Zigbee traffic alongside WiFi and BLE, mapping smart home device deployments.
+- **WIDS mode for your own network** -- Run Kismet in stationary mode at home as a Wireless Intrusion Detection System. Configure alerts for rogue APs, deauth attacks, and new unknown clients appearing on your network.
+- **GPS-tagged signal heatmap generation** -- Export Kismet data to KML and overlay RSSI values as color-coded markers in Google Earth, producing visual heatmaps showing signal coverage and dead zones.
+- **Scheduled wardrive data export** -- Set up a cron job on the Pi 5 that automatically converts `.kismet` databases to WiGLE CSV, generates KML files, and copies outputs to a USB drive after each session.
+- **Integration with Chasing Your Tail for surveillance detection** -- Feed Kismet's real-time device list into CYT-NG's persistence scoring engine. Devices that follow your wardrive route across multiple GPS points get flagged automatically.
+
+---
+
 ## Sources
 
 - [Kismet Wireless Official Site](https://www.kismetwireless.net/)

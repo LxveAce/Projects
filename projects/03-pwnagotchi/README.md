@@ -13,7 +13,9 @@ An AI-powered WiFi auditing tool built on Raspberry Pi Zero W, using deep reinfo
 5. [Setup Guide](#5-setup-guide)
 6. [Best Plugins](#6-best-plugins)
 7. [Verify Captures Without Display](#7-verify-captures-without-display)
-8. [All Resources](#8-all-resources)
+8. [Feature Brainstorm -- What Else Can This Do](#8-feature-brainstorm----what-else-can-this-do)
+9. [All Resources](#9-all-resources)
+10. [Best-Fit Hardware from Your Inventory](#9-best-fit-hardware-from-your-inventory)
 
 ---
 
@@ -660,7 +662,38 @@ Enable the `led` plugin. The green LED will blink in specific patterns when hand
 
 ---
 
-## 8. All Resources
+## Standalone Build Guide
+
+Pocket AI handshake capture unit -- runs autonomously on battery.
+
+1. Flash Pwnagotchi image to MicroSD (Pi Zero 2W)
+2. Solder GPIO header to Pi Zero 2W (for e-ink display)
+3. Connect Waveshare 2.13" e-ink display HAT
+4. Configure config.toml: name, whitelist, plugins (bt-tether, hashie, wpa-sec)
+5. Attach PiSugar 3 battery (5000mAh, ~8 hours runtime)
+6. 3D print or buy a case (Pibow Zero case ~$8)
+7. Power on and pocket carry -- Pwnagotchi runs autonomously, capturing WPA handshakes
+8. Periodically dock to cyberdeck or laptop via USB to offload handshakes from /root/handshakes/
+
+---
+
+## 8. Feature Brainstorm -- What Else Can This Do
+
+- **bt-tether for remote monitoring** -- Enable the bt-tether plugin to pair with your phone via Bluetooth, giving you web UI access and real-time status from your pocket without needing USB or a dedicated display
+- **wpa-sec auto-upload for cloud cracking** -- Enable the wpa-sec plugin so captured handshakes are automatically uploaded to wpa-sec.stanev.org for dictionary-based cracking whenever the Pwnagotchi gets internet access
+- **hashie plugin for automatic hashcat conversion** -- Install the hashie plugin to auto-convert captured PCAP files into hashcat-compatible .hc22000 format, ready to feed directly into a cracking rig
+- **GPS scoring with Nomadotchi** -- Install the Nomadotchi plugin to score your walks based on unique networks discovered and GPS distance traveled, gamifying your wardrive sessions
+- **Custom face and personality** -- Edit the face strings in config.toml to give your Pwnagotchi a unique personality with custom expressions for each mood state (happy, sad, bored, excited, lonely)
+- **Auto-export captures to Pi 5 cyberdeck when docked** -- Write a systemd service that detects when the Pwnagotchi connects via USB to the Pi 5 and automatically copies new handshake files to the cyberdeck's analysis directory
+- **PiSugar 3 upgrade for battery monitoring** -- Replace the PiSugar S with a PiSugar 3 to get I2C battery level reporting, RTC for accurate timestamps, and software-controlled shutdown via the display
+- **Web-based real-time capture map** -- Enable the webgpsmap plugin combined with net-pos for WiFi-based geolocation, creating an interactive browser map of all captured handshakes plotted by location
+- **Handshake quality validation pipeline** -- Enable the check_wpa plugin to automatically scan the handshakes directory and flag which captures contain valid crackable material vs. incomplete half-handshakes
+- **LED feedback for headless operation** -- Enable the led plugin so the Pi's green LED blinks in recognizable patterns for key events (new handshake captured, AI mode active, error state) when running without a display
+- **PwnGRID mesh networking** -- Enable the grid plugin to connect to the PwnGRID community network, discovering nearby Pwnagotchis, sharing stats, and seeing how your unit ranks globally
+
+---
+
+## 9. All Resources
 
 ### Official Resources
 
