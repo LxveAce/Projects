@@ -26,6 +26,7 @@ A curated collection of cybersecurity, wireless, and hardware hacking projects -
 | 14 | [Cyberdeck](projects/14-cyberdeck/) | Brainstorm | Hard | All-in-one portable security rig (Pi 5 + ESP32s + Meshtastic + Kismet) |
 | 15 | [ESP32-DIV](projects/15-esp32-div/) | Evaluating | Medium | Open-source ESP32-S3 multitool — Sub-GHz, IR, RFID/NFC, 2.4GHz (Flipper-class) |
 | 16 | [BlueJammer-V2](projects/16-bluejammer/) | Reference only | -- | 2.4GHz RF jammer — cataloged for reference; deck uses the lawful **detector** instead |
+| 17 | [OUI-Spy](projects/17-oui-spy/) | Ready to Build | Medium | Passive wireless surveillance detection — OUI-based device identification, Flock/drone/tracker scanning on ESP32-S3 |
 
 ---
 
@@ -109,6 +110,10 @@ Full inventory of all purchased hardware with datasheets, drivers, and setup gui
 | Alfa AWUS036ACM (or similar) | Kismet (monitor mode) | ~$40-50 | Medium |
 | ESP32-DIV board + RF shield (ESP32-S3, CC1101, 3x NRF24, IR) | ESP32-DIV | ~$40-70 DIY | Medium |
 | NRF24L01+ PA/LNA module (+ 3.3V adapter/cap) | RF interference detect / Mousejack research | ~$8-12 | Low |
+| LILYGO T-Display S3 (ESP32-S3, 1.9" TFT) | OUI-Spy (full BLE + WiFi, built-in screen) | ~$18-25 | **High** |
+| Seeed XIAO ESP32-S3 (compact alt) | OUI-Spy (all modes, add external OLED) | ~$8-14 | Medium (alt to T-Display) |
+| Passive Piezo Buzzer (3.3V, through-hole) | OUI-Spy (audio alerts) | ~$1-3 | High (with T-Display) |
+| 3.7V LiPo Battery (500-1000mAh, JST 1.25mm) | OUI-Spy (portable power) | ~$5-8 | Medium |
 | ~~Soldering Iron + Accessories~~ | ~~General~~ | -- | **Owned** |
 
 ---
@@ -132,6 +137,9 @@ ESP32 boards and WiFi antennas available. See [project guide](projects/06-flock-
 
 ### 6. Kismet Wardriving
 Pi 5, WiFi adapters, and storage ready. Need GPS module for full wardriving. See [project guide](projects/07-kismet-wardriving/).
+
+### 7. OUI-Spy (WiFi-Only Quick Start)
+Gold #3 or CYD #2 can run Flock-You WiFi promiscuous firmware today — no new hardware needed. For the full experience with BLE Detector, Foxhunter, and all modes, pick up a LILYGO T-Display S3 (~$20, built-in screen). See [project guide](projects/17-oui-spy/).
 
 ---
 
@@ -206,6 +214,10 @@ Pi 5, WiFi adapters, and storage ready. Need GPS module for full wardriving. See
 | ESP32-DIV | ESP32-DIV | [cifertech/esp32-div](https://github.com/cifertech/esp32-div) |
 | Headless Marauder GUI | Marauder / Cyberdeck | [LxveAce/headless-marauder-gui](https://github.com/LxveAce/headless-marauder-gui) |
 | Mousejack (nRF24 research) | BlueJammer detector | [BastilleResearch/mousejack](https://github.com/BastilleResearch/mousejack) |
+| OUI-Spy | OUI-Spy | [colonelpanichacks/oui-spy](https://github.com/colonelpanichacks/oui-spy) |
+| OUI-Spy Unified Blue | OUI-Spy | [colonelpanichacks/oui-spy-unified-blue](https://github.com/colonelpanichacks/oui-spy-unified-blue) |
+| OUI-Spy Omni (Luke Switzer) | OUI-Spy | [lukeswitz/oui-spy-unified-blue](https://github.com/lukeswitz/oui-spy-unified-blue) |
+| OUI Master Database (88K+ OUIs) | OUI-Spy | [Ringmast4r/OUI-Master-Database](https://github.com/Ringmast4r/OUI-Master-Database) |
 
 ---
 
@@ -224,12 +236,12 @@ Pi 5, WiFi adapters, and storage ready. Need GPS module for full wardriving. See
     └──────┬──────┘           └───────┬───────┘          └──────┬──────┘
            │                          │                          │
     ┌──────┴──────┐           ┌───────┴───────┐          ┌──────┴──────┐
-    │ RayHunter   │           │ Flock Detect  │          │ Marauder    │
-    │ Kismet      │           │ Drone Detect  │          │ Flipper     │
-    │ Meshtastic  │           │ Chasing Tail  │          │ NyanBOX     │
-    │ BLE Detect  │           │ BLE Tracking  │          │ Rubber Ducky│
-    └─────────────┘           └───────────────┘          │ Pwnagotchi  │
-                                                         └─────────────┘
+    │ RayHunter   │           │ OUI-Spy ★     │          │ Marauder    │
+    │ Kismet      │           │ Flock Detect  │          │ Flipper     │
+    │ Meshtastic  │           │ Drone Detect  │          │ NyanBOX     │
+    │ BLE Detect  │           │ Chasing Tail  │          │ Rubber Ducky│
+    └─────────────┘           │ BLE Tracking  │          │ Pwnagotchi  │
+                              └───────────────┘          └─────────────┘
            ┌──────────────────────────┼──────────────────────────┐
            │                          │                          │
     ┌──────┴──────┐           ┌───────┴───────┐          ┌──────┴──────┐
@@ -247,7 +259,7 @@ Pi 5, WiFi adapters, and storage ready. Need GPS module for full wardriving. See
 Many projects share the same ESP32 boards, Raspberry Pi units, WiFi adapters, and accessories. Before starting a new project, check the [INVENTORY.md](INVENTORY.md) to see what you already have that can be reused.
 
 **Key shared components:**
-- **ESP32 boards** (Lonely Binary 3-pack, WROOM-32, AEDIKO breakouts) -> Marauder, BLE Detection, Flock Detection, Chasing Your Tail
+- **ESP32 boards** (Lonely Binary 3-pack, WROOM-32, AEDIKO breakouts) -> Marauder, BLE Detection, Flock Detection, Chasing Your Tail, OUI-Spy (WiFi-only modes)
 - **Raspberry Pi 5** -> Kismet, Project Nomad (if ARM solved), general server
 - **Raspberry Pi Zero 2 W** -> Pwnagotchi
 - **Panda PAU0F WiFi 6E adapter** -> Kismet, general pentesting
