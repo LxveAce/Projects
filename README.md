@@ -10,7 +10,7 @@ A curated collection of cybersecurity, wireless, and hardware hacking projects -
 
 | # | Project | Status | Difficulty | Description |
 |---|---------|--------|-----------|-------------|
-| 01 | [ESP32 Marauder](projects/01-esp32-marauder/) | **Built** (CYD + headless) | Medium | WiFi/Bluetooth offensive & defensive toolkit on ESP32 |
+| 01 | [ESP32 Marauder](projects/01-esp32-marauder/) | **Built** (CYD + headless + C5 dual-band) | Medium | WiFi/Bluetooth offensive & defensive toolkit on ESP32 — now with 2.4+5GHz dual-band via ESP32-C5 |
 | 02 | [Flipper Zero + ESP32](projects/02-flipper-zero/) | Not Yet Purchased | Easy | Multi-tool for sub-GHz, RFID, NFC, IR + WiFi via ESP32 board |
 | 03 | [Pwnagotchi](projects/03-pwnagotchi/) | Troubleshooting | Medium | AI-powered WiFi handshake capture tool on Pi Zero |
 | 04 | [Meshtastic](projects/04-meshtastic/) | Troubleshooting | Easy-Medium | LoRa mesh networking for off-grid communications |
@@ -23,10 +23,12 @@ A curated collection of cybersecurity, wireless, and hardware hacking projects -
 | 11 | [NyanBOX](projects/11-nyan-box/) | In Transit | Easy | Pre-built portable pentesting toolkit |
 | 12 | [USB Rubber Ducky](projects/12-usb-rubber-ducky/) | Not Yet Purchased | Easy | Keystroke injection tool (or DIY with ESP32) |
 | 13 | [ESP Terminator](projects/13-esp-terminator/) | Ready to Use | Easy | Web-based ESP32 firmware flasher for multiple tools |
-| 14 | [Cyberdeck](projects/14-cyberdeck/) | Brainstorm | Hard | All-in-one portable security rig (Pi 5 + ESP32s + Meshtastic + Kismet) |
+| 14 | [Cyberdeck](projects/14-cyberdeck/) | Brainstorm | Hard | All-in-one portable security rig (Pi 5 + ESP32-C5 dual-band + HaleHound + RaspyJack + Meshtastic + Kismet) |
 | 15 | [ESP32-DIV](projects/15-esp32-div/) | Evaluating | Medium | Open-source ESP32-S3 multitool — Sub-GHz, IR, RFID/NFC, 2.4GHz (Flipper-class) |
 | 16 | [BlueJammer-V2](projects/16-bluejammer/) | Reference only | -- | 2.4GHz RF jammer — cataloged for reference; deck uses the lawful **detector** instead |
 | 17 | [OUI-Spy](projects/17-oui-spy/) | Ready to Build | Medium | Passive wireless surveillance detection — OUI-based device identification, Flock/drone/tracker scanning on ESP32-S3 |
+| 18 | [HaleHound + IoT Recon](projects/18-halehound/) | Ready to Build | Medium | Multi-protocol attack toolkit on CYD — WiFi, BLE, SubGHz, NFC, IoT credential brute force (ESP32-DIV fork) |
+| 19 | [RaspyJack](projects/19-raspyjack/) | Ready to Build | Easy-Medium | Portable network pentesting toolkit on Pi Zero 2W — 231+ payloads, wired attacks, WebUI (Shark Jack alternative) |
 
 ---
 
@@ -67,7 +69,7 @@ Full inventory of all purchased hardware with datasheets, drivers, and setup gui
 - ESP32 Gold Edition 3-Pack (Lonely Binary, IPEX antenna)
 - ESP32-WROOM-32 Dev Board
 - ESP32 GPIO Breakout Boards 5-Pack (AEDIKO)
-- ESP32-C5 WiFi 6 Dev Boards x2 (Waveshare, dual-band)
+- ESP32-C5 WiFi 6 Dev Boards x2 (Waveshare, **dual-band 2.4+5GHz**, IPEX antenna, cyberdeck Marauder C5)
 
 **Displays:**
 - 2.13" E-Ink HAT V4 (Waveshare, for Pwnagotchi)
@@ -109,7 +111,13 @@ Full inventory of all purchased hardware with datasheets, drivers, and setup gui
 | LattePanda Delta 3 (or x64 SBC) | Project Nomad | ~$200-300 | Low |
 | Alfa AWUS036ACM (or similar) | Kismet (monitor mode) | ~$40-50 | Medium |
 | ESP32-DIV board + RF shield (ESP32-S3, CC1101, 3x NRF24, IR) | ESP32-DIV | ~$40-70 DIY | Medium |
-| NRF24L01+ PA/LNA module (+ 3.3V adapter/cap) | RF interference detect / Mousejack research | ~$8-12 | Low |
+| NRF24L01+ PA/LNA module (+ 3.3V adapter/cap) | RF interference detect / Mousejack research / HaleHound | ~$8-12 | Low |
+| CC1101 SubGHz Module (HW-863) | HaleHound SubGHz (replay, brute force, Tesla) | ~$5-8 | Medium |
+| PN532 V3 NFC/RFID Module (SPI) | HaleHound NFC read/clone/brute | ~$5-8 | Medium |
+| U.FL-to-SMA Pigtail Cables x2 | ESP32-C5 boards → SMA bulkhead (dual-band antennas) | ~$5-8 | **High** |
+| Raspberry Pi Zero 2 WH | RaspyJack (dedicated, separate from Pwnagotchi) | ~$15-20 | Medium |
+| Waveshare 1.44" LCD HAT | RaspyJack display (joystick + buttons) | ~$12-15 | Medium |
+| USB OTG + USB-to-Ethernet Adapter | RaspyJack wired network attacks | ~$8-15 | Medium |
 | LILYGO T-Display S3 (ESP32-S3, 1.9" TFT) | OUI-Spy (full BLE + WiFi, built-in screen) | ~$18-25 | **High** |
 | Seeed XIAO ESP32-S3 (compact alt) | OUI-Spy (all modes, add external OLED) | ~$8-14 | Medium (alt to T-Display) |
 | Passive Piezo Buzzer (3.3V, through-hole) | OUI-Spy (audio alerts) | ~$1-3 | High (with T-Display) |
@@ -140,6 +148,12 @@ Pi 5, WiFi adapters, and storage ready. Need GPS module for full wardriving. See
 
 ### 7. OUI-Spy (WiFi-Only Quick Start)
 Gold #3 or CYD #2 can run Flock-You WiFi promiscuous firmware today — no new hardware needed. For the full experience with BLE Detector, Foxhunter, and all modes, pick up a LILYGO T-Display S3 (~$20, built-in screen). See [project guide](projects/17-oui-spy/).
+
+### 8. HaleHound + IoT Recon
+CYD #2 can be flashed to HaleHound right now via [halehound.com](https://halehound.com/) web flasher. IoT Recon credential brute force works with just the CYD — no external modules needed. Add CC1101/NRF24/PN532 later for SubGHz/NFC. See [project guide](projects/18-halehound/).
+
+### 9. ESP32-C5 Dual-Band Marauder
+Both Waveshare ESP32-C5 boards are ready to flash with Marauder C5 firmware for 2.4+5GHz attacks. Use the [headless-marauder-gui](https://github.com/LxveAce/headless-marauder-gui) flasher with C5 target. Dual-band antennas via IPEX connector. See [Marauder C5 wiki](https://github.com/justcallmekoko/ESP32Marauder/wiki/ESP32%E2%80%90C5%E2%80%90DevKitC%E2%80%901).
 
 ---
 
@@ -218,6 +232,11 @@ Gold #3 or CYD #2 can run Flock-You WiFi promiscuous firmware today — no new h
 | OUI-Spy Unified Blue | OUI-Spy | [colonelpanichacks/oui-spy-unified-blue](https://github.com/colonelpanichacks/oui-spy-unified-blue) |
 | OUI-Spy Omni (Luke Switzer) | OUI-Spy | [lukeswitz/oui-spy-unified-blue](https://github.com/lukeswitz/oui-spy-unified-blue) |
 | OUI Master Database (88K+ OUIs) | OUI-Spy | [Ringmast4r/OUI-Master-Database](https://github.com/Ringmast4r/OUI-Master-Database) |
+| HaleHound-CYD | HaleHound | [JesseCHale/HaleHound-CYD](https://github.com/JesseCHale/HaleHound-CYD) |
+| ESP32 Marauder (C5 firmware) | Marauder (dual-band) | [justcallmekoko/ESP32Marauder](https://github.com/justcallmekoko/ESP32Marauder/wiki/ESP32%E2%80%90C5%E2%80%90DevKitC%E2%80%901) |
+| RaspyJack | RaspyJack | [7h30th3r0n3/Raspyjack](https://github.com/7h30th3r0n3/Raspyjack) |
+| RaspyJack Community Payloads | RaspyJack | [wickednull/raspyjack-payloads](https://github.com/wickednull/raspyjack-payloads) |
+| GhostESP Revival (C5 support) | Dual-band alternative FW | [GhostESP](https://ghostesp.net/) |
 
 ---
 
@@ -237,11 +256,12 @@ Gold #3 or CYD #2 can run Flock-You WiFi promiscuous firmware today — no new h
            │                          │                          │
     ┌──────┴──────┐           ┌───────┴───────┐          ┌──────┴──────┐
     │ RayHunter   │           │ OUI-Spy ★     │          │ Marauder    │
-    │ Kismet      │           │ Flock Detect  │          │ Flipper     │
-    │ Meshtastic  │           │ Drone Detect  │          │ NyanBOX     │
-    │ BLE Detect  │           │ Chasing Tail  │          │ Rubber Ducky│
-    └─────────────┘           │ BLE Tracking  │          │ Pwnagotchi  │
-                              └───────────────┘          └─────────────┘
+    │ Kismet      │           │ Flock Detect  │          │ Marauder C5 │
+    │ Meshtastic  │           │ Drone Detect  │          │ HaleHound   │
+    │ BLE Detect  │           │ Chasing Tail  │          │ Flipper     │
+    └─────────────┘           │ BLE Tracking  │          │ RaspyJack   │
+                              └───────────────┘          │ Pwnagotchi  │
+                                                         └─────────────┘
            ┌──────────────────────────┼──────────────────────────┐
            │                          │                          │
     ┌──────┴──────┐           ┌───────┴───────┐          ┌──────┴──────┐
@@ -260,8 +280,9 @@ Many projects share the same ESP32 boards, Raspberry Pi units, WiFi adapters, an
 
 **Key shared components:**
 - **ESP32 boards** (Lonely Binary 3-pack, WROOM-32, AEDIKO breakouts) -> Marauder, BLE Detection, Flock Detection, Chasing Your Tail, OUI-Spy (WiFi-only modes)
+- **ESP32-C5 boards** (Waveshare 2-pack) -> **Dual-band Marauder (2.4+5GHz)**, dual-band scanning/wardriving, IoT Recon
 - **Raspberry Pi 5** -> Kismet, Project Nomad (if ARM solved), general server
-- **Raspberry Pi Zero 2 W** -> Pwnagotchi
+- **Raspberry Pi Zero 2 W** -> Pwnagotchi, RaspyJack (need dedicated units)
 - **Panda PAU0F WiFi 6E adapter** -> Kismet, general pentesting
 - **SD cards & USB drives** -> All projects needing OS images or data storage
 - **Fluke multimeter** -> Troubleshooting all electronics projects

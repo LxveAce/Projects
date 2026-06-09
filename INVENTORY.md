@@ -16,8 +16,8 @@ All items below have been purchased via Amazon. Organized by category with links
 | 4 | Lonely Binary ESP32 Gold Edition 3-Pack (IPEX antenna) | [B0FRXZD6VC](https://amazon.com/dp/B0FRXZD6VC) | ~$36 | [Lonely Binary](https://lonelybinary.com/en-us/products/esp32-ipex-kit) | Marauder, BLE, Flock |
 | 5 | ESP32 ESP-WROOM-32 Dev Board | [B07WCG1PLV](https://amazon.com/dp/B07WCG1PLV) | ~$7-10 | [Espressif](https://www.espressif.com/en/producttype/esp32-wroom-32) | Marauder, general |
 | 6 | AEDIKO ESP32 GPIO Breakout Board 5-Pack | [B0D2HNT8ZR](https://amazon.com/dp/B0D2HNT8ZR) | ~$15-20 | AEDIKO | General prototyping |
-| 7 | Waveshare ESP32-C5 WiFi 6 Dev Board (N16R8) | [B0G34WYL8M](https://amazon.com/dp/B0G34WYL8M) | ~$18-22 | [Waveshare](https://www.waveshare.com/esp32-c5-wifi6-kit-n16r4.htm) | WiFi 6 research |
-| 8 | Waveshare ESP32-C5 WiFi 6 Dev Board (variant) | [B0G3Q1QS93](https://amazon.com/dp/B0G3Q1QS93) | ~$18-22 | [Waveshare](https://www.waveshare.com/product/arduino/boards-kits/esp32-c5.htm) | WiFi 6 research |
+| 7 | Waveshare ESP32-C5 WiFi 6 Dev Board (N16R8) | [B0G34WYL8M](https://amazon.com/dp/B0G34WYL8M) | ~$18-22 | [Waveshare](https://www.waveshare.com/esp32-c5-wifi6-kit-n16r4.htm) | **Cyberdeck: Dual-band Marauder C5 #1** (2.4+5GHz, IPEX antenna) |
+| 8 | Waveshare ESP32-C5 WiFi 6 Dev Board (variant) | [B0G3Q1QS93](https://amazon.com/dp/B0G3Q1QS93) | ~$18-22 | [Waveshare](https://www.waveshare.com/product/arduino/boards-kits/esp32-c5.htm) | **Cyberdeck: Dual-band scanner C5 #2** (2.4+5GHz, IPEX antenna) |
 
 ### Datasheets & Drivers
 - **Raspberry Pi 5**: [Datasheet](https://www.raspberrypi.com/products/raspberry-pi-5/) | [Quick Start](https://www.canakit.com/quick-start/pi)
@@ -186,8 +186,24 @@ All items below have been purchased via Amazon. Organized by category with links
 - [ ] Passive piezo buzzer (not yet purchased)
 - [ ] 3.7V LiPo battery, JST 1.25mm (not yet purchased)
 
-### WiFi 6 / Zigbee / Thread Research
-- [x] Waveshare ESP32-C5 WiFi 6 boards (x2)
+### ESP32-C5 Dual-Band (Cyberdeck)
+- [x] Waveshare ESP32-C5 WiFi 6 board #1 → **Dual-band Marauder** (2.4+5GHz, headless, controlled via Pi 5)
+- [x] Waveshare ESP32-C5 WiFi 6 board #2 → **Dual-band scanner/wardriving** (2.4+5GHz, headless)
+- [x] Bingfu dual-band antennas (2.4/5.8GHz) → C5 boards via IPEX→SMA
+- [ ] U.FL-to-SMA pigtail cables x2 (for C5 IPEX → SMA bulkhead) — ~$5-8
+
+### HaleHound (Project 18)
+- [x] ESP32 2.8" CYD Touchscreen #2 → **HaleHound multi-protocol toolkit**
+- [x] Micro SD card (loot + custom creds)
+- [ ] CC1101 SubGHz module (HW-863 or E07-433M20S) — ~$5-8
+- [ ] NRF24L01+PA+LNA module — ~$3-5
+- [ ] PN532 V3 NFC/RFID module (SPI mode) — ~$5-8
+
+### RaspyJack (Project 19)
+- [ ] Raspberry Pi Zero 2 WH (dedicated, separate from Pwnagotchi) — ~$15-20
+- [ ] Waveshare 1.44" LCD HAT (ST7735S, 128x128, joystick) — ~$12-15
+- [ ] USB OTG adapter — ~$3-5
+- [ ] USB-to-Ethernet adapter — ~$5-10
 
 ### Kismet Wardriving
 - [x] CanaKit Raspberry Pi 5 Starter Kit PRO
