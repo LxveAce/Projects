@@ -1,5 +1,7 @@
 # RayHunter
 
+> **Cyberdeck Status:** DECK-INTEGRATED (SW12) -- Orbic RC400L mounted inside Pelican 1300, powered via USB hub, Pi 5 accesses RayHunter API via ADB port forwarding (`adb forward tcp:8080 tcp:8080`). See [Cyberdeck Integration Guide](../14-cyberdeck/integrations/05-rayhunter/).
+
 ## Table of Contents
 
 1. [Overview](#1-overview)
