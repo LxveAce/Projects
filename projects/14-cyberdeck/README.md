@@ -34,11 +34,13 @@ A cyberdeck is a custom-built, self-contained portable computer -- typically hou
 
 This cyberdeck is NOT just "a Pi in a box." It's a multi-tool that consolidates **every project in this repo** into a single portable rig that can:
 
-- Run ESP32 Marauder for WiFi/BLE offensive testing
+- Run ESP32 Marauder on **both 2.4GHz and 5GHz** via dual-band ESP32-C5 boards
+- Run HaleHound for **IoT Recon credential harvesting** + SubGHz/NFC attacks
+- Run RaspyJack for **wired network pentesting** (Responder, ARP MITM, DNS spoofing)
 - Detect Flock ALPR surveillance cameras while driving
 - Scan for BLE trackers (AirTags, Tiles, SmartTags) following you
 - Operate a Meshtastic mesh node for off-grid comms
-- Run Kismet wardriving with GPS logging
+- Run Kismet wardriving with GPS logging on WiFi 6E
 - Detect nearby drones via RemoteID
 - All simultaneously, from one battery, with one display
 
@@ -64,14 +66,18 @@ This cyberdeck is NOT just "a Pi in a box." It's a multi-tool that consolidates 
 | **Lonely Binary ESP32 Gold #2** | Flock camera detection (flock-you firmware) | IPEX antenna -> SMA bulkhead |
 | **Lonely Binary ESP32 Gold #3** | BLE Detection / Chasing Your Tail scanner | IPEX antenna -> SMA bulkhead |
 | **Heltec LoRa V3** | Meshtastic mesh node (915MHz) | IPEX -> SMA bulkhead (LoRa antenna) |
+| **Waveshare ESP32-C5 #1** | **Dual-band Marauder (2.4+5GHz)** -- headless, Pi 5 controlled | IPEX → SMA bulkhead (dual-band antenna) |
+| **Waveshare ESP32-C5 #2** | **Dual-band scanner/wardriving (2.4+5GHz)** -- headless | IPEX → SMA bulkhead (dual-band antenna) |
 | **ESP32-WROOM-32 generic** | Drone RemoteID detection OR spare | Internal PCB antenna sufficient |
+| **CYD 2.8" #2** | **HaleHound multi-protocol (IoT Recon + SubGHz + NFC)** | Built-in touchscreen, self-contained |
 | **Hosyond 7" DSI Touchscreen** | Primary display | DSI ribbon to Pi 5 |
 | **CYD 2.8" Touchscreen #1** | Secondary status display (Marauder GUI) | Standalone ESP32 display |
 | **Panda PAU0F WiFi 6E adapter** | Kismet primary WiFi (monitor mode) | USB 3.0 to Pi 5 |
 | **RT5370 WiFi dongle** | Kismet secondary 2.4GHz monitor | USB 2.0 to Pi 5 |
+| **Pi Zero 2 W (RaspyJack)** | Wired network pentesting + Linux recon | Waveshare 1.44" LCD HAT, USB-Ethernet |
 | **Rii K06 Mini Keyboard** | Input for the cyberdeck | Bluetooth, backlit |
 | **DIYmall 2.4G antennas (2x)** | WiFi antennas for ESP32 boards | U.FL pigtails |
-| **Bingfu dual-band antennas (2x)** | WiFi/BT antennas (2.4/5.8GHz) | RP-SMA |
+| **Bingfu dual-band antennas (2x)** | **ESP32-C5 dual-band antennas (2.4/5.8GHz)** | RP-SMA → SMA adapter → C5 IPEX pigtail |
 | **915MHz LoRa antennas (2x)** | Meshtastic antenna | IPEX + SMA |
 | **Boobrie RP-SMA to SMA adapters** | Antenna adapter chain | |
 | **128GB Micro SD cards** | Pi 5 OS + Kismet data | |
@@ -347,28 +353,30 @@ Drill 5-6 holes in one side of the case and install **SMA bulkhead connectors** 
 ```
 CASE SIDE PANEL (external view)
 
-┌──────────────────────────────────────────┐
-│                                          │
-│  [SMA]  [SMA]  [SMA]  [SMA]  [SMA]     │
-│   WiFi   WiFi   WiFi   LoRa   BLE      │
-│   2.4G   2.4G   2.4G   915M   2.4G     │
-│   MAR    FLOCK  KISM   MESH   BLE      │
-│                                          │
-│  [USB-C]  [USB-A]  [PWR SW]  [LED]     │
-│   Charge   Data     ON/OFF   Status    │
-│                                          │
-└──────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────┐
+│                                                       │
+│  [SMA]  [SMA]  [SMA]  [SMA]  [SMA]  [SMA]  [SMA]   │
+│  Gold1  Gold2  Gold3  C5 #1  C5 #2  LoRa   PAU0F   │
+│  2.4G   2.4G   2.4G   DUAL   DUAL   915M   6E      │
+│  MAR    FLOCK  BLE    MAR5G  SCAN   MESH   KISM    │
+│                                                       │
+│  [USB-C]  [USB-A]  [ETH]  [PWR SW]  [LED]           │
+│   Charge   Data    RJack  ON/OFF    Status           │
+│                                                       │
+└───────────────────────────────────────────────────────┘
 ```
 
 ### Antenna Assignments
 
 | Bulkhead # | Device | Antenna | Frequency |
 |-----------|--------|---------|-----------|
-| SMA 1 | Lonely Binary #1 (Marauder) | Bingfu 3dBi dual-band | 2.4/5.8 GHz |
+| SMA 1 | Lonely Binary #1 (Marauder 2.4GHz) | DIYmall 3dBi | 2.4 GHz |
 | SMA 2 | Lonely Binary #2 (Flock) | DIYmall 3dBi | 2.4 GHz |
-| SMA 3 | Panda PAU0F (Kismet) | Bingfu 3dBi dual-band | 2.4/5/6 GHz |
-| SMA 4 | Heltec LoRa V3 (Meshtastic) | 915MHz LoRa 3dBi | 915 MHz |
-| SMA 5 | Lonely Binary #3 (BLE) | DIYmall 3dBi | 2.4 GHz |
+| SMA 3 | Lonely Binary #3 (BLE) | DIYmall 3dBi (spare/new) | 2.4 GHz |
+| SMA 4 | **ESP32-C5 #1 (Dual-band Marauder)** | **Bingfu 3dBi dual-band** | **2.4/5.8 GHz** |
+| SMA 5 | **ESP32-C5 #2 (Dual-band Scanner)** | **Bingfu 3dBi dual-band** | **2.4/5.8 GHz** |
+| SMA 6 | Heltec LoRa V3 (Meshtastic) | 915MHz LoRa 3dBi | 915 MHz |
+| SMA 7 | Panda PAU0F (Kismet WiFi 6E) | PAU0F built-in antenna + SMA extension | 2.4/5/6 GHz |
 
 ### Internal Routing
 
@@ -389,6 +397,19 @@ For directional work: swap Marauder bulkhead for a panel or Yagi antenna.
 When the case is closed for transport, unscrew all external antennas and store them in a mesh pocket in the lid. The SMA bulkheads sit flush with the case wall. Screw on SMA dust caps (~$3 for a 10-pack) to protect the connectors and maintain the seal.
 
 ### How to Connect Antennas to Each Board
+
+#### Waveshare ESP32-C5 (x2) — IPEX Connector (No Soldering, Dual-Band)
+
+The C5 boards have an IPEX/U.FL connector for external antenna. Connection is identical to the Gold boards below. The critical difference: **use dual-band antennas** (2.4/5.8GHz) on the C5 SMA bulkheads so you get both bands. The Bingfu antennas in inventory are dual-band and perfect for this.
+
+```
+CONNECTION CHAIN (C5 dual-band):
+
+  [ESP32-C5 IPEX socket] → [U.FL pigtail 15-20cm] → [SMA bulkhead] → [Bingfu dual-band antenna]
+                                                        (case wall)     (2.4/5.8 GHz, RP-SMA)
+
+  Note: Bingfu antennas are RP-SMA. Use Boobrie RP-SMA-to-SMA adapter if bulkhead is SMA.
+```
 
 #### Lonely Binary ESP32 Gold (x3) — IPEX Connector (No Soldering)
 

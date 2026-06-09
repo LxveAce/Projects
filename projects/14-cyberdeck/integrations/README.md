@@ -48,6 +48,8 @@ Each maps to a numbered project in the repo. Numbers match the source project fo
 | 13 | [ESP Terminator](13-esp-terminator/) | The web flasher used to flash the deck's ESP32s | espterminator.com | [13-esp-terminator](../../13-esp-terminator/) |
 | 15 | [ESP32-DIV](15-esp32-div/) | Sub-GHz / IR / RFID-NFC / 2.4GHz multitool (companion) | ESP32-DIV (CC1101 + NRF24) | [15-esp32-div](../../15-esp32-div/) |
 | 16 | [RF Interference Detection](16-bluejammer/) | Lawful detector side of BlueJammer — **no jammer** | nRF24L01+ (RX-only) | [16-bluejammer](../../16-bluejammer/) |
+| 18 | [HaleHound + IoT Recon](18-halehound/) | Multi-protocol attack station + IoT credential harvester | CYD #2 (HaleHound firmware) | [18-halehound](../../18-halehound/) |
+| 19 | [RaspyJack](19-raspyjack/) | Wired network pentesting + Linux recon (Shark Jack alt) | Pi Zero 2 W + 1.44" LCD HAT | [19-raspyjack](../../19-raspyjack/) |
 
 ## Hardware Part Guides
 
@@ -73,14 +75,38 @@ These assignments are fixed across every guide so nothing collides.
 | Board / device | Deck slot | Power | Antenna | Display |
 |----------------|-----------|-------|---------|---------|
 | Pi 5 8GB | Brain | Anker 347 USB-C PD (always on) | — | 7" DSI |
-| Lonely Binary Gold #1 | Marauder | Hub → switch SW1 | SMA #1 (2.4/5.8 GHz) | CYD #1 |
-| Lonely Binary Gold #2 | Flock | Hub → switch SW2 | SMA #2 (2.4 GHz) | CYD #2 |
+| Lonely Binary Gold #1 | Marauder (2.4GHz, CYD touchscreen) | Hub → switch SW1 | SMA #1 (2.4 GHz) | CYD #1 (Marauder) |
+| Lonely Binary Gold #2 | Flock detection | Hub → switch SW2 | SMA #2 (2.4 GHz) | — (Pi 5 dashboard) |
 | Lonely Binary Gold #3 | BLE + Chasing Your Tail | Hub → switch SW3 | SMA #3 (2.4 GHz) | — |
-| Heltec LoRa V3 | Meshtastic | Hub → switch SW4 | SMA #4 (915 MHz) | onboard 0.96" |
-| ESP32-WROOM-32 | Drone RemoteID | Hub → switch SW5 | internal PCB | CYD #2 (shared) |
-| Panda PAU0F | Kismet primary | Pi 5 USB 3.0 (direct, always on) | SMA #5 (built-in) | — |
-| RT5370 | Kismet secondary | Hub → switch SW6 | internal | — |
-| VK-162 GPS | Shared GPS | Hub → switch SW7 | internal | — |
+| **Waveshare ESP32-C5 #1** | **Dual-band Marauder (2.4+5GHz)** | Hub → switch SW4 | **SMA #4 (dual-band 2.4/5GHz)** | — (headless, Pi 5 GUI) |
+| **Waveshare ESP32-C5 #2** | **Dual-band scanner/wardriving** | Hub → switch SW5 | **SMA #5 (dual-band 2.4/5GHz)** | — (headless, Pi 5 GUI) |
+| Heltec LoRa V3 | Meshtastic | Hub → switch SW6 | SMA #6 (915 MHz) | onboard 0.96" |
+| ESP32-WROOM-32 | Drone RemoteID | Hub → switch SW7 | internal PCB | — |
+| CYD #2 | **HaleHound (IoT Recon + multi-protocol)** | Hub → switch SW8 | internal PCB (2.4 GHz) | built-in 2.8" touch |
+| Pi Zero 2 W | **RaspyJack (wired network attacks)** | Hub → switch SW9 | internal | 1.44" LCD HAT |
+| Panda PAU0F | Kismet primary (WiFi 6E) | Pi 5 USB 3.0 (direct, always on) | SMA #7 (built-in) | — |
+| RT5370 | Kismet secondary | Hub → switch SW10 | internal | — |
+| VK-162 GPS | Shared GPS | Hub → switch SW11 | internal | — |
+
+### Dual-Band Upgrade Notes
+
+The **ESP32-C5 boards** are the dual-band backbone of the deck. They run Marauder firmware with full 2.4GHz AND 5GHz WiFi 6 capability — packet injection, monitor mode, deauth, beacon spam, evil twin, wardriving on BOTH bands. Controlled headless from the Pi 5 via the [headless-marauder-gui](https://github.com/LxveAce/headless-marauder-gui).
+
+- **C5 #1** runs dual-band Marauder — the primary 5GHz attack platform
+- **C5 #2** runs dual-band scanning/wardriving — passive monitoring on 5GHz networks
+- Both use **IPEX antenna connectors** → U.FL pigtails → SMA bulkheads → **Bingfu dual-band antennas** (2.4/5.8GHz, already in inventory)
+- Classic ESP32 Gold boards remain for 2.4GHz CYD-integrated tasks (Marauder touchscreen, Flock, BLE)
+- The C5 **cannot use both bands simultaneously** (single radio, band-switching) but covers the full 2.4+5GHz spectrum
+
+### SMA Bulkhead Layout (7 total)
+
+```
+─── CASE SIDE PANEL ────────────────────────────────
+[SMA1]  [SMA2]  [SMA3]  [SMA4]  [SMA5]  [SMA6]  [SMA7]
+Gold#1  Gold#2  Gold#3  C5 #1   C5 #2   LoRa    PAU0F
+2.4GHz  2.4GHz  2.4GHz  DUAL    DUAL    915MHz  6E
+────────────────────────────────────────────────────
+```
 
 All ESP32 serial links run at **115200 baud** over USB to the Pi 5.
 
