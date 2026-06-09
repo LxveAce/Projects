@@ -44,6 +44,7 @@ This cyberdeck is NOT just "a Pi in a box." It's a multi-tool that consolidates 
 - Operate a Meshtastic mesh node for off-grid comms
 - Run Kismet wardriving with GPS logging on WiFi 6E
 - Detect nearby drones via RemoteID
+- Detect IMSI catchers and stingrays via RayHunter (cellular band)
 - All simultaneously, from one battery, with one display
 
 ### Core Principles
@@ -76,6 +77,7 @@ This cyberdeck is NOT just "a Pi in a box." It's a multi-tool that consolidates 
 | **CYD 2.8" Touchscreen #1** | Secondary status display (Marauder GUI) | Standalone ESP32 display |
 | **Panda PAU0F WiFi 6E adapter** | Kismet primary WiFi (monitor mode) | USB 3.0 to Pi 5 |
 | **RT5370 WiFi dongle** | Kismet secondary 2.4GHz monitor | USB 2.0 to Pi 5 |
+| **Orbic Speed RC400L** | **RayHunter IMSI catcher / stingray detector** | USB-C to Pi 5 via ADB, internal cellular antenna |
 | **Pi Zero 2 W (RaspyJack)** | Wired network pentesting + Linux recon | Waveshare 1.44" LCD HAT, USB-Ethernet |
 | **Rii K06 Mini Keyboard** | Input for the cyberdeck | Bluetooth, backlit |
 | **DIYmall 2.4G antennas (2x)** | WiFi antennas for ESP32 boards | U.FL pigtails |
@@ -271,9 +273,10 @@ Each ESP32 connects to the Pi 5 via USB for serial communication and power. The 
 | 7" DSI display | 5V (DSI) | 400mA | 500mA |
 | Panda PAU0F WiFi 6E | 5V (USB 3.0) | 400mA | 600mA |
 | RT5370 WiFi | 5V (USB) | 150mA | 200mA |
+| Orbic RC400L (RayHunter) | 5V (USB-C) | 600mA | 1.0A |
 | VK-162 GPS | 5V (USB) | 50mA | 80mA |
 | USB Hub | 5V | 50mA | 100mA |
-| **TOTAL** | | **~3.6A** | **~6.5A** |
+| **TOTAL** | | **~4.2A** | **~7.5A** |
 
 ### Battery Sizing
 
@@ -1100,33 +1103,34 @@ All tools connect to `gpsd` at `localhost:2947`:
 | 5 | DSI FPC Extension Cable 30cm | 15-pin 1mm pitch, routes through hinge | ~$5-8 | [Amazon](https://www.amazon.com/Cables-Ribbon-Flexible-Raspberry-Extension/dp/B0891TPPXH) |
 | 6 | Coolerguys IP67 40mm Fans x2 | Waterproof intake/exhaust, maintains seal | ~$26-30 | [Amazon](https://www.amazon.com/Coolerguys-40x40x10mm-CG4010M12-IP67-Waterproof-Exterior/dp/B09YWDT4MD) |
 | 7 | Noctua NF-A4x10 5V Fan | Internal circulator, ultra-quiet | ~$15 | [Amazon](https://www.amazon.com/Noctua-Cooling-Bearing-NF-A4X10-FLX-5V/dp/B00NEMGCIA) |
-| 8 | 5V-to-12V DC Boost Converter | Powers 12V IP67 fans from USB 5V | ~$5 | Search "5V to 12V boost converter USB" |
+| 8 | DROK USB 5V to 12V Boost Converter | Powers 12V IP67 fans from USB 5V, LED display | ~$8-10 | [Amazon](https://www.amazon.com/DROK-Voltage-Converter-Transformer-Regulator/dp/B074R7FDCR) |
 | 9 | VK-162 USB GPS Module | GPS for Kismet + Flock + Meshtastic | ~$15 | [Amazon](https://www.amazon.com/VK-162-G-Mouse-External-Navigation-Raspberry/dp/B01EROIUEW) |
 | 10 | M2.5/M3 Brass Standoff Kit 420pc | Board mounting hardware | ~$10 | [Amazon](https://www.amazon.com/HanTof-Standoff-Assortment-Motherboard-Raspberry/dp/B07CK7L2W6) |
 | 11 | IP65 Panel-Mount USB-C | Waterproof bulkhead, charge port | ~$10-12 | [Amazon](https://www.amazon.com/HangTon-Waterproof-Connector-Extension-Pass-Through/dp/B0CDPSGBNL) |
 | 12 | IP67 Panel-Mount USB-A | Waterproof bulkhead, data export port | ~$10-12 | [Amazon](https://www.amazon.com/PENGLIN-Waterproof-Connector-Bulkhead-Extension/dp/B09VNS64HM) |
-| 13 | Twidec Toggle Switches w/ Caps x10 | SPST, waterproof boot caps, per-device | ~$10 | [Amazon](https://www.amazon.com/Twidec-Toggle-Miniature-Switches-Waterproof/dp/B08CX6P86W) |
+| 13 | Twidec Toggle Switches w/ Caps x12 | SPST, waterproof boot caps, per-device | ~$12 | [Amazon](https://www.amazon.com/Twidec-Toggle-Miniature-Switches-Waterproof/dp/B08CX6P86W) |
 | 14 | 3M Marine Grade Silicone Sealant | Clear, waterproof seal for all holes | ~$8-12 | [Amazon](https://www.amazon.com/3M-08019-Marine-Silicone-Sealant/dp/B000H8W9V8) |
 | 15 | Amphenol VENT-PS1 Membrane Vent | IP69K pressure equalization, ePTFE | ~$3-4 | [DigiKey](https://www.digikey.com/en/products/detail/amphenol-ltw/VENT-PS1YBK-N8001/7898285) |
 | 16 | Geekworm H509 Pi 5 Heatsink | Passive aluminum, low-profile | ~$10-15 | [Amazon](https://www.amazon.com/Geekworm-Aluminum-Heatsink-H509-Raspberry/dp/B0DDTL52Q6) |
 | 17 | Adhesive ESP32 Heatsinks 20-pack | 9x9x5mm with 3M thermal tape | ~$5-8 | [Amazon](https://www.amazon.com/Easycargo-Heatsink-conductive-Regulators-8-8mmx8-8mmx5mm/dp/B079FQ22LK) |
 | 18 | Thermalright Thermal Pads 120x120x3mm | 12.8 W/mK, heat bridge to case wall | ~$10-15 | [Amazon](https://www.amazon.com/Thermalright-120x120x3mm-Resistance-High-Temperature-Non-Conductive/dp/B08ZN7CN9K) |
-| 19 | Neoprene Gasket Sheet 12"x12" | Custom gaskets for fan mounts | ~$8-12 | Search "neoprene gasket sheet 12x12" |
+| 19 | Neoprene Gasket Sheet 1/16" 12"x12" | Custom gaskets for fan mounts | ~$8-10 | [Amazon](https://www.amazon.com/Small-Parts-Neoprene-Sheet-Gasket/dp/B0075ZMFME) |
 | 20 | 2.42" SSD1309 OLED (I2C) | System status display, 128x64 | ~$10-12 | [Amazon](https://www.amazon.com/HiLetgo-SSD1309-128x64-Display-Optional/dp/B0CFF5SD1T) |
 | 21 | Perixx PERIBOARD-409U Wired Mini KB | USB-only input, BLE stealth | ~$20 | [Amazon](https://www.amazon.com/Perixx-PERIBOARD-409U-Mini-Keyboard-12-40x5-79x0-79/dp/B007LQKFG0) |
 | 22 | GL850G 4-Port USB Hub Module | Embedded hub breakout for internal use | ~$10-12 | [Amazon](https://www.amazon.com/Port-Module-Genesys-Logic-GL850G/dp/B0BWNG3Z3Y) |
 | 23 | Adhesive Cable Clips 30-pack | Adjustable, internal cable routing | ~$5 | [Amazon](https://www.amazon.com/Viaky-Adhesive-Backed-Adjustable-Management/dp/B01M6U9Q9C) |
-| 24 | Clear Acrylic Sheet 12"x12" (3mm) | Mounting plates — cut to fit case | ~$8-10 | Search "acrylic sheet 12x12 3mm clear" |
+| 24 | Performore Clear Acrylic Sheet 12"x12" 3mm | Mounting plates — cut to fit case | ~$8-10 | [Amazon](https://www.amazon.com/Plexiglass-Unbreakable-Lightweight-Substitute-Greenhouse/dp/B07BDRZTZV) |
 | 25 | DIN Rail ESP32 Mount Breakout | Screw terminal + DIN clip for ESP32s | ~$10 ea | [Amazon](https://www.amazon.com/Mount-Terminal-Breakout-Module-ESP32-DevKitC/dp/B08LGQ2H72) |
-| 26 | Aluminum L-Brackets (pack) | Display mounting in lid, no 3D printing | ~$5 | Search "aluminum L bracket small pack" |
-| 27 | SMA Dust Caps 10-pack | Protect bulkheads when antennas stowed | ~$3 | Search "SMA dust cap 10 pack" |
-| | **TOTAL NEW PARTS** | | **~$340-420** | |
+| 26 | OTTFF Aluminum L-Brackets 10-Pack 2"x2" | Display mounting in lid, no 3D printing | ~$10 | [Amazon](https://www.amazon.com/Bracket-Aluminum-Connector-Profile-Thickness/dp/B0C4P5BPYL) |
+| 27 | SMA Dust Caps Gold-Plated 10-pack | Protect bulkheads when antennas stowed | ~$5 | [Amazon](https://www.amazon.com/Metal-Protective-Instrument-Connector-Gold-Plated/dp/B089KD1D5F) |
+| 28 | Orbic Speed RC400L (Unlocked) | RayHunter IMSI catcher detector, USB-powered | ~$30-40 | [Amazon](https://www.amazon.com/RC400L-Carrier-Unlocked-Mobile-Hotspot/dp/B0F45RXZCW) |
+| | **TOTAL NEW PARTS** | | **~$385-475** | |
 
 ### Total Project Cost
 
 **Existing inventory:** ~$1,250-$1,450 (already purchased)
-**New cyberdeck parts:** ~$340-420
-**Grand total for complete cyberdeck:** ~$1,590-$1,870
+**New cyberdeck parts:** ~$385-475
+**Grand total for complete cyberdeck:** ~$1,635-$1,925
 
 ---
 
@@ -1284,13 +1288,13 @@ All tools connect to `gpsd` at `localhost:2947`:
 │                                                                          │
 │  ┌──────────────────────────────────────────────────────────────────┐    │
 │  │                                                                  │    │
-│  │  POWER SWITCHES (11x SPST + waterproof boot caps)                │    │
+│  │  POWER SWITCHES (12x SPST + waterproof boot caps)                │    │
 │  │                                                                  │    │
-│  │  ┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐      │    │
-│  │  │SW1││SW2││SW3││SW4││SW5││SW6││SW7││SW8││SW9││S10││S11│      │    │
-│  │  │MAR││FLK││BLE││5GM││5GS││MSH││DRN││IOT││NET││KS2││GPS│      │    │
-│  │  └─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘      │    │
-│  │    │    │    │    │    │    │    │    │    │    │    │          │    │
+│  │  ┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐┌───┐ │    │
+│  │  │SW1││SW2││SW3││SW4││SW5││SW6││SW7││SW8││SW9││S10││S11││S12│ │    │
+│  │  │MAR││FLK││BLE││5GM││5GS││MSH││DRN││IOT││NET││KS2││GPS││RAY│ │    │
+│  │  └─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘└─┬─┘ │    │
+│  │    │    │    │    │    │    │    │    │    │    │    │    │     │    │
 │  │  Each switch inline with USB 5V power to its device             │    │
 │  │                                                                  │    │
 │  │   ┌──────────┐  ┌──────────┐  ┌─────┐                           │    │
@@ -1304,7 +1308,7 @@ All tools connect to `gpsd` at `localhost:2947`:
 │  SW1=Gold#1 Marauder   SW2=Gold#2 Flock     SW3=Gold#3 BLE              │
 │  SW4=C5#1 5G Marauder  SW5=C5#2 5G Scanner  SW6=Heltec Meshtastic       │
 │  SW7=WROOM DroneID     SW8=CYD#2 HaleHound  SW9=PiZero RaspyJack        │
-│  S10=RT5370 Kismet#2   S11=VK-162 GPS                                   │
+│  S10=RT5370 Kismet#2   S11=VK-162 GPS       S12=Orbic RayHunter         │
 │  Pi 5 + Panda PAU0F always on (direct USB 3.0, no switch)               │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
@@ -1380,7 +1384,7 @@ All tools connect to `gpsd` at `localhost:2947`:
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│  POWER DISTRIBUTION (13 devices, 11 switches)                  │
+│  POWER DISTRIBUTION (14 devices, 12 switches)                  │
 │                                                                │
 │  ┌──────────────┐                                              │
 │  │  Anker 347   │                                              │
@@ -1393,7 +1397,7 @@ All tools connect to `gpsd` at `localhost:2947`:
 │  │  22.5W       │       │                                      │
 │  │              │       ├──► SW1  ──► Gold #1 (Marauder 2.4G)  │
 │  │  USB-A #2 ───┼──►    ├──► SW2  ──► Gold #2 (Flock)         │
-│  │  (to hub)    │       ├──► SW3  ──► Gold #3 (BLE/CYT)       │
+│  │  (to hub #2) │       ├──► SW3  ──► Gold #3 (BLE/CYT)       │
 │  │              │       ├──► SW4  ──► C5 #1 (Dual-band MAR)   │
 │  │  USB-C IN ◄──┼───── Panel-mount USB-C (charging)            │
 │  └──────────────┘       ├──► SW5  ──► C5 #2 (Dual-band SCAN)  │
@@ -1402,12 +1406,12 @@ All tools connect to `gpsd` at `localhost:2947`:
 │  ├─ USB 3.0 #1 ──►      ├──► SW8  ──► CYD #2 (HaleHound)     │
 │  │  Panda PAU0F          ├──► SW9  ──► Pi Zero 2W (RaspyJack) │
 │  │  (direct, always on)  ├──► SW10 ──► RT5370 (Kismet #2)     │
-│  ├─ USB 3.0 #2 ──►      └──► SW11 ──► VK-162 GPS              │
-│  │  USB Hub (upstream)                                         │
+│  ├─ USB 3.0 #2 ──►      ├──► SW11 ──► VK-162 GPS              │
+│  │  USB Hub (upstream)   └──► SW12 ──► Orbic RC400L (RayHunter)│
 │  ├─ USB 2.0 #1 ──► VK-162 GPS (via hub)                       │
 │  └─ USB 2.0 #2 ──► Wired USB Keyboard                         │
 │                                                                │
-│  SW1-SW11 = SPST toggle switches with waterproof boots         │
+│  SW1-SW12 = SPST toggle switches with waterproof boots         │
 │  Pi 5 + Panda PAU0F = always on (no switch)                    │
 │                                                                │
 │  12V rail (5V-to-12V boost converter):                         │
@@ -1498,7 +1502,17 @@ All tools connect to `gpsd` at `localhost:2947`:
 - [ ] Build Flask + SocketIO dashboard app
 - [ ] Configure Chromium kiosk mode: `chromium-browser --kiosk http://localhost:5000`
 - [ ] Write `temp_monitor.py` for OLED system vitals display
+- [ ] Set up RayHunter integration:
+  - [ ] Connect Orbic RC400L via USB-C to hub (SW12)
+  - [ ] Install ADB: `sudo apt install android-tools-adb`
+  - [ ] Create systemd service for `adb forward tcp:8080 tcp:8080`
+  - [ ] Add RayHunter tab to Flask dashboard — poll `http://localhost:8080/api/analysis`
+  - [ ] Display alert level (green/yellow/orange/red) on dashboard
+  - [ ] Optional: apply autoboot mod (patch aboot: byte `0x20` → `0xff` at sequence `03 02 00 0a 20`)
 - [ ] Test all services start on boot
+
+> **See also:** [FIRMWARE-REFERENCE.md](FIRMWARE-REFERENCE.md) for all firmware versions, flash commands, and download links.
+> **See also:** [BUILD-GUIDE.md](BUILD-GUIDE.md) for the full step-by-step from individual components to final assembly.
 
 ### Phase 8: Sealed Integration Testing (Weekend 4)
 
@@ -1543,6 +1557,7 @@ These boards are permanently mounted inside the Pelican 1300, powered by the hub
 | 18 - HaleHound | CYD #2 | IoT Recon + SubGHz + NFC multi-protocol | internal | SW8 |
 | 19 - RaspyJack | Pi Zero 2W | Wired network pentesting (Shark Jack alt) | internal | SW9 |
 | 07 - Kismet | PAU0F + RT5370 | WiFi 6E wardriving (primary + secondary) | SMA 7 | always/SW10 |
+| 05 - RayHunter | Orbic RC400L | IMSI catcher / stingray detector (cellular) | internal | SW12 |
 | Shared | VK-162 GPS | GPS feed via gpsd for all tools | internal | SW11 |
 
 ### Standalone (Separate Device, Own Build Guide)
@@ -1553,7 +1568,6 @@ These projects stay outside the cyberdeck — they're pocket-carry, phone-based,
 |---------|---------------|----------|
 | 02 - Flipper Zero | Not ESP32-based, pocket carry, own screen/battery | Flipper Zero (not yet purchased) |
 | 03 - Pwnagotchi | Autonomous AI, pocket carry, long-duration capture walks | Pi Zero 2W + e-ink + PiSugar |
-| 05 - RayHunter | Requires Orbic phone hardware (cellular modem) | Orbic Speed RC400L |
 | 11 - NyanBOX | Pre-built sealed unit, redundant with Marauder | NyanBOX ($220) |
 | 12 - USB Rubber Ducky | USB stick form factor, physical access tool | Hak5 Ducky / DIY ESP32-S2 |
 | 09 - Project Nomad | x64 only — blocked on ARM compatibility | LattePanda or x64 SBC |
@@ -1577,7 +1591,7 @@ What else can this platform do beyond the current project lineup:
 - **Automated wardriving pipeline** — boot the deck in a car, Kismet + GPS auto-log, C5 scans 5GHz simultaneously, Gold #2 watches for Flock cameras, export WiGLE-compatible CSV at end of drive
 - **IoT credential farm** — HaleHound auto-scans every connected network for default-credential IoT devices, exports harvested creds to Pi 5 for reporting
 - **Multi-band coordinated attack** — Gold #1 deauths on 2.4GHz while C5 #1 deauths on 5GHz, synchronized via Pi 5 serial commands
-- **Stingray detection overlay** — if RayHunter (companion) is running alongside, pipe its alerts to the cyberdeck dashboard via Bluetooth tether
+- **Stingray detection overlay** — RayHunter (deck-integrated, SW12) feeds real-time IMSI catcher alerts to the Flask dashboard via `adb forward tcp:8080 tcp:8080`. Poll `/api/analysis` for threat level (green/yellow/orange/red). Autoboot mod patches aboot partition so Orbic starts with the deck
 - **Portable WIDS (Wireless Intrusion Detection)** — Kismet in WIDS mode monitors your own network for rogue APs, evil twins, and deauth attacks
 - **Mesh emergency broadcast** — pre-programmed Meshtastic messages ("NEED EXTRACT", "ALL CLEAR", GPS coords) triggered by hardware button on the case
 - **Thermal-managed sustained operation** — IP67 fans + membrane vent keep Pi 5 under 65°C for 8+ hour field deployments
@@ -1630,7 +1644,7 @@ What else can this platform do beyond the current project lineup:
 | Question | Answer |
 |----------|--------|
 | **Case?** | Pelican 1300 (~$85-100) |
-| **Total devices?** | 13 (Pi 5 + 3 Gold + 2 C5 + Heltec + WROOM + 2 CYD + Pi Zero + PAU0F + RT5370 + GPS) |
+| **Total devices?** | 14 (Pi 5 + 3 Gold + 2 C5 + Heltec + WROOM + 2 CYD + Pi Zero + PAU0F + RT5370 + GPS + Orbic) |
 | **Displays?** | 5 total: 7" DSI + 2x CYD 2.8" + 2.42" OLED + Heltec built-in |
 | **Battery?** | Anker 347 Power Bank (25,600mAh, 30W USB-C PD) |
 | **Cooling?** | 3-layer sealed: 2x IP67 Coolerguys + Noctua internal + membrane vent |
@@ -1638,14 +1652,14 @@ What else can this platform do beyond the current project lineup:
 | **Antennas?** | 7x SMA bulkheads (3x 2.4G + 2x dual-band + 1x 915MHz + 1x WiFi 6E) |
 | **Antenna gain?** | Default 5 dBi omni all ports; swap to 8-10 dBi directional for targeted work |
 | **Mounting?** | 3mm acrylic plates + DIN rail brackets (no 3D printer) |
-| **Power switches?** | 11x SPST toggles with waterproof boot caps |
-| **Software?** | Kali Linux + Kismet + Flask/SocketIO dashboard |
+| **Power switches?** | 12x SPST toggles with waterproof boot caps |
+| **Software?** | Kali Linux + Kismet + Flask/SocketIO dashboard + RayHunter API |
 | **Input?** | Perixx PERIBOARD-409U wired USB (BLE stealth) |
 | **GPS?** | VK-162 USB module via gpsd (shared to all tools) |
 | **GPIO used?** | 3-4 of 26 pins (no expander needed) |
-| **Frequency coverage?** | 915MHz (LoRa) + 2.4GHz + 5GHz + 6GHz (WiFi 6E) |
-| **Deck projects?** | 11 integrated, 6 standalone, 4 companion/tool |
-| **New parts budget?** | ~$380-460 |
+| **Frequency coverage?** | 700-2100MHz (LTE/cellular) + 915MHz (LoRa) + 2.4GHz + 5GHz + 6GHz (WiFi 6E) |
+| **Deck projects?** | 12 integrated, 5 standalone, 4 companion/tool |
+| **New parts budget?** | ~$385-475 |
 | **Build time?** | 4-5 weekends (9 phases) |
 
 ---

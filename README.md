@@ -23,7 +23,7 @@ A curated collection of cybersecurity, wireless, and hardware hacking projects -
 | 11 | [NyanBOX](projects/11-nyan-box/) | In Transit | Easy | Pre-built portable pentesting toolkit |
 | 12 | [USB Rubber Ducky](projects/12-usb-rubber-ducky/) | Not Yet Purchased | Easy | Keystroke injection tool (or DIY with ESP32) |
 | 13 | [ESP Terminator](projects/13-esp-terminator/) | Ready to Use | Easy | Web-based ESP32 firmware flasher for multiple tools |
-| 14 | [Cyberdeck](projects/14-cyberdeck/) | Brainstorm | Hard | All-in-one portable security rig (Pi 5 + ESP32-C5 dual-band + HaleHound + RaspyJack + Meshtastic + Kismet) |
+| 14 | [Cyberdeck](projects/14-cyberdeck/) | Brainstorm | Hard | All-in-one portable security rig — 14 devices, 12 switches, 7 SMA antennas (Pi 5 + ESP32-C5 dual-band + RayHunter + HaleHound + RaspyJack + Meshtastic + Kismet) |
 | 15 | [ESP32-DIV](projects/15-esp32-div/) | Evaluating | Medium | Open-source ESP32-S3 multitool — Sub-GHz, IR, RFID/NFC, 2.4GHz (Flipper-class) |
 | 16 | [BlueJammer-V2](projects/16-bluejammer/) | Reference only | -- | 2.4GHz RF jammer — cataloged for reference; deck uses the lawful **detector** instead |
 | 17 | [OUI-Spy](projects/17-oui-spy/) | Ready to Build | Medium | Passive wireless surveillance detection — OUI-based device identification, Flock/drone/tracker scanning on ESP32-S3 |
@@ -34,7 +34,7 @@ A curated collection of cybersecurity, wireless, and hardware hacking projects -
 
 ## Cyberdeck Classification
 
-Every project falls into one of three categories relative to the [Cyberdeck build](projects/14-cyberdeck/) (Pelican 1300, 13 devices, 7 SMA bulkheads, 11 switches):
+Every project falls into one of three categories relative to the [Cyberdeck build](projects/14-cyberdeck/) (Pelican 1300, 14 devices, 7 SMA bulkheads, 12 switches):
 
 ### Deck-Integrated (Board Mounted Inside)
 
@@ -49,6 +49,7 @@ Every project falls into one of three categories relative to the [Cyberdeck buil
 | 06 Drone | WROOM-32 | RemoteID drone detection | Internal |
 | 18 HaleHound | CYD #2 | IoT Recon + SubGHz + NFC | Internal |
 | 19 RaspyJack | Pi Zero 2W | Wired network pentesting | Internal |
+| 05 RayHunter | Orbic RC400L | IMSI catcher / stingray detector | Internal (cellular) |
 | 07 Kismet | PAU0F + RT5370 | WiFi 6E wardriving | SMA 7 (tri-band) |
 | Shared | VK-162 GPS | GPS for all tools via gpsd | Internal |
 
@@ -58,7 +59,6 @@ Every project falls into one of three categories relative to the [Cyberdeck buil
 |---------|-----|----------|
 | 02 Flipper Zero | Pocket multi-tool, own screen/battery | Flipper Zero + AWOK C5 Touch |
 | 03 Pwnagotchi | Autonomous AI, pocket carry | Pi Zero 2W + e-ink + PiSugar |
-| 05 RayHunter | Requires Orbic cellular modem | Orbic Speed RC400L |
 | 09 Project Nomad | x64 only (blocked on ARM) | LattePanda / x64 SBC |
 | 11 NyanBOX | Pre-built sealed unit | NyanBOX kit ($220) |
 | 12 USB Rubber Ducky | USB stick, physical access | Hak5 Ducky / DIY ESP32-S2 |

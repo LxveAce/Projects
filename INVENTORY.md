@@ -182,9 +182,9 @@ All items below have been purchased via Amazon. Organized by category with links
 - [x] CYD 2.8" Touchscreen #2 (WiFi-only with built-in display, needs custom firmware)
 - [x] DIYmall 2.4G WiFi Antennas (for extended range)
 - [x] Boobrie SMA/RP-SMA Adapters
-- [ ] LILYGO T-Display S3 (full BLE + WiFi, built-in 1.9" TFT — not yet purchased)
-- [ ] Passive piezo buzzer (not yet purchased)
-- [ ] 3.7V LiPo battery, JST 1.25mm (not yet purchased)
+- [ ] LILYGO T-Display S3 (ESP32-S3, built-in 1.9" TFT, BLE+WiFi) — ~$18-22 → [Amazon](https://www.amazon.com/LILYGO-T-Display-S3-ESP32-S3-Development/dp/B0B93NWL6G)
+- [ ] Passive piezo buzzer (3.3V compatible, through-hole) — ~$5-7 → [Amazon](https://www.amazon.com/Cylewet-Electronic-Magnetic-Continuous-Arduino/dp/B01N7NHSY6)
+- [ ] 3.7V LiPo battery 1000mAh, JST 1.25mm connector — ~$8-12 → [Amazon](https://www.amazon.com/EEMB-1000mAh-Battery-Rechargeable-Connector/dp/B08214DJLJ)
 
 ### ESP32-C5 Dual-Band (Cyberdeck)
 - [x] Waveshare ESP32-C5 WiFi 6 board #1 → **Dual-band Marauder** (2.4+5GHz, headless, controlled via Pi 5)
@@ -195,15 +195,19 @@ All items below have been purchased via Amazon. Organized by category with links
 ### HaleHound (Project 18)
 - [x] ESP32 2.8" CYD Touchscreen #2 → **HaleHound multi-protocol toolkit**
 - [x] Micro SD card (loot + custom creds)
-- [ ] CC1101 SubGHz module (HW-863 or E07-433M20S) — ~$5-8
-- [ ] NRF24L01+PA+LNA module — ~$3-5
-- [ ] PN532 V3 NFC/RFID module (SPI mode) — ~$5-8
+- [ ] CC1101 SubGHz module 2-pack (315/433/868/915MHz + SMA antenna) — ~$8-12 → [Amazon](https://www.amazon.com/CC1101-Wireless-Transceiver-915MHZ-Antenna/dp/B01DS1WUEQ)
+- [ ] NRF24L01+PA+LNA 2-pack (2.4GHz, 1100m range, SMA antenna) — ~$8-10 → [Amazon](https://www.amazon.com/HiLetgo%C2%AE-NRF24L01-Wireless-Transceiver-Compatible/dp/B00WG9HO6Q)
+- [ ] PN532 V3 NFC/RFID module (I2C/SPI/HSU, includes S50 cards) — ~$6-8 → [Amazon](https://www.amazon.com/HiLetgo-Communication-Arduino-Raspberry-Android/dp/B01I1J17LC)
 
 ### RaspyJack (Project 19)
-- [ ] Raspberry Pi Zero 2 WH (dedicated, separate from Pwnagotchi) — ~$15-20
-- [ ] Waveshare 1.44" LCD HAT (ST7735S, 128x128, joystick) — ~$12-15
-- [ ] USB OTG adapter — ~$3-5
-- [ ] USB-to-Ethernet adapter — ~$5-10
+- [ ] Raspberry Pi Zero 2 WH (dedicated, separate from Pwnagotchi) — ~$15-20 → [Amazon](https://www.amazon.com/Raspberry-Pi-Zero-WH/dp/B0CG9BY48N)
+- [ ] Waveshare 1.44" LCD HAT (ST7735S, 128x128, joystick + buttons) — ~$12-15 → [Amazon](https://www.amazon.com/waveshare-1-44inch-Interface-Direct-pluggable-Raspberry/dp/B077Z7DWW1)
+- [ ] USB OTG adapter (Micro-B to USB-A female) — ~$3-5 → [Amazon](https://www.amazon.com/UGREEN-Adapter-Samsung-Controller-Smartphone/dp/B00LN3LQKQ)
+- [ ] USB-to-Ethernet adapter (AX88772 chipset, Linux compatible) — ~$8-12 → [Amazon](https://www.amazon.com/Cable-Matters-Ethernet-Adapter-Supporting/dp/B00ET4KHJ2)
+
+### RayHunter (Project 05 — Cyberdeck Integrated)
+- [ ] Orbic Speed RC400L (carrier unlocked, 4G LTE hotspot) — ~$30-40 → [Amazon](https://www.amazon.com/RC400L-Carrier-Unlocked-Mobile-Hotspot/dp/B0F45RXZCW)
+- [ ] Deactivated SIM card (any carrier, no active plan needed) — free/~$1
 
 ### Kismet Wardriving
 - [x] CanaKit Raspberry Pi 5 Starter Kit PRO
@@ -238,5 +242,5 @@ Some items were purchased in multiples, allowing dedicated assignment to separat
 | Rii K06 Mini Keyboard | 2 | #1 → Pwnagotchi rig (headless Pi Zero setup/troubleshooting) · #2 → Field kit (Kismet wardriving / general) |
 | Hosyond 7" DSI Display | 2 | #1 → Kismet wardriving dashboard (Pi 5) · #2 → General Pi desktop / Project Nomad (if LattePanda not used) |
 | JSAUX Micro HDMI Adapter | 3 | #1 → Pi 5 · #2 → Pi Zero 2 W · #3 → Spare |
-| Lonely Binary ESP32 Gold | 3 | #1 → Marauder (primary, has IPEX antenna) · #2 → BLE Detection · #3 → Flock/Drone Detection / OUI-Spy WiFi-only |
-| ESP32 2.8" CYD Touchscreen | 2 | #1 → Marauder touchscreen (built) · #2 → OUI-Spy WiFi-only (with built-in display) or general |
+| Lonely Binary ESP32 Gold | 3 | #1 → Marauder 2.4GHz + CYD #1 (cyberdeck SW1) · #2 → Flock detection (cyberdeck SW2) · #3 → BLE/CYT scanner (cyberdeck SW3) |
+| ESP32 2.8" CYD Touchscreen | 2 | #1 → Marauder touchscreen (built) · #2 → HaleHound multi-protocol toolkit (cyberdeck SW8) |

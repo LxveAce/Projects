@@ -37,7 +37,7 @@ Each maps to a numbered project in the repo. Numbers match the source project fo
 | 02 | [Flipper Zero](02-flipper-zero/) | Sub-GHz / RFID / NFC / IR companion | Flipper Zero + ESP32 WiFi board | [02-flipper-zero](../../02-flipper-zero/) |
 | 03 | [Pwnagotchi](03-pwnagotchi/) | Docked, runs separate — charge/offload bay | Pi Zero 2 W + e-ink | [03-pwnagotchi](../../03-pwnagotchi/) |
 | 04 | [Meshtastic](04-meshtastic/) | Off-grid mesh node | Heltec LoRa V3 | [04-meshtastic](../../04-meshtastic/) |
-| 05 | [RayHunter](05-rayhunter/) | Stingray / IMSI-catcher detector (companion) | Orbic Speed RC400L | [05-rayhunter](../../05-rayhunter/) |
+| 05 | [RayHunter](05-rayhunter/) | **IMSI catcher / stingray detector (deck-integrated)** | Orbic Speed RC400L (USB-C → Pi 5 ADB) | [05-rayhunter](../../05-rayhunter/) |
 | 06 | [Flock & Drone Detection](06-flock-drone-detection/) | ALPR camera + drone RemoteID detection | Gold #2 + WROOM-32 | [06-flock-drone-detection](../../06-flock-drone-detection/) |
 | 07 | [Kismet Wardriving](07-kismet-wardriving/) | WiFi mapping / wardriving | Pi 5 + Panda PAU0F + RT5370 | [07-kismet-wardriving](../../07-kismet-wardriving/) |
 | 08 | [BLE Detection](08-ble-detection/) | Bluetooth tracker / device detection | Lonely Binary Gold #3 | [08-ble-detection](../../08-ble-detection/) |
@@ -87,6 +87,18 @@ These assignments are fixed across every guide so nothing collides.
 | Panda PAU0F | Kismet primary (WiFi 6E) | Pi 5 USB 3.0 (direct, always on) | SMA #7 (built-in) | — |
 | RT5370 | Kismet secondary | Hub → switch SW10 | internal | — |
 | VK-162 GPS | Shared GPS | Hub → switch SW11 | internal | — |
+| **Orbic RC400L** | **RayHunter IMSI/stingray detector** | Hub → switch SW12 | internal (cellular) | — (Pi 5 via ADB forward) |
+
+### RayHunter Integration Notes
+
+The **Orbic Speed RC400L** runs [RayHunter](https://github.com/EFForg/rayhunter) (EFF's IMSI catcher detector) and connects to the Pi 5 via **ADB over USB-C**. The Pi forwards port 8080 (`adb forward tcp:8080 tcp:8080`) and polls the RayHunter REST API at `http://localhost:8080/api/analysis` for real-time stingray alerts.
+
+- **Autoboot mod:** Patch aboot partition (change byte `0x20` → `0xff` at sequence `03 02 00 0a 20`) so Orbic starts automatically with the deck
+- **SIM required:** Any deactivated SIM card works — no active plan needed
+- **Battery stays in:** The Orbic won't boot without its battery present; USB keeps it charged
+- **No external antenna:** Internal cellular antenna only — position near case wall for best signal
+- **Power draw:** ~3-5W (600mA typical, 1A peak)
+- **Dashboard:** Flask app polls `/api/analysis` every 5s, displays alert level (green/yellow/orange/red)
 
 ### Dual-Band Upgrade Notes
 
