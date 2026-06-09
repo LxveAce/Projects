@@ -14,6 +14,9 @@
 8. [Troubleshooting](#8-troubleshooting)
 9. [Legal Considerations](#9-legal-considerations)
 10. [All Resource Links](#10-all-resource-links)
+11. [Best-Fit Hardware from Your Inventory](#11-best-fit-hardware-from-your-inventory)
+12. [Feature Brainstorm -- What Else Can This Do](#12-feature-brainstorm----what-else-can-this-do)
+13. [Cyberdeck Integration](#13-cyberdeck-integration)
 
 ---
 
@@ -824,7 +827,24 @@ If running Marauder on the CYD standalone (without the Lonely Binary board), you
 
 ---
 
-## 12. Cyberdeck Integration
+## 12. Feature Brainstorm -- What Else Can This Do
+
+- **Dual-band attack coordination** -- Run a Gold board on 2.4GHz and an ESP32-C5 on 5GHz simultaneously, covering both bands during scans and deauths from a single operator station
+- **Automated PMKID farm** -- Script a scan-deauth-capture-save loop via serial CLI on the Pi 5 that continuously cycles through discovered APs, captures PMKID/EAPOL, and auto-exports to hashcat-ready format
+- **Evil Portal template library** -- Build a collection of cloned captive portal pages (hotel WiFi, airline WiFi, corporate guest networks) stored on SD card, selectable per engagement
+- **Wireshark-ready PCAP export pipeline** -- Write a Pi 5 script that pulls PCAPs from the SD card via serial, timestamps and organizes them by target SSID, and opens them directly in Wireshark or tshark for immediate analysis
+- **Custom SD card directory structure** -- Create organized folders on the SD card (e.g., `/captures/pmkid/`, `/captures/handshakes/`, `/evil-portal/templates/`, `/logs/wardrive/`) so captures from different sessions stay separated and searchable
+- **Marauder CLI automation scripts** -- Write Python scripts on the Pi 5 that send serial commands to automate common workflows: scan all APs, select by RSSI threshold, run targeted deauth for N seconds, stop and save
+- **Signal strength heatmapping** -- Combine wardriving GPS data with RSSI readings to generate WiFi signal heatmaps of a target area using tools like Wigle or custom matplotlib plots
+- **Channel utilization analyzer** -- Scan all 14 channels and log packet counts per channel over time, producing a channel congestion report to identify the quietest channels for your own use or the busiest for target-rich scanning
+- **Rogue AP detection mode** -- Run Marauder in continuous scan mode to detect new or unexpected APs appearing on your own network, alerting via the Pi 5 dashboard when an unknown BSSID shows up
+- **Multi-board coordinated scanning** -- Use a Gold board for 2.4GHz AP scanning and a C5 for 5GHz scanning simultaneously, merging results on the Pi 5 into a single unified target list
+- **BLE tracker sweep** -- Periodically scan for AirTags, Tiles, and unknown BLE beacons in your vicinity, logging MAC addresses and timestamps to detect persistent trackers following your location
+- **Deauth detection alarm** -- Run the Deauth Sniff feature continuously as a defensive IDS, triggering an audible or visual alert on the CYD screen when someone is deauthing your own network
+
+---
+
+## 13. Cyberdeck Integration
 
 > See [Project 14: Cyberdeck](../14-cyberdeck/) for the full build plan.
 

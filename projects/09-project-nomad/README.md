@@ -649,6 +649,38 @@ No ARM-specific modifications in any recent releases. Updates focus on x86_64 op
 
 ---
 
+## Standalone Build Guide
+
+Offline knowledge server -- currently BLOCKED on ARM (Pi 5). Standalone deployment options below.
+
+1. Current status: Nomad requires x64 architecture -- does NOT run on Pi 5 (ARM64)
+2. Option A (future): Wait for community ARM port or use box64 emulation on Pi 5
+3. Option B (now): Deploy on a LattePanda 3 Delta ($219) -- x64 SBC, 8GB RAM, runs Nomad natively
+4. Option C (now): Use ARM-native alternatives on Pi 5:
+   - Kiwix: offline Wikipedia/Stack Overflow/WikiHow (apt install kiwix-serve)
+   - Kolibri: offline educational content server
+   - llama.cpp with Phi-3-mini or TinyLlama: local LLM on Pi 5
+   - Offline OSM map tiles via tile server
+5. If using LattePanda: flash Ubuntu, install Docker, `docker pull nomad`, expose on LAN
+6. Access via browser from any device on the same network
+
+---
+
+## Feature Brainstorm -- What Else Can This Do
+
+- **Community RPi fork on Pi 5** -- Install the [eglische/project-nomad-rpi](https://github.com/eglische/project-nomad-rpi) fork directly on your Pi 5 8GB. Skips the x64 requirement entirely. You lose GPU-accelerated AI but gain Kiwix, Kolibri, maps, CyberChef, and notes.
+- **Offline Wikipedia and medical references via standalone Kiwix** -- Even without full NOMAD, install `kiwix-serve` directly on the Pi 5 (arm64 package available) and load ZIM files for Wikipedia, WikiMed, and Project Gutenberg. Lightweight and fully functional.
+- **Kolibri education platform on Pi 5** -- Kolibri is Python-based and runs natively on ARM. Install it standalone with Khan Academy content packs for an offline education server without needing the full NOMAD stack.
+- **Local LLM on Pi 5 via llama.cpp** -- Run `llama.cpp` natively on the Pi 5's Cortex-A76 cores. Small models like TinyLlama (1.1B) or Phi-3 Mini (3.8B) run at usable speeds (3-8 tokens/sec) for offline Q&A without GPU.
+- **Offline map tiles via OpenStreetMap** -- Download regional OSM `.pmtiles` or `.mbtiles` files and serve them locally with a lightweight tile server on the Pi 5. Pair with the VK-162 GPS module for offline navigation.
+- **Offline survival and repair reference library** -- Curate ZIM files for survival guides (SAS Survival Handbook, Army Field Manuals, FEMA guides), medical references, and repair manuals. Serve via Kiwix alongside Wikipedia.
+- **Mesh integration for sharing knowledge between nodes** -- Run Meshtastic or Reticulum alongside the knowledge server. Use mesh messaging to request specific articles or data from another NOMAD node within radio range.
+- **LattePanda Delta 3 as dedicated NOMAD box** -- When budget allows, purchase the LP3 Delta (~$230) for a full-featured NOMAD install with all Docker services. Use the Pi 5 for the lightweight Kiwix/Kolibri stack in the meantime.
+- **CyberChef standalone deployment** -- CyberChef is a static web app. Host it on the Pi 5 with a simple HTTP server (`python3 -m http.server`) for offline encoding, decoding, hashing, and data analysis without the full NOMAD stack.
+- **QEMU/box64 emulation testing** -- Experiment with box64 (user-mode x86-64 emulation on ARM) to run specific NOMAD components. Performance will be poor for AI inference but may work for lighter services like FlatNotes or the Command Center UI.
+
+---
+
 ## Sources
 
 - [Project NOMAD GitHub Repository](https://github.com/Crosstalk-Solutions/project-nomad)

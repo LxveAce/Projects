@@ -14,7 +14,10 @@
 8. [Range and Antennas](#8-range-and-antennas)
 9. [Solar and Battery Options](#9-solar-and-battery-options)
 10. [Use Cases and Integration with Project Nomad](#10-use-cases-and-integration-with-project-nomad)
-11. [Sources](#sources)
+11. [Feature Brainstorm -- What Else Can This Do](#11-feature-brainstorm----what-else-can-this-do)
+12. [Sources](#12-sources)
+13. [Best-Fit Hardware from Your Inventory](#12-best-fit-hardware-from-your-inventory)
+14. [Cyberdeck Integration](#13-cyberdeck-integration)
 
 ---
 
@@ -660,7 +663,23 @@ Pair Meshtastic (long-range text/GPS) with HAVEN (IP mesh/internet sharing) and 
 
 ---
 
-## 11. Sources
+## 11. Feature Brainstorm -- What Else Can This Do
+
+- **Solar-powered permanent relay node** -- Mount a second Heltec V3 (or nRF52840 board) with a 5W solar panel and 18650 cells at a high point on your roof or a nearby pole, configured as a Router role for 24/7 mesh relay coverage across the neighborhood
+- **MQTT bridge to internet** -- Connect one node to your home WiFi and enable the MQTT module to bridge the local LoRa mesh to the internet, letting you send and receive mesh messages from anywhere in the world via the Meshtastic web client
+- **Home Assistant integration** -- Use the MQTT bridge to feed Meshtastic telemetry (temperature, humidity, battery voltage, GPS positions) into Home Assistant as sensor entities, enabling automations triggered by mesh events
+- **ATAK/CivTAK tactical mapping** -- Install the ATAK plugin and configure a Meshtastic TAK gateway so all mesh node positions appear on a real-time tactical map on your phone, useful for group coordination during outdoor activities
+- **Environmental sensor telemetry** -- Add a BME280 or BME680 sensor to the Heltec's I2C bus and enable the Telemetry module to broadcast temperature, humidity, and barometric pressure readings over the mesh
+- **GPS position sharing for group coordination** -- Add a GPS module to the Heltec and enable Position broadcasts so friends and family can see your real-time location on their Meshtastic app, no cell service needed
+- **Range test coverage mapping** -- Use the built-in Range Test module with two nodes to systematically map LoRa coverage across your area, exporting results to Google Earth KML for a visual coverage map
+- **Emergency broadcast channel with pre-set messages** -- Configure a secondary channel with canned emergency messages (SOS, location request, all-clear) accessible via quick-select, ready to deploy if cell networks go down
+- **Secure admin channel for remote node management** -- Set up a dedicated Admin channel with its own AES-256 key so you can remotely reboot, reconfigure, or update settings on distant relay nodes without physical access
+- **Second node as dedicated high-point repeater** -- Buy a second Heltec V3 or RAK WisBlock, configure it as a Router/Repeater, and place it at the highest accessible point to dramatically extend mesh range for all nearby nodes
+- **Store-and-forward messaging** -- Enable the Store & Forward module on a powered node so messages sent while other nodes are offline get delivered when those nodes come back on the mesh
+
+---
+
+## 12. Sources
 
 - [Meshtastic Official Site](https://meshtastic.org/)
 - [Meshtastic Getting Started Guide](https://meshtastic.org/docs/getting-started/)

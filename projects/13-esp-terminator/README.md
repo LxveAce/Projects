@@ -371,6 +371,20 @@ Every major firmware project (Marauder, GhostESP, Bruce) includes disclaimers st
 
 ---
 
+## Feature Brainstorm -- What Else Can This Do
+
+- **Pre-stage firmware binaries for all cyberdeck boards on a USB drive** -- Download the correct firmware files (Marauder, GhostESP, Bruce) for every ESP32 board in your inventory and store them on a 32GB USB drive. Enables offline flashing without internet access.
+- **Create a flash kit checklist for rapid cyberdeck board provisioning** -- Document the exact firmware version, board type, and flash settings for each of your ESP32 boards (Gold #1-3, CYD #1-2, AITRIP, ESP32-C5) so any board can be reprovisioned in under 2 minutes.
+- **Bookmark all firmware URLs for quick access** -- Maintain a browser bookmark folder with direct links to ESP Terminator, FZEE Flasher, Spacehuhn Web Updater, Meshtastic Web Flasher, and each firmware project's release page for instant access.
+- **Compare ESP Terminator vs FZEE Flasher vs Spacehuhn for different boards** -- Test all three web flashers with your specific hardware to determine which handles each board most reliably. Document which flasher works best for each board/firmware combination.
+- **Automated flash script for cyberdeck rebuild** -- Write a batch/shell script using `esptool.py` that flashes all cyberdeck boards in sequence from pre-downloaded firmware binaries. Useful for disaster recovery if you need to rebuild the entire cyberdeck from scratch.
+- **Firmware version tracking spreadsheet for all boards** -- Maintain a simple spreadsheet (or markdown table) tracking which firmware version is currently flashed on each board, when it was last updated, and what the latest available version is.
+- **Test GhostESP as a Marauder alternative** -- Flash GhostESP onto a spare board (generic WROOM-32 or CYD #2) and compare its WiFi/BLE capabilities against Marauder. GhostESP adds WPA3/SAE testing, Karma attacks, and live Wireshark streaming that Marauder lacks.
+- **Flash Meshtastic firmware for LoRa mesh experiments** -- Use ESP Terminator to flash Meshtastic onto a compatible board for long-range off-grid text messaging, complementing your existing WiFi/BLE toolkit with LoRa capability.
+- **Build a portable flash station** -- Keep a dedicated USB-C cable, a printout of your flash kit checklist, and a USB drive with pre-staged firmware in a small pouch. Enables field re-flashing without a laptop if you have phone OTG capability.
+
+---
+
 ## Sources
 
 - [ESP Terminator Official Website](https://espterminator.com/)

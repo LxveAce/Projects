@@ -619,6 +619,39 @@ Rapidly becoming the most popular DIY Rubber Ducky platform.
 
 ---
 
+## Standalone Build Guide
+
+Keystroke injection device -- multiple options from $5 DIY to $80 commercial.
+
+1. Option A: Purchase Hak5 USB Rubber Ducky (~$80)
+   - Write DuckyScript 3.0 payloads on PC
+   - Compile with PayloadStudio or ducky-tools
+   - Flash to Ducky's MicroSD, plug into target USB port
+2. Option B: DIY with ESP32-S2 (~$5) -- same HID injection capability
+   - Flash ESP32-S2 with usb-rubber-ducky firmware (Arduino)
+   - Load payloads via web interface at 192.168.4.1
+3. Option C: Flipper Zero BadUSB -- use Flipper as a Rubber Ducky alternative
+   - Load .txt payloads onto Flipper's SD card under /badusb/
+   - Plug Flipper into target via USB-C -- runs payload automatically
+4. All options are plug-and-go physical access tools -- no integration needed
+5. Build a payload library organized by OS and objective: Windows cred dump, WiFi password extraction, reverse shell, persistence
+
+---
+
+## Feature Brainstorm -- What Else Can This Do
+
+- **Custom payloads for authorized pentest scenarios** -- Write DuckyScript payloads for common physical security audit tasks: Windows credential harvesting (`netsh wlan show profiles`), reverse shell establishment, and local admin enumeration, all with proper logging for engagement reports.
+- **DIY ESP32-S2 Rubber Ducky for $5** -- Purchase an ESP32-S2 Mini (~$5-8) and flash SuperWiFiDuck firmware. Get WiFi-based payload management (edit and deploy payloads from your phone via web UI) at a fraction of the Hak5 price.
+- **Flipper Zero BadUSB as backup injection platform** -- Use the Flipper Zero's built-in BadUSB mode as a secondary keystroke injection tool. DuckyScript 1.0 compatible, and the Flipper's inconspicuous form factor makes it ideal for physical security demonstrations.
+- **Payload library organized by OS and objective** -- Build a structured payload repository sorted by target OS (Windows/macOS/Linux) and objective (recon, exfiltration, persistence, credential harvest). Maintain tested versions with timing delays calibrated to each OS.
+- **Conditional payloads that detect OS before executing** -- Use DuckyScript 3.0's OS detection and keystroke reflection features to write universal payloads that identify whether the target runs Windows, macOS, or Linux and branch to the appropriate command set automatically.
+- **USB Armory Mk II as advanced HID platform** -- For more complex engagements, the USB Armory Mk II ($170) runs a full Linux OS on a USB stick form factor, enabling HID attacks combined with network-level MitM, DHCP spoofing, and persistent implant deployment.
+- **Raspberry Pi Pico pico-ducky build** -- Flash a $4 Pi Pico with pico-ducky firmware for a dead-simple DuckyScript-compatible injector. Payloads are plain text files on the Pico's filesystem -- edit and swap without recompilation.
+- **Physical security audit automation** -- Script a payload that documents the physical security posture of a workstation: checks if the screen is locked, captures hostname/username, lists installed security software, and timestamps the test for the audit report.
+- **Payload timing calibration worksheet** -- Create a reference document of tested delay values for each target OS version (Windows 10/11 boot-to-desktop, macOS Spotlight response time, Linux terminal launch latency) to eliminate payload timing failures.
+
+---
+
 ## 11. Best-Fit Hardware from Your Inventory
 
 ### Status: Partially Ready (DIY Route Available)

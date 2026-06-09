@@ -14,6 +14,8 @@
 6. [Legal Considerations](#6-legal-considerations)
 7. [Pricing and Where to Buy](#7-pricing-and-where-to-buy)
 8. [Sources](#sources)
+9. [Feature Brainstorm -- What Else Can This Do](#9-feature-brainstorm----what-else-can-this-do)
+10. [Best-Fit Hardware from Your Inventory](#10-best-fit-hardware-from-your-inventory)
 
 ---
 
@@ -510,7 +512,37 @@ Visit flipper.net/pages/resellers and select your country for a complete list of
 
 ---
 
-## 9. Best-Fit Hardware from Your Inventory
+## Standalone Build Guide
+
+Flipper Zero is standalone by nature -- it is a pocket device with a built-in battery, screen, and buttons.
+
+1. Purchase Flipper Zero (~$170) + AWOK Dual C5 Touch WiFi addon ($70)
+2. Flash Momentum firmware via qFlipper app
+3. Install SubGHz regional unlock (if legal in your jurisdiction)
+4. Configure GPIO addon pins for WiFi board
+5. Install key apps: WiFi Marauder, NFC Magic, Bad USB
+6. Carry in pocket -- built-in battery, screen, buttons, no extra hardware needed
+7. Pair with Flipper phone app for remote control and firmware updates
+
+---
+
+## 9. Feature Brainstorm -- What Else Can This Do
+
+- **Momentum FindMy tracking** -- Enable FindMy at startup so the Flipper broadcasts as an Apple AirTag, making it locatable from any iPhone if lost or stolen
+- **SubGHz garage and gate audit toolkit** -- Build a library of captured static-code signals for your own garage doors, gates, and remotes so you can test replay resistance and verify rolling code enforcement
+- **Custom IR database for specific targets** -- Record IR codes from every remote in your home (TV, AC, soundbar, projector, fan) into organized Flipper files, turning it into a single universal remote that works offline
+- **BadUSB payloads for authorized pentests** -- Write DuckyScript payloads that automate common pentest tasks: reverse shell setup, credential harvesting, network recon scripts, WiFi password extraction from saved profiles
+- **NFC card backup and research** -- Read and back up your own NFC access badges, transit cards, and gym cards to study their data structures and encryption types
+- **BLE device profiling** -- Scan and catalog all BLE devices in a building (smart locks, IoT sensors, fitness trackers), documenting their advertised services, UUIDs, and signal patterns for security assessments
+- **Coordinated WiFi/SubGHz with Marauder via GPIO** -- Connect an ESP32 to the Flipper's GPIO to run Marauder WiFi attacks while simultaneously monitoring SubGHz frequencies, creating a dual-band offensive platform
+- **Dual C5 Touch wardriving with GPS** -- Use the AWOK board's dual-band WiFi and built-in GPS to map both 2.4GHz and 5GHz networks with WiGLE-compatible exports during daily drives
+- **Custom animations and asset packs** -- Create personalized boot animations, idle screens, and menu icons using Momentum's asset pack system for quick visual identification of your device
+- **SubGHz weather station monitoring** -- Decode and display live data from nearby 433MHz weather stations (temperature, humidity, wind speed) using Flipper's CC1101 radio and built-in protocol decoders
+- **RFID access control audit** -- Read and analyze 125kHz access cards at your workplace (with authorization) to determine card type, data format, and whether the system uses weak/clonable protocols
+
+---
+
+## 10. Best-Fit Hardware from Your Inventory
 
 ### Status: Not Yet Purchased
 

@@ -625,6 +625,21 @@ Passively receiving BLE advertising packets that are broadcast publicly is gener
 
 ---
 
+## Feature Brainstorm -- What Else Can This Do
+
+- **AirTag/Tile/SmartTag unwanted tracker detection** -- Flash the ESP32 Gold #3 with AirTagTag or AirFlag firmware to continuously scan for Apple FindMy, Tile, and Samsung SmartTag advertising patterns and alert when an unknown tracker persists near you.
+- **BLE device fingerprinting by manufacturer** -- Parse the manufacturer-specific data field (company ID bytes) in BLE advertisements to categorize every detected device by brand (Apple `0x004C`, Samsung, Google, Tile, etc.) and build a local device census.
+- **Presence monitoring for specific devices** -- Maintain a whitelist of known BLE MAC addresses (your phone, watch, keys) and trigger an alert when any whitelisted device leaves or enters range, useful for room-level occupancy tracking.
+- **Card skimmer detection at gas stations and ATMs** -- Scan for HC-03, HC-05, and HC-06 Bluetooth serial modules commonly embedded in card skimmers. Flag any detection with an audible buzzer alert before you insert your card.
+- **BLE advertising payload analysis for privacy research** -- Log and decode raw advertising payloads to study which devices leak identifiable data (device names, service UUIDs, TX power) despite MAC randomization, documenting real-world BLE privacy exposure.
+- **Integration with Chasing Your Tail persistence scoring** -- Stream detected BLE device MACs to the CYT-NG engine on the Pi 5, where devices seen across 3+ scan cycles at different GPS coordinates get flagged as potential surveillance trackers.
+- **Custom OUI alert list for known surveillance hardware** -- Build a lookup table of Bluetooth OUI prefixes associated with law enforcement tracking devices, covert body cameras, and commercial surveillance hardware. Trigger priority alerts on match.
+- **Multi-channel BLE scanning for comprehensive coverage** -- Rotate scanning across all three BLE advertising channels (37, 38, 39) with configurable dwell times to maximize the probability of catching devices with long advertising intervals.
+- **Real-time BLE device dashboard on cyberdeck** -- Stream all detected BLE devices over serial to the Pi 5 dashboard, showing a live table with MAC, name, RSSI, manufacturer, first-seen/last-seen timestamps, and persistence count.
+- **Export BLE device history for offline analysis** -- Log every scan cycle to the SD card in CSV format (timestamp, MAC, RSSI, name, manufacturer data) for post-session analysis, trend identification, and location correlation with GPS data.
+
+---
+
 ## 9. Sources
 
 - [ESP32 BLE Beacon Scanner Explained (2026)](https://esp32.co.uk/esp32-ble-beacon-scanner-explained-2026/)

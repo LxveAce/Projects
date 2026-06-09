@@ -866,6 +866,22 @@ Some states have additional drone privacy laws. Detection and observation is uni
 
 ---
 
+## Feature Brainstorm -- What Else Can This Do
+
+- **GPS-tagged Flock camera mapping during daily drives** -- Run the Flock-You detector with a GPS puck during your regular commute and export KML files to contribute camera locations to the DeFlock crowdsourced map at maps.deflock.org
+- **Multi-ESP32 mesh detection network** -- Deploy multiple Flock-You and Drone Mesh Mapper nodes across a property or neighborhood, sharing alerts over Meshtastic LoRa so a detection at any node triggers notifications at all nodes without internet
+- **Acoustic drone detection layer via Batear** -- Flash the Batear firmware onto the Heltec LoRa V3 with an ICS-43434 MEMS mic to detect drones that disable or lack RemoteID by identifying rotor acoustic signatures
+- **Unified detection dashboard** -- Build a single Flask or Node-RED dashboard on the Pi 5 that aggregates all detection streams (Flock cameras, drone RemoteID, acoustic detections, BLE trackers) into one real-time map with color-coded alert types
+- **Directional antenna sweep for pinpointing camera locations** -- Replace the omnidirectional antenna with a directional panel or Yagi to sweep and triangulate the exact mounting position of a detected Flock camera based on RSSI peak
+- **Community alert network via MQTT** -- Bridge Flock and drone detections to an MQTT broker so multiple users in the same area can share real-time alerts, building a neighborhood-wide surveillance awareness network
+- **Automated KML export for Google Earth camera mapping** -- Script the Flask dashboard to auto-export cumulative detection data as KML on a daily schedule, building a growing Google Earth layer of every Flock camera encountered over weeks and months
+- **Drone flight path recording and playback** -- Use the Drone Mesh Mapper's historical GeoJSON exports to record complete drone flight paths with timestamps, then replay them in Google Earth or Cesium to analyze patterns and identify repeat surveillance flights
+- **Custom OUI database with local surveillance hardware signatures** -- Extend the 31-OUI Flock list with MAC prefixes from other local surveillance hardware (city-owned cameras, private security systems, Raven gunshot detectors) for broader detection coverage
+- **OUI-SPY unified detection platform** -- Consolidate Flock-You, drone RemoteID, and BLE tracker detection into a single OUI-SPY multi-mode board, switching between Detector, Foxhunter, Flock-You, and Sky Spy modes via the WiFi config page at 192.168.4.1
+- **Vehicle-mounted always-on detection rig** -- Wire a Flock-You ESP32 to a USB car adapter with a magnetic-mount omnidirectional antenna on the roof, running continuously during all drives for passive camera mapping without any manual intervention
+
+---
+
 ## Sources
 
 - [colonelpanichacks/flock-you (GitHub)](https://github.com/colonelpanichacks/flock-you)

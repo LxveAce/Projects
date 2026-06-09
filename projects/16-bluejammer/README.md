@@ -71,7 +71,21 @@ the Panda PAU0F + Kismet, so the BW16 board is largely redundant.)
 
 ---
 
-## 5. Resources
+## 5. Feature Brainstorm — What Else Can This Do
+
+- **NRF24 RX-only jam detector** — build the lawful counterpart: sweep NRF24 channels in receive mode and flag sustained high-RSSI noise floors that indicate active 2.4 GHz jamming against your own network
+- **WiFi deauth detection via Marauder** — use Marauder's `sniffdeauth` mode alongside the NRF24 detector to cover both WiFi-layer and RF-layer denial-of-service against your infrastructure
+- **BLE interference monitoring** — log BLE advertising channel (37/38/39) RSSI baselines over time and alert when the noise floor rises anomalously, indicating possible BLE jamming or heavy interference
+- **Threat model documentation** — write up the BlueJammer attack profile (range, affected protocols, power levels, channel coverage) so the cyberdeck's defensive tools are calibrated against a realistic adversary
+- **Detection threshold calibration** — characterize normal vs. jammed RSSI signatures in your home lab, office, and outdoor environments to reduce false positives in the NRF24 detector
+- **Jam detection alerts on cyberdeck dashboard** — integrate the NRF24 detector output into the Pi 5 dashboard via serial or MQTT so jamming events appear alongside deauth alerts and RayHunter stingray warnings
+- **FCC enforcement case research** — catalog public FCC enforcement actions and fines for jammer use as educational reference material; useful for security awareness training and presentations
+- **MouseJack research (receive-only)** — use the same NRF24 modules in RX mode to discover vulnerable wireless keyboards and mice in range; passive scanning is lawful and demonstrates why unencrypted 2.4 GHz peripherals are a risk
+- **Multi-band interference timeline** — correlate NRF24 2.4 GHz noise data with Marauder WiFi channel utilization and BLE scan results to build a unified RF health timeline for a site survey
+
+---
+
+## 6. Resources
 
 - Upstream (reference): https://github.com/EmenstaNougat/BlueJammer-V2
 - Lawful counterpart in the deck: [RF interference detection + nRF24 research](../14-cyberdeck/integrations/16-bluejammer/)
