@@ -177,6 +177,15 @@ All items below have been purchased via Amazon. Organized by category with links
 - [x] ESP32 boards
 - [x] WiFi antennas
 
+### OUI-Spy
+- [x] Lonely Binary ESP32 Gold #3 (WiFi-only Flock-You promiscuous mode)
+- [x] CYD 2.8" Touchscreen #2 (WiFi-only with built-in display, needs custom firmware)
+- [x] DIYmall 2.4G WiFi Antennas (for extended range)
+- [x] Boobrie SMA/RP-SMA Adapters
+- [ ] LILYGO T-Display S3 (full BLE + WiFi, built-in 1.9" TFT — not yet purchased)
+- [ ] Passive piezo buzzer (not yet purchased)
+- [ ] 3.7V LiPo battery, JST 1.25mm (not yet purchased)
+
 ### WiFi 6 / Zigbee / Thread Research
 - [x] Waveshare ESP32-C5 WiFi 6 boards (x2)
 
@@ -213,4 +222,5 @@ Some items were purchased in multiples, allowing dedicated assignment to separat
 | Rii K06 Mini Keyboard | 2 | #1 → Pwnagotchi rig (headless Pi Zero setup/troubleshooting) · #2 → Field kit (Kismet wardriving / general) |
 | Hosyond 7" DSI Display | 2 | #1 → Kismet wardriving dashboard (Pi 5) · #2 → General Pi desktop / Project Nomad (if LattePanda not used) |
 | JSAUX Micro HDMI Adapter | 3 | #1 → Pi 5 · #2 → Pi Zero 2 W · #3 → Spare |
-| Lonely Binary ESP32 Gold | 3 | #1 → Marauder (primary, has IPEX antenna) · #2 → BLE Detection · #3 → Flock/Drone Detection |
+| Lonely Binary ESP32 Gold | 3 | #1 → Marauder (primary, has IPEX antenna) · #2 → BLE Detection · #3 → Flock/Drone Detection / OUI-Spy WiFi-only |
+| ESP32 2.8" CYD Touchscreen | 2 | #1 → Marauder touchscreen (built) · #2 → OUI-Spy WiFi-only (with built-in display) or general |
