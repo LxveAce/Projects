@@ -4,7 +4,7 @@
 > **Board:** ESP32 2.8" CYD Touchscreen #2
 > **Deck role:** Multi-protocol attack station + IoT Recon credential harvester
 > **Power:** Hub → switch SW8
-> **Antenna:** Internal PCB (2.4GHz ESP32 built-in)
+> **Antenna:** ESP32 internal PCB (2.4GHz WiFi/BLE) · CC1101 SMA (SubGHz, swap 315/433/915MHz whips) · NRF24 RP-SMA (2.4GHz duck) · PN532 PCB coil (NFC, 1-4cm)
 > **Display:** Built-in 2.8" touchscreen (self-contained)
 
 ---
@@ -44,9 +44,11 @@ Marauder focuses on WiFi/BLE. HaleHound adds SubGHz, NFC, IR, and most important
 |-----------|--------|-------|
 | CYD 2.8" Touchscreen #2 | INVENTORY | Reflash from stock to HaleHound |
 | Micro SD card (16GB+) | INVENTORY | Loot storage + custom creds |
-| CC1101 module | **Purchase** (~$5) | Optional: SubGHz capability |
-| NRF24L01+PA+LNA | **Purchase** (~$5) | Optional: 2.4GHz radio attacks |
-| PN532 V3 (SPI mode) | **Purchase** (~$7) | Optional: NFC/RFID |
+| CC1101 module (SMA) | INVENTORY: 2-pack | SubGHz — **included 433MHz antenna + need 315/915MHz whips** |
+| NRF24L01+PA+LNA (RP-SMA) | INVENTORY: 2-pack | 2.4GHz radio — **included duck antenna is sufficient** |
+| PN532 V3 (SPI mode) | INVENTORY | NFC/RFID — **built-in PCB coil, 1-4cm range** |
+| 315MHz SMA whip antenna | **Purchase** (~$3-5) | CC1101 US Tesla / garage band |
+| 915MHz SMA whip antenna | **Purchase** (~$3-5) | CC1101 ISM band |
 
 ### CYD #2 Reassignment
 
