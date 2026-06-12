@@ -1,8 +1,27 @@
 # Claude Session Transfer Notes
 
-**Last updated:** 2026-06-07
+**Last updated:** 2026-06-12
 **Project:** `C:\Users\mmrla\Projects` (Security & Hardware Projects Repo)
 **GitHub:** https://github.com/LxveAce/Projects (private)
+
+---
+
+## What Was Done This Session (2026-06-12) — overnight autonomous
+
+Most of this session ran in the **cyber-controller** repo (separate repo), but two cyberdeck
+artifacts landed here:
+
+- **`projects/14-cyberdeck/VISION-ROADMAP.md`** (NEW) — squash-all vision tying CyberC + the deck +
+  the firmware fleet into a three-horizon roadmap, anchored to CyberC **v1.1.0**. New file; existing
+  originals untouched, per repo convention.
+- Earlier this session: `FIRMWARE-DEVICE-SPECIALTIES.md`, `CYBERDECK-V2-ARCHITECTURE.md`,
+  `BUILD-GUIDE-STEP-BY-STEP.md`, and `integrations/16-bluejammer/BW16-RTL8720DN-VALIDATED.md`.
+
+**Cyber Controller (the other repo) reached v1.1.0** — released. 11 PRs: Unified Action Broadcast,
+GhostESP/Meshtastic zip + BW16/RTL8720 flashing, the **complete 10-finding security audit**, UI
+performance, and fact-check corrections (Bruce → BruceDevices/firmware; count → 19). All commits as
+LxveAce. Hardware fleet on the bench; **Raspberry Pi still not connected** (the cyberdeck-core +
+Kali end-state work is blocked on that).
 
 ---
 
