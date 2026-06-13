@@ -4,6 +4,10 @@
 **Project:** `C:\Users\mmrla\Projects` (Security & Hardware Projects Repo)
 **GitHub:** https://github.com/LxveAce/Projects (private)
 
+> **⏯ ACTIVE / MID-FLIGHT TASK:** Pi 5 → Kali headless bring-up. Full resume state in
+> **`projects/14-cyberdeck/PI-KALI-BRINGUP-RESUME.md`** — start there. SD is written + staged
+> (ssh + WiFi + USB-gadget); WiFi didn't appear on the LAN; next step is the C-to-C USB-gadget path.
+
 ---
 
 ## What Was Done This Session (2026-06-12) — overnight autonomous
