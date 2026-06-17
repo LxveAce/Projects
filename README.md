@@ -1,6 +1,8 @@
 # Security & Hardware Projects
 
-A curated collection of cybersecurity, wireless, and hardware hacking projects -- from ESP32 tools to mesh networking to surveillance detection. Each project has its own folder with deep research, step-by-step build guides, and resource links.
+A curated collection of cybersecurity, wireless, and hardware hacking projects -- from ESP32 tools to mesh networking to surveillance detection. Each project has its own folder with deep research, step-by-step build guides, and resource links. The flagship is a 14-device Pelican 1300 cyberdeck (Project 14) that consolidates the integrable projects into a single field-portable rig.
+
+This is a self-taught, hobby-driven security-research and hardware portfolio. Everything here is documentation, research, and build notes -- not production software.
 
 **General Resource Hub:** [BushidoUK/Open-source-tools-for-CTI](https://github.com/BushidoUK/Open-source-tools-for-CTI)
 
@@ -102,7 +104,7 @@ Every project falls into one of three categories relative to the [Cyberdeck buil
 
 Full inventory of all purchased hardware with datasheets, drivers, and setup guides: **[INVENTORY.md](INVENTORY.md)**
 
-### What I Have (37 items + extras, ~$1,250-$1,450 total)
+### What I Have (curated core build hardware, ~$1,250-$1,450; see [INVENTORY.md](INVENTORY.md) for the full spend)
 
 **Compute:**
 - Raspberry Pi 5 8GB Starter Kit (CanaKit, 128GB SD)
@@ -287,7 +289,7 @@ Both Waveshare ESP32-C5 boards are ready to flash with Marauder C5 firmware for 
 ```
                          ┌──────────────────────────┐
                          │   CYBERDECK (Pelican 1300) │
-                         │  13 devices, 7 SMA, 11 SW │
+                         │  14 devices, 7 SMA, 12 SW │
                          └────────────┬─────────────┘
               ┌──────────────┬────────┼────────┬──────────────┐
               │              │        │        │              │
@@ -332,6 +334,22 @@ Many projects share the same ESP32 boards, Raspberry Pi units, WiFi adapters, an
 
 ---
 
+## License
+
+Released under the [MIT License](LICENSE). This repository is documentation, research, and build notes -- not production software or libraries.
+
+---
+
 ## Disclaimer
 
-These are **personal security-research and hardware projects shared for educational purposes.** Use any tools, firmware, or techniques referenced here **only** on systems, networks, and devices that you own or are explicitly authorized to test. Some techniques may be illegal to use against systems you do not own. You are solely responsible for complying with all applicable laws. Everything is provided **as-is, with no warranty** and **no liability** for misuse or damage.
+These are **personal security-research and hardware projects shared for educational purposes.** Use any tools, firmware, or techniques referenced here **only** on systems, networks, and devices that you own or are explicitly authorized to test. Some techniques may be illegal to use against systems you do not own. You are solely responsible for complying with all applicable laws. Everything is provided **as-is, with no warranty** and **no liability** for misuse or damage. RF jamming and unauthorized interference are illegal in most jurisdictions -- this repo catalogs jammers for reference only and uses lawful detector firmware instead.
+
+Security vulnerabilities or harmful/misleading guidance can be reported per the [security policy](SECURITY.md).
+
+---
+
+## Connect
+
+- **Discord:** [discord.gg/lxveace](https://discord.gg/lxveace) -- questions, help, or to talk through this project
+- **GitHub:** [@LxveAce](https://github.com/LxveAce)
+- **Website:** [lxveace.com](https://lxveace.com)
