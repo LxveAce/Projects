@@ -117,7 +117,7 @@ So the SD supports **both** paths: boot on PSU → WiFi, OR C-to-C cable → USB
    [[feedback_asset_implementation]]) + the Emensta-inspired revamp (purple LxveAce / green CC).
 
 ## 4. Standing rules (don't forget)
-- Commit cyber-controller + Projects + websites as **`LxveAce <extrafadexd@gmail.com>` only — NO Claude
+- Commit cyber-controller + Projects + websites as **`LxveAce <lxveace@proton.me>` only — NO Claude
   co-author**. Pushing is authorized.
 - Projects repo: **add new files, don't edit originals**; keep `CLAUDE-TRANSFER.md` updated.
 - Dangerous RF (jammers/deauth) = **label, never block**; BlueJammer is lab-only/illegal-to-operate,
