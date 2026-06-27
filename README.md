@@ -11,13 +11,17 @@ This is a self-taught, hobby-driven security-research and hardware portfolio. Ev
 
 **Status:** Healthy public documentation/research portfolio — 19 projects plus the Project 14 cyberdeck, MIT-licensed, default branch `main`. No broken builds or crash-level defects; the focus is keeping the research and build notes accurate.
 
+**Shipped software:**
+- **cyber-controller v1.2.1** (latest release) — all-in-one controller/flasher/logger/pentest with a cyberdeck GUI. Now ships a Software-OS flashing tab (flash verified Kali/Tails/Arch to USB, auto-resolved latest version with an offline bundled fallback, SHA-256 + OpenPGP verified); a Wardriving tab (GPS-tagged Wi-Fi → WiGLE CSV, lawful and owner-authorized only); in-app Access-Gate setup (Settings → Access Gate: set admin password / physical USB key / policy from the GUI, salted-scrypt + encrypted vault); and a How-To tab. The prior Windows one-click `.exe` startup crash is fixed and verified.
+- **universal-flasher v1.4.0** (latest release) — focused flasher only (no controller/logger/wardriving). Now flashes operating systems (Kali/Tails/Arch to USB) via `--list-os`/`--flash-os` with an auto-updating catalog plus offline fallback, alongside the existing ESP32 firmware flasher.
+- Both apps ship an auto-updating OS catalog kept current by a weekly CI job, and both work fully offline.
+
 **In progress / known issues:**
-- Reconciling the cyberdeck `UNIVERSAL-FLASHER.md` planning doc so it points at the already-shipped flasher lineage (the work it once planned now ships as the Cyber Controller app) instead of describing it as unbuilt.
 - Correcting an ESP32 board-variant note (Lonely Binary "Gold" boards are classic ESP32, not ESP32-S3) so build steps reference the hardware-verified chip.
 - Verifying the published downloads pages render working installer links end-to-end in a real browser.
 
 **Roadmap:**
-- Repoint the cyberdeck planning docs (`UNIVERSAL-FLASHER.md`, `FIRMWARE-REFERENCE.md`) to the shipped Cyber Controller / universal-flasher lineage so they inform rather than duplicate it.
+- Repoint the cyberdeck planning docs (`UNIVERSAL-FLASHER.md`, `FIRMWARE-REFERENCE.md`) to the shipped Cyber Controller v1.2.1 / universal-flasher v1.4.0 lineage so they inform rather than duplicate it.
 - Add the missing `integrations/17-oui-spy` build guide (or document that OUI-Spy is folded into 18-halehound).
 - Bump the embedded marauder README to the current upstream release and link readers to the maintained repo's Releases.
 - Add lightweight CI (`python -m py_compile`) to guard the one vendored code snapshot.
