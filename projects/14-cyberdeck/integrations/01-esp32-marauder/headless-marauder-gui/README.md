@@ -3,7 +3,7 @@
 > **This project has moved to its own repo:**
 > **https://github.com/LxveAce/headless-marauder-gui**
 
-The code in this folder is a stale snapshot from v1.0.0. The current version (v1.2.0) lives at the link above and includes:
+The code in this folder is a stale snapshot from v1.0.0. The current version (v1.3.2) lives at the link above (see the [Releases page](https://github.com/LxveAce/headless-marauder-gui/releases) for the latest) and includes:
 
 - **Four front-ends** — PyQt5 GUI, Tkinter GUI, Textual TUI, and a Browser UI (Flask + WebSocket)
 - **Standalone executables** — pre-built binaries for Windows x64, Linux x64, and **Linux ARM64** (Raspberry Pi / ARM SBCs) on the [Releases page](https://github.com/LxveAce/headless-marauder-gui/releases/latest)

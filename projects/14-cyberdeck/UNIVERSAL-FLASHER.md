@@ -1,9 +1,12 @@
 # Universal Flasher — Architecture & Roadmap
 
-> **Codename:** Universal Flasher (working title)
+> **SHIPPED.** This concept shipped as **[LxveAce/universal-flasher](https://github.com/LxveAce/universal-flasher)** (v1.3.x)
+> and was subsequently folded into the flagship **[LxveAce/cyber-controller](https://github.com/LxveAce/cyber-controller)**
+> ([cybercontroller.org](https://cybercontroller.org)), which is now the maintained home for cyberdeck
+> flashing and device management. This document is retained as the original architecture and roadmap
+> notes; for current downloads and docs, see cyber-controller.
+
 > **Built on:** [Headless Marauder GUI](https://github.com/LxveAce/headless-marauder-gui) scaffold
-> **Status:** Planning
-> **Target repo:** New repo (TBD), forked from headless-marauder-gui
 
 ---
 
@@ -135,7 +138,7 @@ Each firmware gets a JSON profile that tells the flasher everything it needs:
   "supported_chips": ["esp32", "esp32s2", "esp32s3", "esp32c3", "esp32c5"],
   "board_variants": {
     "multiboardS3": {
-      "name": "Multiboard S3 (Lonely Binary Gold, CYD, etc.)",
+      "name": "Multiboard S3 (CYD, S3 devkits, etc. — NOT the classic-ESP32 Gold board)",
       "chip": "esp32s3",
       "files": {
         "bootloader": "esp32_marauder.ino.bootloader.bin",
@@ -167,7 +170,7 @@ Each firmware gets a JSON profile that tells the flasher everything it needs:
   "serial_controller": "marauder",
   "serial_baud": 115200,
   "has_suicide_build": true,
-  "notes": "Gold boards are ESP32-S3. C5 boards support 2.4+5GHz dual-band."
+  "notes": "Gold boards are CLASSIC ESP32 (WROOM, CH340 USB-serial) — hardware-verified: esptool reports Device: ESP32, and the _multiboardS3.bin fails preflight on them. Flash the classic-ESP32 (WROOM) Marauder build, not the S3 build. C5 boards support 2.4+5GHz dual-band."
 }
 ```
 
@@ -213,7 +216,7 @@ USB device connected
 
 | Firmware | Latest | Boards | Repo | Flash Tool |
 |----------|--------|--------|------|------------|
-| ESP32 Marauder | v1.12.1 | Gold (S3), CYD, C5, WROOM, Cardputer | justcallmekoko/ESP32Marauder | esptool |
+| ESP32 Marauder | v1.12.1 | Gold (classic ESP32 / WROOM, CH340), CYD, C5, S3, Cardputer | justcallmekoko/ESP32Marauder | esptool |
 | GhostESP | v1.9.10 | S3, C5, XIAO, DevKitC | GhostESP-Revival/GhostESP | esptool |
 | Bruce | v1.15 | S3, CYD, C5, Cardputer, many more | BruceDevices/firmware | esptool |
 | HaleHound-CYD | v3.5.5 | CYD 2.8" (ESP32-2432S028R) | JesseCHale/HaleHound-CYD | esptool |
@@ -362,30 +365,14 @@ The "Devices" tab that shows all connected cyberdeck devices:
 
 ### Phase 5: Rename & New Repo (1 day)
 
-- [ ] Fork headless-marauder-gui to new repo
-- [ ] Rename project (TBD — "Cyberdeck Flasher", "Universal Flasher", etc.)
-- [ ] Update all branding, README, PyInstaller specs
-- [ ] Keep headless-marauder-gui as the Marauder-focused release
-- [ ] New repo becomes the full cyberdeck management tool
+- [x] Fork headless-marauder-gui to new repo (shipped as LxveAce/universal-flasher)
+- [x] Update all branding, README, PyInstaller specs
+- [x] Keep headless-marauder-gui as the Marauder-focused release
+- [x] New repo becomes the full cyberdeck management tool (folded into LxveAce/cyber-controller — cybercontroller.org)
 
 ---
 
-## 8. Naming Candidates
-
-The new tool needs a name that reflects its broader scope:
-
-| Name | Vibe |
-|------|------|
-| **Armory** | Weapons rack — flash and arm every device |
-| **Deck Commander** | Cyberdeck management tool |
-| **Provision** | Provisioning tool for security hardware |
-| **FlashForge** | Forging firmware onto boards |
-| **Arsenal** | Collection of security tools |
-| **Quartermaster** | The person who equips the squad |
-
----
-
-## 9. Technical Constraints
+## 8. Technical Constraints
 
 - **Python-only** — must stay Python for cross-platform exe builds (PyInstaller)
 - **No cloud** — all firmware downloads are direct from GitHub Releases, no intermediary
@@ -396,4 +383,4 @@ The new tool needs a name that reflects its broader scope:
 
 ---
 
-*This is a planning document. Implementation starts after the cyberdeck build guide is complete.*
+*This was the original planning document. The tool shipped as LxveAce/universal-flasher (v1.3.x) and is now maintained as part of LxveAce/cyber-controller (cybercontroller.org).*
