@@ -6,6 +6,23 @@ This is a self-taught, hobby-driven security-research and hardware portfolio. Ev
 
 **General Resource Hub:** [BushidoUK/Open-source-tools-for-CTI](https://github.com/BushidoUK/Open-source-tools-for-CTI)
 
+<!-- STATUS-ROADMAP:START -->
+## Status & Roadmap
+
+**Status:** Healthy public documentation/research portfolio — 19 projects plus the Project 14 cyberdeck, MIT-licensed, default branch `main`. No broken builds or crash-level defects; the focus is keeping the research and build notes accurate.
+
+**In progress / known issues:**
+- Reconciling the cyberdeck `UNIVERSAL-FLASHER.md` planning doc so it points at the already-shipped flasher lineage (the work it once planned now ships as the Cyber Controller app) instead of describing it as unbuilt.
+- Correcting an ESP32 board-variant note (Lonely Binary "Gold" boards are classic ESP32, not ESP32-S3) so build steps reference the hardware-verified chip.
+- Verifying the published downloads pages render working installer links end-to-end in a real browser.
+
+**Roadmap:**
+- Repoint the cyberdeck planning docs (`UNIVERSAL-FLASHER.md`, `FIRMWARE-REFERENCE.md`) to the shipped Cyber Controller / universal-flasher lineage so they inform rather than duplicate it.
+- Add the missing `integrations/17-oui-spy` build guide (or document that OUI-Spy is folded into 18-halehound).
+- Bump the embedded marauder README to the current upstream release and link readers to the maintained repo's Releases.
+- Add lightweight CI (`python -m py_compile`) to guard the one vendored code snapshot.
+<!-- STATUS-ROADMAP:END -->
+
 ---
 
 ## Project Directory
