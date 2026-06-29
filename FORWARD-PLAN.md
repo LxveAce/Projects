@@ -25,7 +25,7 @@
 | `UNIVERSAL-FLASHER.md` is stale (plans an already-shipped tool) | `projects/14-cyberdeck/UNIVERSAL-FLASHER.md` lines 4-6, 373-385 | P2 | Repoint to LxveAce/universal-flasher (v1.3.0) + cyber-controller (v1.1.0); drop naming brainstorm. |
 | Gold-board chip contradiction (says S3, is classic ESP32) | `projects/14-cyberdeck/UNIVERSAL-FLASHER.md` lines 138, 170, 216 | P2 | Contradicts CLAUDE-TRANSFER.md, SESSION.md l.213, hmg README l.5; esptool reports ESP32. |
 | Embedded marauder README understates upstream version (v1.2.0 vs v1.3.2) | `.../integrations/01-esp32-marauder/headless-marauder-gui/README.md` line 6 | P3 | Latest upstream release is v1.3.2 (2026-06-11). |
-| Missing `integrations/17-oui-spy` guide while `projects/17-oui-spy` exists | `projects/14-cyberdeck/integrations/` (has 01-13,15,16,18,19) | P3 | Add the guide or document 17 is folded into 18-halehound (and 14 has no integration by design). |
+| ~~Missing `integrations/17-oui-spy` guide while `projects/17-oui-spy` exists~~ | `projects/14-cyberdeck/integrations/17-oui-spy/` | P3 | **DONE 2026-06-29.** Authored the decision-made guide (LILYGO T-Display S3 + Unified Blue, companion passive detector); confirmed OUI-Spy is distinct, not folded into 18-halehound. Index row added. |
 | Stale code snapshot vendored in docs repo (drifts from upstream) | `.../integrations/01-esp32-marauder/headless-marauder-gui/` | P3 | Self-declared stale v1.0.0; its install.sh builds outdated code. Prefer pointer/submodule. |
 | Repo `homepageUrl` has a trailing space | GitHub metadata for LxveAce/Projects | P3 | `gh repo edit LxveAce/Projects --homepage https://esp32marauder.com` |
 
@@ -34,7 +34,7 @@
 > No explicit user directives were supplied for this plan. The items below derive from recon evidence only.
 
 - **Repoint cyberdeck planning docs to the shipped lineage.** Add a "this shipped as Cyber Controller" banner (with repo + cybercontroller.org links) to `UNIVERSAL-FLASHER.md`, and cross-check `FIRMWARE-REFERENCE.md` / root `README.md` so they INFORM rather than duplicate `cyber-controller` / `universal-flasher`.
-- **Add the missing `integrations/17-oui-spy` guide** for consistency with `projects/17-oui-spy` — or explicitly document that 17 is folded into 18-halehound and that 14 has no integration subfolder by design.
+- ~~**Add the missing `integrations/17-oui-spy` guide**~~ **DONE 2026-06-29** — authored at `integrations/17-oui-spy/` (T-Display S3 + Unified Blue companion); index updated.
 - **Bump the embedded marauder README** version reference v1.2.0 -> v1.3.2 and point readers to the maintained repo's Releases.
 - **Optional lightweight CI:** `python -m py_compile` over the vendored snapshot so the one code artifact the repo carries is guarded (today there is no `.github/`).
 - **Refresh continuity:** promote `session-context/SESSION.md` (current to 2026-06-27) as authoritative and mark `Projects/CLAUDE-TRANSFER.md` (2026-06-07) as superseded — it predates projects 17-19 and the cyber-controller pivot.

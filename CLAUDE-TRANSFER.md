@@ -1,5 +1,10 @@
 # Claude Session Transfer Notes
 
+> **⚠ SUPERSEDED (2026-06-29).** This file predates projects 17–19 and the cyber-controller pivot.
+> For current continuity use **`C:\Users\mmrla\repos\command-center\CONTINUE-HERE.md`** + `PROGRESS.md`
+> (managerial source of truth) and `C:\Users\mmrla\repos\session-context\SESSION.md`. Kept only for the
+> historical cyberdeck/Pi-Kali bring-up notes below.
+
 **Last updated:** 2026-06-12
 **Project:** `C:\Users\mmrla\Projects` (Security & Hardware Projects Repo)
 **GitHub:** https://github.com/LxveAce/Projects (private)

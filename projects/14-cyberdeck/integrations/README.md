@@ -48,6 +48,7 @@ Each maps to a numbered project in the repo. Numbers match the source project fo
 | 13 | [ESP Terminator](13-esp-terminator/) | The web flasher used to flash the deck's ESP32s | espterminator.com | [13-esp-terminator](../../13-esp-terminator/) |
 | 15 | [ESP32-DIV](15-esp32-div/) | Sub-GHz / IR / RFID-NFC / 2.4GHz multitool (companion) | ESP32-DIV (CC1101 + NRF24) | [15-esp32-div](../../15-esp32-div/) |
 | 16 | [RF Interference Detection](16-bluejammer/) | Lawful detector side of BlueJammer — **no jammer** | nRF24L01+ (RX-only) | [16-bluejammer](../../16-bluejammer/) |
+| 17 | [OUI-Spy](17-oui-spy/) | Passive surveillance detector + RF direction-finding (companion) | LILYGO T-Display S3 (ESP32-S3, Unified Blue) | [17-oui-spy](../../17-oui-spy/) |
 | 18 | [HaleHound + IoT Recon](18-halehound/) | Multi-protocol attack station + IoT credential harvester | CYD #2 (HaleHound firmware) | [18-halehound](../../18-halehound/) |
 | 19 | [RaspyJack](19-raspyjack/) | Wired network pentesting + Linux recon (Shark Jack alt) | Pi Zero 2 W + 1.44" LCD HAT | [19-raspyjack](../../19-raspyjack/) |
 
