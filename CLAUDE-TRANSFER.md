@@ -1,12 +1,12 @@
 # Claude Session Transfer Notes
 
 > **⚠ SUPERSEDED (2026-06-29).** This file predates projects 17–19 and the cyber-controller pivot.
-> For current continuity use **`C:\Users\mmrla\repos\command-center\CONTINUE-HERE.md`** + `PROGRESS.md`
-> (managerial source of truth) and `C:\Users\mmrla\repos\session-context\SESSION.md`. Kept only for the
+> For current continuity use **`<HOME>\repos\command-center\CONTINUE-HERE.md`** + `PROGRESS.md`
+> (managerial source of truth) and `<HOME>\repos\session-context\SESSION.md`. Kept only for the
 > historical cyberdeck/Pi-Kali bring-up notes below.
 
 **Last updated:** 2026-06-12
-**Project:** `C:\Users\mmrla\Projects` (Security & Hardware Projects Repo)
+**Project:** `<HOME>\Projects` (Security & Hardware Projects Repo)
 **GitHub:** https://github.com/LxveAce/Projects (private)
 
 > **⏯ ACTIVE / MID-FLIGHT TASK:** Pi 5 → Kali headless bring-up. Full resume state in
@@ -266,7 +266,7 @@ directly and verified):
 - **No 3D printer** — acrylic, DIN rail, foam, L-brackets.
 - **No Bluetooth keyboard** — wired only (BLE stealth).
 - **Anker 347** = power bank. **Pelican 1300** = case.
-- **Do NOT modify** `C:\Users\mmrla\Downloads\Barcode Label Gen` (original copy).
+- **Do NOT modify** `<HOME>\Downloads\Barcode Label Gen` (original copy).
 - **No operational RF jammer.** Building/operating a broadband jammer (BlueJammer) is illegal
   (47 U.S.C. §333 / FCC) with **no research/personal-use exemption** — stated "research/design intent"
   does NOT change this (unlike deauth, which is an authorized-target technique). BlueJammer is
@@ -287,8 +287,8 @@ directly and verified):
    updater + install.sh + GUIDE.md + in-app Guide tab.
 
 `.gitattributes` in both forces LF for `*.sh`/`*.py` (Windows-edited → Linux-run safe).
-Local working copies: `C:\Users\extra\projects\Projects` and `C:\Users\extra\projects\headless-marauder-gui`
-(user's canonical path for the kit repo is `C:\Users\mmrla\Projects`). After restart: `git pull` both.
+Local working copies: `<HOME>\projects\Projects` and `<HOME>\projects\headless-marauder-gui`
+(user's canonical path for the kit repo is `<HOME>\Projects`). After restart: `git pull` both.
 
 Honored throughout: don't edit original project READMEs / cyberdeck `README.md`; commit as LxveAce,
 no Claude co-author.

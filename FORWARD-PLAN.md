@@ -51,7 +51,7 @@ This repo is PUBLIC — frame everything as responsible hardening, no exploit re
 
 ## Dig deeper (next dedicated session)
 
-1. **Line-by-line reconcile** `UNIVERSAL-FLASHER.md` Section 3 ("What Already Exists") and Sections 5/7/8 ("future work") against the shipped `uf_core/` in `C:/Users/mmrla/repos/universal-flasher` and `cyber-controller`, so the doc reflects BUILT vs genuinely-open work.
+1. **Line-by-line reconcile** `UNIVERSAL-FLASHER.md` Section 3 ("What Already Exists") and Sections 5/7/8 ("future work") against the shipped `uf_core/` in `<HOME>/repos/universal-flasher` and `cyber-controller`, so the doc reflects BUILT vs genuinely-open work.
 2. **Audit all 50+ research/build `.md` docs** across the 19 projects for accuracy, dead external links (justcallmekoko, EFForg, etc. were never checked), and outdated technical claims — recon only verified internal `projects/NN-name/` links resolve.
 3. **Diff the vendored snapshot vs upstream v1.3.2** to quantify drift and decide submodule-vs-pointer-README.
 4. **Verify the esptool pin** `>=4.7,<6` against the API `flasher.py` actually calls (taken from a comment, not validated).
@@ -64,8 +64,8 @@ This repo is PUBLIC — frame everything as responsible hardening, no exploit re
 - **Shipped software lineage Projects documents:** `headless-marauder-gui` (public, MIT, Marauder-only, 4 UIs, v1.3.2) -> `universal-flasher` + `universal-flasher-ui` (multi-firmware, v1.3.0 2026-06-09) -> **`cyber-controller`** (FLAGSHIP SUCCESSOR, v1.1.0, 21 firmware profiles, cybercontroller.org).
 - **Sibling release health (recon-verified):** cyber-controller v1.1.0 (linux-x64 / macos-arm64 / windows-x64.exe — .exe 52 downloads, one asset byte-verified HTTP 206); universal-flasher v1.1.1 (4 assets, win .exe 48 dl); Suicide-Marauder v1.0.0 (4 assets); headless-marauder-gui v1.3.2.
 - **Live sites (all HTTP 200):** esp32marauder.com (+ /downloads.html), lxveace.com, cybercontroller.org.
-- **Continuity sources:** `C:/Users/mmrla/repos/session-context/SESSION.md` (current to 2026-06-27, authoritative) and `C:/Users/mmrla/Projects/CLAUDE-TRANSFER.md` (2026-06-07, older — predates projects 17-19 + the cyber-controller pivot).
-- **Local clones for cross-repo work:** `C:/Users/mmrla/repos/{universal-flasher, cyber-controller, headless-marauder-gui}`.
+- **Continuity sources:** `<HOME>/repos/session-context/SESSION.md` (current to 2026-06-27, authoritative) and `<HOME>/Projects/CLAUDE-TRANSFER.md` (2026-06-07, older — predates projects 17-19 + the cyber-controller pivot).
+- **Local clones for cross-repo work:** `<HOME>/repos/{universal-flasher, cyber-controller, headless-marauder-gui}`.
 - **Standing rules:** commit as LxveAce, NO Claude co-author; no PII on public repos; decision-made not option-dumps; site-header hardening tracked in private `website-playbook/MANUAL-ACTIONS.md`.
 
 ## Open questions

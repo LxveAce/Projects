@@ -65,7 +65,7 @@ So the SD supports **both** paths: boot on PSU → WiFi, OR C-to-C cable → USB
    solid-red-only/nothing = not booting (suspect power or the SD write / Pi 5 EEPROM, not the network).
 
 ### Tools already in place
-- **Raspberry Pi Imager** installer downloaded to `C:\Users\extra\Downloads\RaspberryPiImager-setup.exe`
+- **Raspberry Pi Imager** installer downloaded to `<HOME>\Downloads\RaspberryPiImager-setup.exe`
   (used to write the SD).
 - Scan helper used: a fast async ping sweep (`SendPingAsync`, 500 ms) over `192.168.1.0/24` + ARP-MAC
   match for Pi OUIs (`b8-27-eb|dc-a6-32|e4-5f-01|d8-3a-dd|2c-cf-67|28-cd-c1`) + `Test-NetConnection -Port 22`.
@@ -89,7 +89,7 @@ So the SD supports **both** paths: boot on PSU → WiFi, OR C-to-C cable → USB
 - **Inventory reconciled** from order screenshots (the June haul). Deck is ~95% sourced. Still shipping:
   **2× CC1101** for FreqFoxRF (~Jun 23–30). Still to buy: **Pi Zero 2 W** (Pwnagotchi), optional REYAX
   **RYLR998** (ModuLoRa). 27 W PSU confirmed (CanaKit). Panda PAU0F tri-band = monitor-mode for the Pi.
-- **Branding assets** received in `C:\Users\extra\Downloads\attachments\` and cataloged (filenames are
+- **Branding assets** received in `<HOME>\Downloads\attachments\` and cataloged (filenames are
   WRONG — see [[feedback_asset_implementation]]): `LxveAce Brand Pics.png` = LxveAce primary logo
   (purple spade); `Cyber Controller Logos.png` = the LxveAce **YouTube banner**; `hand drawn LxveAce
   Logo.jpg` = the **Cyber Controller green logo set**. Two identities: **LxveAce = purple ace-of-spades**,
